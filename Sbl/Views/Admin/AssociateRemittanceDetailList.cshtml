@@ -1,0 +1,399 @@
+﻿@using Microsoft.Ajax.Utilities
+@using Sbl.Helpers
+@using Sbl.Models
+
+@model IEnumerable<AssociateRemittanceViewModel>
+@{
+    ViewBag.Title = "Associate Week Remittance Details";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Associate Week Remittance Details</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Associate Week Remittance Details</li>
+                    </ol>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row">
+                            @if (!User.IsInRole(WebConstant.SBLUserRole.Driver))
+                            {
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label class="control-label"><strong>Associate</strong></label>
+                                        @Html.DropDownList("associateId", (IEnumerable<SelectListItem>)ViewBag.Associates, "Select Associate", new { @class = "form-control select2 custom-select", @id = "ddlAssociateId" })
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label class="control-label"><strong>Depot</strong></label>
+                                        @Html.DropDownList("depotId", (IEnumerable<SelectListItem>)ViewBag.Depots, "Select Depot", new { @class = "form-control select2 custom-select", @id = "ddlDepotId" })
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Week</strong></label>
+                                    @Html.DropDownList("weekNumber", DropdownListBinder.PopulatWeeks(), "Select Week", new { @class = "form-control select2 custom-select", @id = "ddlWeekNumber" })
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <br />
+                                    <input type="button" id="btnSearch" name="Search" class="btn btn-success" style="color: #fff; margin-top: 10px;" value="Search" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            @foreach (var item in Model)
+                            {
+                                <table id="tableAccordin" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" style="width:100%;margin-bottom:5px;">
+                                    <tbody class="tbodyAccordin">
+                                        <tr class="trAccordion">
+                                            <td style="padding:5px;">
+
+                                                <a id="aEdit" title="Edit" class="btn btn-xs btn-success pull-left m-r-10" href="javascript:void(0);"><i class="fa fa-eye" style="color: white;"></i></a>
+
+                                                <p class="pull-left" style="margin:0;"><strong>@item.AssociateName</strong> (Week @item.WeekNumber)</p>
+
+                                                @if (!User.IsInRole(WebConstant.SBLUserRole.Driver))
+                                                {
+                                                    if (item.AuthAdmin == false)
+                                                    {
+                                                        <button type="button" id="btnSendEmailToAssociate" name="Email to Associate" value="Email to Associate" class="btn btn-xs btn-success pull-right m-l-15" data-associateid="@item.AssociateId" data-week="@item.WeekNumber">Email to Associate</button>
+                                                        <a id="aAddChargeCredit" title="Add Charge/Credit" class="btn btn-xs btn-success pull-right m-l-15" href="javascript:void(0);">Add Charge/Credit</a>
+                                                    }
+                                                    <a id="aViewRemittance" title="View Remittance" class="btn btn-xs btn-success pull-right m-l-40" target="_blank" href="javascript:void(0);" data-associateid="@item.AssociateId" data-week="@item.WeekNumber">View Remittance</a>
+                                                }
+                                                else
+                                                {
+                                                    <a id="aViewRemittance" title="View Remittance" class="btn btn-xs btn-success pull-right" target="_blank" href="javascript:void(0);" data-associateid="@item.AssociateId" data-week="@item.WeekNumber">View Remittance</a>
+                                                }
+
+                                                @if (User.IsInRole(WebConstant.SBLUserRole.Admin) && item.AuthPoc == true && item.AuthPayroll == true && item.AuthAdmin == false)
+                                                {
+                                                    <a id="aAuthPeriodAdmin" title="Authorise Period" class="btn btn-xs pull-right m-l-15" data-associateid="@item.AssociateId" data-week="@item.WeekNumber" style="background-color: green; border-color: #333333; padding-bottom: 0px; padding-top: 1px; padding-right: 7px; padding-left: 7px;"><i class="fa fa-lock fa-4" style="color: white; font-size: 21px;"></i></a>
+                                                }
+                                                @if (User.IsInRole(WebConstant.SBLUserRole.Payroll) && item.AuthPoc == true && item.AuthPayroll == false && item.AuthAdmin == false)
+                                                {
+                                                    <a id="aAuthPeriodPayroll" title="Authorise Period" class="btn btn-xs pull-right m-l-15" data-associateid="@item.AssociateId" data-week="@item.WeekNumber" style="background-color: orange; border-color: #333333; padding-bottom: 0px; padding-top: 1px; padding-right: 7px; padding-left: 7px;"><i class="fa fa-lock fa-4" style="color: white; font-size: 21px;"></i></a>
+                                                }
+                                                @if (User.IsInRole(WebConstant.SBLUserRole.POC) && item.AuthPoc == false && item.AuthPayroll == false && item.AuthAdmin == false)
+                                                {
+                                                    <a id="aAuthPeriodPoc" title="Authorise Period" class="btn btn-xs pull-right m-l-15" data-associateid="@item.AssociateId" data-week="@item.WeekNumber" style="background-color: red; border-color: #333333; padding-bottom: 0px; padding-top: 1px; padding-right: 7px; padding-left: 7px;"><i class="fa fa-lock fa-4" style="color: white; font-size: 21px;"></i></a>
+                                                }
+
+                                                @if (item.AuthAdmin == true)
+                                                {
+                                                    <div class="label label-table label-info pull-right m-l-15" style="margin-top:3px;background-color:green;">Admin Authorised</div>
+                                                }
+
+                                                @if (item.AuthPayroll == true)
+                                                {
+                                                    <div class="label label-table label-warning pull-right m-l-15" style="margin-top:3px;background-color:orange;">Payroll Authorised</div>
+                                                }
+
+                                                @if (item.AuthPoc == true)
+                                                {
+                                                    <div class="label label-table label-danger pull-right m-l-15" style="margin-top:3px; background-color:red;">POC Authorised</div>
+                                                }
+
+                                            </td>
+                                        </tr>
+                                        <tr class="trRouteDetails">
+                                            <td>
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Date</th>
+                                                                <th>Route Type</th>
+                                                                <th>Route Code</th>
+                                                                @*<th>Depot</th>*@
+                                                                <th>AD1</th>
+                                                                <th>AD2</th>
+                                                                <th>AD3</th>
+                                                                <th>Mileage</th>
+                                                                <th>Fuel</th>
+                                                                <th>Deduct</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var route in item.Routes)
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        @if (route.RouteDate != null)
+                                                                        {
+                                                                            @route.RouteDate.Value.ToString("dd/MM/yyyy")
+                                                                        }
+                                                                    </td>
+                                                                    <td>@route.RouteType1</td>
+                                                                    <td>@route.RouteCode1</td>
+                                                                    @*<td>@route.Depot</td>*@
+                                                                    <td>@route.Ad1Quantity</td>
+                                                                    <td>@route.Ad2Quantity</td>
+                                                                    <td>@route.Ad3Quantity</td>
+                                                                    <td>@route.Mileage</td>
+                                                                    <td>@route.FuelSupport</td>
+                                                                    <td>@route.Deduct</td>
+                                                                </tr>
+                                                            }
+
+                                                        </tbody>
+
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    </tfoot>
+                                </table>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        $(function () {
+            var $contents = $("#tableAccordin .trRouteDetails").hide();
+            var $heads = $("#tableAccordin .trAccordion").on("click", function (e) {
+
+                var $next = $(this).next($contents);
+                console.log($next);
+                $contents.not($next).slideUp();
+                $next.slideToggle();
+                e.preventDefault();
+
+            });
+        });
+
+        $("#ddlAssociateId").select2();
+        $(document.body).on("click", "#btnSendEmailToAssociate", function () {
+            swal({
+                title: "Email Remittance",
+                text: "Do you want to Email the remittance to the associate?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes",
+                closeOnConfirm: false
+            }, function () {
+                var associateId = $(this).data("associateid");
+                var weekNumber = $(this).data("week");
+                $.ajax({
+                    url: "@Url.Action("SendEmailToAssociate", "admin")",
+                    type: "GET",
+                    data: { associateId: associateId, weekNumber: weekNumber },
+                    success: function (data) {
+
+                    }
+                });
+            });
+        });
+
+        $(document.body).on("click", "#btnSearch", function () {
+            var depotId = $("#ddlDepotId").val();
+            var weekNumber = $("#ddlWeekNumber").val();
+            var associateId = $("#ddlAssociateId").val();
+            var queryString = "";
+            if (depotId > 0) {
+                queryString = "?depotId=" + depotId;
+            }
+            if (weekNumber > 0) {
+                if (queryString == "") {
+                    queryString = "?weekNumber=" + weekNumber;
+                } else {
+                    queryString = queryString + "&weekNumber=" + weekNumber;
+                }
+            }
+            if (associateId > 0) {
+                if (queryString == "") {
+                    queryString = "?associateId=" + associateId;
+                } else {
+                    queryString = queryString + "&associateId=" + associateId;
+                }
+            }
+            window.location.href = "/admin/AssociateRemittanceDetailList" + queryString;
+        });
+
+        $(document.body).on("click", "#aViewRemittance", function () {
+            var associateId = $(this).data("associateid");
+            var weekNumber = $(this).data("week");
+            var reDirectUrl = "/admin/AssociateRemittance?associateid=" + associateId + "&weekNumber=" + weekNumber;
+            // window.location.href = "/admin/AssociateRemittance?associateid=" + associateId + "&weekNumber=" + weekNumber;
+            window.open(reDirectUrl, '_blank');
+        });
+
+
+
+
+        $(document.body).on("click", "#aAuthPeriodPoc", function () {
+            var associateId = $(this).data("associateid");
+            var weekNumber = $(this).data("week");
+
+            var depotId = $("#ddlDepotId").val();
+            var selectedWeekNumber = $("#ddlWeekNumber").val();
+            var selectedAssociateId = $("#ddlAssociateId").val();
+            var queryString = "";
+            if (depotId > 0) {
+                queryString = "?depotId=" + depotId;
+            }
+            if (selectedWeekNumber > 0) {
+                if (queryString == "") {
+                    queryString = "?weekNumber=" + selectedWeekNumber;
+                } else {
+                    queryString = "&weekNumber=" + selectedWeekNumber;
+                }
+
+            }
+            if (selectedAssociateId > 0) {
+                if (queryString == "") {
+                    queryString = "?associateId=" + selectedAssociateId;
+                } else {
+                    queryString = "&associateId=" + selectedAssociateId;
+                }
+            }
+
+            swal({
+                title: "POC Authorisation",
+                text: "Are you sure you want to authorise this period? You won't be able to revert this action.",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: "@Url.Action("UpdateAuthPoc", "admin")",
+                    type: "GET",
+                    data: { associateId: associateId, weekNumber: weekNumber },
+                    success: function (data) {
+                        window.location.href = "/admin/AssociateRemittanceDetailList" + queryString;
+                    }
+                });
+            });
+        });
+
+
+        $(document.body).on("click", "#aAuthPeriodPayroll", function () {
+            var associateId = $(this).data("associateid");
+            var weekNumber = $(this).data("week");
+
+            var depotId = $("#ddlDepotId").val();
+            var selectedWeekNumber = $("#ddlWeekNumber").val();
+            var selectedAssociateId = $("#ddlAssociateId").val();
+            var queryString = "";
+            if (depotId > 0) {
+                queryString = "?depotId=" + depotId;
+            }
+            if (selectedWeekNumber > 0) {
+                if (queryString == "") {
+                    queryString = "?weekNumber=" + selectedWeekNumber;
+                } else {
+                    queryString = "&weekNumber=" + selectedWeekNumber;
+                }
+
+            }
+            if (selectedAssociateId > 0) {
+                if (queryString == "") {
+                    queryString = "?associateId=" + selectedAssociateId;
+                } else {
+                    queryString = "&associateId=" + selectedAssociateId;
+                }
+            }
+
+            swal({
+                title: "Payroll Authorisation",
+                text: "Are you sure you want to authorise this period? You won't be able to revert this action.",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: "@Url.Action("UpdateAuthPayroll", "admin")",
+                    type: "GET",
+                    data: { associateId: associateId, weekNumber: weekNumber },
+                    success: function (data) {
+                        window.location.href = "/admin/AssociateRemittanceDetailList" + queryString;
+                    }
+                });
+            });
+        });
+
+
+        $(document.body).on("click", "#aAuthPeriodAdmin", function () {
+            var associateId = $(this).data("associateid");
+            var weekNumber = $(this).data("week");
+
+            var depotId = $("#ddlDepotId").val();
+            var selectedWeekNumber = $("#ddlWeekNumber").val();
+            var selectedAssociateId = $("#ddlAssociateId").val();
+            var queryString = "";
+            if (depotId > 0) {
+                queryString = "?depotId=" + depotId;
+            }
+            if (selectedWeekNumber > 0) {
+                if (queryString == "") {
+                    queryString = "?weekNumber=" + selectedWeekNumber;
+                } else {
+                    queryString = "&weekNumber=" + selectedWeekNumber;
+                }
+
+            }
+            if (selectedAssociateId > 0) {
+                if (queryString == "") {
+                    queryString = "?associateId=" + selectedAssociateId;
+                } else {
+                    queryString = "&associateId=" + selectedAssociateId;
+                }
+            }
+
+            swal({
+                title: "Admin Authorisation",
+                text: "Are you sure you want to authorise this period? You won't be able to revert this action.",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: "@Url.Action("UpdateAuthAdmin", "admin")",
+                    type: "GET",
+                    data: { associateId: associateId, weekNumber: weekNumber },
+                    success: function (data) {
+                        window.location.href = "/admin/AssociateRemittanceDetailList" + queryString;
+                    }
+                });
+            });
+        });
+
+
+    </script>
+}

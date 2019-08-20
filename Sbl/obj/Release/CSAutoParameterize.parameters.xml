@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="Data Source=45.63.97.35;Initial Catalog=sbltest;UID=sbl;PWD=bmdf5xHH8W;Asynchronous Processing=true;Max Pool Size=1000; Connection Timeout=600" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="E:\\SBL\ Codebase\\Sbl\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+</parameters>

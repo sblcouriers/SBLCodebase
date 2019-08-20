@@ -1,0 +1,116 @@
+﻿@using Sbl.Helpers
+@model Sbl.Models.Induction
+
+@{
+    ViewBag.Title = "Edit Induction";
+}
+
+
+
+<div class="page-wrapper">
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Edit Induction</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/inductionlist">Inductions</a></li>
+                        <li class="breadcrumb-item active">Edit Induction</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page Content -->
+        <!-- ============================================================== -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("inductionedit", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.FullName, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.FullName)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.MobileNumber, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.MobileNumber, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.MobileNumber)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Email)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.Status, new { @class = "control-label" })
+                                                    @Html.DropDownListFor(m => m.Status, DropdownListBinder.PopulatInductionStatus(), "-- Select --", new { @class = "form-control", @style = "background-color: #13a89e; color: #fff;" })
+                                                    @Html.ValidationMessageFor(m => m.Status)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                <a href="~/admin/inductionlist" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page Content -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Container fluid  -->
+    <!-- ============================================================== -->
+</div>
+
+@section Scripts {
+    <!-- ============================================================== -->
+    <!-- This page plugins -->
+    <!-- ============================================================== -->
+    <script>
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+    </script>
+    <!-- ============================================================== -->
+    <!-- This page plugins -->
+    <!-- ============================================================== -->
+}

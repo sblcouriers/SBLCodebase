@@ -1,0 +1,351 @@
+﻿@model IEnumerable<Sbl.Models.Induction>
+
+@{
+    ViewBag.Title = "Induction List";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Inductions</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Inductions</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="main-table" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Depot</th>
+                                        <th>Name</th>
+                                        <th>Mobile</th>
+                                        <th>Notes</th>
+                                        <th>1: Form</th>
+                                        <th>2: Docs</th>
+                                        <th>3: Depot</th>
+                                        <th>4: DVLA</th>
+                                        <th>5: Flex</th>
+                                        <th>6: CBR</th>
+                                        <th>7: Training</th>
+                                        <th>8: Van</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@String.Format("{0:dd MMM yyyy}", item.DateCreated)</td>
+                                            <td></td>
+                                            <td>@item.FullName</td>
+                                            <td>@item.MobileNumber</td>
+                                            <td>
+                                                <a href="javascript:void(0);" class="InsertNote" data-inductionid="@item.Id" data-toggle="tooltip" data-original-title="View Notes">
+                                                    <i class="fa fa-eye text-inverse m-r-10"></i>
+                                                </a>
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" class="btn btn-xs btn-success UploadDocs" data-inductionid="@item.Id">
+                                                    <span>Upload docs</span>
+                                                </a>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="text-nowrap">
+                                                <a href="~/admin/inductionview/@item.Id" data-toggle="tooltip" data-original-title="View"> <i class="fa fa-eye text-inverse m-r-10"></i> </a>
+                                                <a href="~/admin/inductionedit/@item.Id" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/node_modules/datatables/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#main-table').DataTable();
+        });
+        $('#main-table').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    </script>
+    <script>
+
+
+
+        $(document.body).on("click", ".InsertNote", function () {
+            var InductionId = $(this).data("inductionid");
+            var jc = $.confirm({
+                title: "Notes",
+                content: '' +
+                '' +
+                '<div class="row" style=\"margin:0;\">' +
+                    '<div class="col-md-12">' +
+                        '<div class="form-group">' +
+                            '<label><strong>Note</strong></label>' +
+                            '<textarea id="Description" class="form-control" rows="3"></textarea>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="col-md-12">' +
+                        '<div class="form-group">' +
+                            '<label><strong>Note history</strong></label>' +
+                            '<div id="NoteHistory"></div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '',
+                boxWidth: '40%',
+                useBootstrap: false,
+                buttons: {
+                    yes: {
+                        text: "Yes",
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            //
+                            $.ajax({
+                                url: "@Url.Action("InsertInductionNote", "Admin")",
+                                type: "GET",
+                                data: {
+                                    InductionId: InductionId,
+                                    Description: $("#Description").val()
+                                },
+                                success: function (data) {
+                                    if (data.status == 1) {
+                                        jc.close();
+                                    }
+                                }
+                            });
+                            //
+                        }
+                    },
+                    cancel: {
+                        text: 'Cancel',
+                        btnClass: 'btn-red'
+                    },
+                },
+                onContentReady: function () {
+                    //
+                    $.ajax({
+                        url: "@Url.Action("GetInductionNotes", "Admin")",
+                        type: "GET",
+                        data: {
+                            InductionId: InductionId
+                        },
+                        success: function (data) {
+                            if (data.status == 1) {
+                                $("#NoteHistory").empty();
+                                $("#NoteHistory").append("<hr>");
+                                if (data.notes.length == 0) {
+                                    $("#NoteHistory").append("<p>There are no notes.</p>");
+                                }
+                                else {
+                                    $.each(data.notes, function (i, x) {
+                                        $("#NoteHistory").append("<p>" + x.Description + "<br>" + x.Author + " - " + moment(x.DateNote).format('DD/MM/YYYY HH:mm') + "</p><hr>");
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    //
+                }
+            });
+        });
+
+
+
+
+        $(document.body).on("click", ".UploadDocs", function () {
+            var InductionId = $(this).data("inductionid");
+            var jc = $.confirm({
+                title: "Upload docs",
+                content: '' +
+                '' +
+                '<div class="row" style=\"margin:0;\">' +
+                    '<div class="col-md-12">' +
+                        '<div id="DocumentList"></div>' +
+                    '</div>' +
+                '</div>' +
+                '',
+                boxWidth: '40%',
+                useBootstrap: false,
+                buttons: {
+                    doc1: {
+                        text: "Driving License",
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            jc.close();
+                            UploadDrivingLicense(InductionId);
+                        }
+                    },
+                    doc2: {
+                        text: "Proof of ID",
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            jc.close();
+                        }
+                    },
+                    cancel: {
+                        text: 'Close',
+                        btnClass: 'btn-warning'
+                    },
+                },
+                onContentReady: function () {
+                    //
+                    $.ajax({
+                        url: "@Url.Action("GetInductionDocs", "Admin")",
+                        type: "GET",
+                        data: {
+                            InductionId: InductionId
+                        },
+                        success: function (data) {
+                            if (data.status == 1) {
+                                $("#DocumentList").empty();
+                                $("#DocumentList").append("<hr>");
+                                if (data.IsValidDrivingLicense == true) {
+                                    $("#DocumentList").append("<span>Driving License: Not uploaded</span><hr>");
+                                }
+                                else {
+                                    $("#DocumentList").append("<a href=\"/Admin/DownloadInductionDrivingLicense?inductionid=" + data.Id + "\" class=\"btn btn-xs btn-info\" style=\"margin-bottom:10px;\">Download Driving License</a><hr>");
+                                }
+                            }
+                        }
+                    });
+                    //
+                }
+            });
+        });
+
+        
+        var formdata;
+
+        $(document.body).on("change", "#InputUploadDrivingLicense", function (e) {
+            var files = e.target.files;
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    formdata = new FormData();
+                    for (var x = 0; x < files.length; x++) {
+                        formdata.append("file" + x, files[x]);
+                    }
+                } else {
+                    alert("This browser doesn't support HTML5 file uploads!");
+                }
+            }
+        });
+
+        function UploadDrivingLicense(InductionId)
+        {
+            var jc = $.confirm({
+                title: 'Upload Driving License',
+                content: '' +
+                    '<br>' +
+                    '<input type="file" id="InputUploadDrivingLicense" />' +
+                    '<br>' +
+                    '',
+                buttons: {
+                    confirm: {
+                        text: 'Save',
+                        btnClass: 'btn-success',
+                        action: function () {
+                            $.ajax({
+                                url: '/Admin/UploadDrivingLicense?inductionid=' + InductionId,
+                                type: "POST",
+                                contentType: false,
+                                processData: false,
+                                data: formdata,
+                                success: function (data) {
+                                    if (data.result == 2) {
+                                        jc.close();
+                                    }
+                                    if (data.result == 0) {
+                                        $.alert({
+                                            type: 'grey',
+                                            title: 'Failed',
+                                            content: data.message
+                                        });
+                                    }
+                                    if (data.result == -1) {
+                                        $.alert({
+                                            type: 'red',
+                                            title: 'Failed',
+                                            content: 'Could not process your request. Please try again or contact support.',
+                                            onClose: function () {
+                                                location.reload();
+                                            }
+                                        });
+                                    }
+                                },
+                                error: function (xhr, status, p3, p4){
+                                    var err = "Error " + " " + status + " " + p3 + " " + p4;
+                                    if (xhr.responseText && xhr.responseText[0] == "{")
+                                        err = JSON.parse(xhr.responseText).Message;
+                                    console.log(err);
+                                }
+                            });
+
+                            return false;
+                        }
+                    },
+                    cancel: {
+                        text: 'Cancel',
+                        btnClass: 'btn-default'
+                    },
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+}

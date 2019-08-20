@@ -1,0 +1,955 @@
+﻿@using Sbl.Helpers
+@model Sbl.Models.InspectionInViewModel
+
+@{
+    ViewBag.Title = "Inspection In";
+}
+
+
+<style>
+    .gridcell {
+        border: 1px dotted #cccccc;
+        color: #f1f1f1;
+        display: inline-block;
+        float: left;
+    }
+
+    .g1 {
+        background-color: red;
+        opacity: 0.8;
+    }
+
+    .g2 {
+        background-color: darkblue;
+        opacity: 0.8;
+    }
+
+    .g3 {
+        background-color: gold;
+        opacity: 0.8;
+    }
+
+    .g4 {
+        background-color: dimgrey;
+        opacity: 0.8;
+    }
+
+    .g5 {
+        background-color: green;
+        opacity: 0.8;
+    }
+
+    .g6 {
+        background-color: purple;
+        opacity: 0.8;
+    }
+
+    .g7 {
+        background-color: darkturquoise;
+        opacity: 0.8;
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Inspection In</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/inspectionlist">Inspections</a></li>
+                        <li class="breadcrumb-item active">Inspection In</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("inspectionin", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            @Html.ValidationSummary()
+
+                            @Html.HiddenFor(m => m.VehicleId)
+
+
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.DateIn, new { @class = "control-label" })
+                                                    <div class="input-group">
+                                                        @Html.EditorFor(m => m.DateIn, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.OdometerIn, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.OdometerIn, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.FuelLevelIn, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.FuelLevelIn, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                <div id="side1" style="width: 600px; height:600px; background-image: url('/img/side1.png');"></div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <img src="~/img/map.png" />
+                                                <input id="ConditionSide1In" name="ConditionSide1In" value="@Model.ConditionSide1In" style="visibility:hidden;" />
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                <div id="side2" style="width: 600px; height:600px; background-image: url('/img/side2.png');"></div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <img src="~/img/map.png" />
+                                                <input id="ConditionSide2In" name="ConditionSide2In" value="@Model.ConditionSide2In" style="visibility:hidden;" />
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                <div id="front" style="width: 600px; height:600px; background-image: url('/img/front.png');"></div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <img src="~/img/map.png" />
+                                                <input id="ConditionFrontIn" name="ConditionFrontIn" value="@Model.ConditionFrontIn" style="visibility:hidden;" />
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                <div id="back" style="width: 600px; height:600px; background-image: url('/img/back.png');"></div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <img src="~/img/map.png" />
+                                                <input id="ConditionBackIn" name="ConditionBackIn" value="@Model.ConditionBackIn" style="visibility:hidden;" />
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                <div id="windshield" style="width: 600px; height:600px; background-image: url('/img/windshield.png');"></div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <img src="~/img/map.png" />
+                                                <input id="ConditionWindshieldIn" name="ConditionWindshieldIn" value="@Model.ConditionWindshieldIn" style="visibility:hidden;" />
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.AdditionalDamageCommentsIn, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.AdditionalDamageCommentsIn, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h4 class="text-success">Tyre Details</h4>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInNSMM1, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.TyreInNSMM1, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInNSPSI1, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.TyreInNSPSI1, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInNSMake1, new { @class = "control-label" })
+                                                    @Html.DropDownListFor(m => m.TyreInNSMake1, DropdownListBinder.PopulatTyreType(), "-- Select --", new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInNSMM2, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.TyreInNSMM2, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInNSPSI2, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.TyreInNSPSI2, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInNSMake2, new { @class = "control-label" })
+                                                    @Html.DropDownListFor(m => m.TyreInNSMake2, DropdownListBinder.PopulatTyreType(), "-- Select --", new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInOSMM1, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.TyreInOSMM1, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInOSPSI1, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.TyreInOSPSI1, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInOSMake1, new { @class = "control-label" })
+                                                    @Html.DropDownListFor(m => m.TyreInOSMake1, DropdownListBinder.PopulatTyreType(), "-- Select --", new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInOSMM2, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.TyreInOSMM2, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInOSPSI2, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.TyreInOSPSI2, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInOSMake2, new { @class = "control-label" })
+                                                    @Html.DropDownListFor(m => m.TyreInOSMake2, DropdownListBinder.PopulatTyreType(), "-- Select --", new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInSpareTyreMM, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.TyreInSpareTyreMM, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInSpareTyrePSI, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.TyreInSpareTyrePSI, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.TyreInSpareTyreMake, new { @class = "control-label" })
+                                                    @Html.DropDownListFor(m => m.TyreInSpareTyreMake, DropdownListBinder.PopulatTyreType(), "-- Select --", new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h4 class="text-success">Operational Checks</h4>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.LightsIndicatorsHornIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.LightsIndicatorsHornIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.WindscreenWipersWasherIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.WindscreenWipersWasherIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.RadioIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.RadioIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.DriversHandbookIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.DriversHandbookIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.CoolantLevelIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.CoolantLevelIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.EngineOilLevelIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.EngineOilLevelIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.BrakeFluidLevelIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.BrakeFluidLevelIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.TyrePressuresCheckedIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.TyrePressuresCheckedIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.SeatbeltConditionAndOperationIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.SeatbeltConditionAndOperationIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.CigaretteLighterIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.CigaretteLighterIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.JackAndToolsPresentIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.JackAndToolsPresentIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.HandbrakeOperationIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.HandbrakeOperationIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.InternalConditionCleanlinessIn, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.InternalConditionCleanlinessIn, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h4 class="text-success">Date and Signatures</h4>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.DateSignedSblIn, new { @class = "control-label" })
+                                                    <div class="input-group">
+                                                        @Html.EditorFor(m => m.DateSignedSblIn, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.SignatureSblIn, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.SignatureSblIn, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.DateSignedAssociateIn, new { @class = "control-label" })
+                                                    <div class="input-group">
+                                                        @Html.EditorFor(m => m.DateSignedAssociateIn, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.SignatureAssociateIn, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.SignatureAssociateIn, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                <a href="~/admin/inspectionlist" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        $("#VehicleId").select2();
+        $("#AssociateId").select2();
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+
+        SetGrid();
+        function SetGrid() {
+            var cols = 30;
+            var rows = 30;
+            var width = 20;
+            var height = 20;
+            $('#side1').empty();
+            for (y = 0; y <= (rows - 1) ; y++) {
+                for (x = 0; x <= (cols - 1) ; x++) {
+                    $('#side1').append("<div class=\"gridcell " + "x" + x + "y" + y + "\" data-cols=\"" + cols + "\" data-rows=\"" + rows + "\" data-x=\"" + x + "\" data-y=\"" + y + "\" data-width=\"" + width + "\" data-height=\"" + height + "\" style=\"width:" + (width) + "px; height:" + (height) + "px;\"></div>");
+                }
+            }
+            $('#side2').empty();
+            for (y = 0; y <= (rows - 1) ; y++) {
+                for (x = 0; x <= (cols - 1) ; x++) {
+                    $('#side2').append("<div class=\"gridcell " + "x" + x + "y" + y + "\" data-cols=\"" + cols + "\" data-rows=\"" + rows + "\" data-x=\"" + x + "\" data-y=\"" + y + "\" data-width=\"" + width + "\" data-height=\"" + height + "\" style=\"width:" + (width) + "px; height:" + (height) + "px;\"></div>");
+                }
+            }
+            $('#front').empty();
+            for (y = 0; y <= (rows - 1) ; y++) {
+                for (x = 0; x <= (cols - 1) ; x++) {
+                    $('#front').append("<div class=\"gridcell " + "x" + x + "y" + y + "\" data-cols=\"" + cols + "\" data-rows=\"" + rows + "\" data-x=\"" + x + "\" data-y=\"" + y + "\" data-width=\"" + width + "\" data-height=\"" + height + "\" style=\"width:" + (width) + "px; height:" + (height) + "px;\"></div>");
+                }
+            }
+            $('#back').empty();
+            for (y = 0; y <= (rows - 1) ; y++) {
+                for (x = 0; x <= (cols - 1) ; x++) {
+                    $('#back').append("<div class=\"gridcell " + "x" + x + "y" + y + "\" data-cols=\"" + cols + "\" data-rows=\"" + rows + "\" data-x=\"" + x + "\" data-y=\"" + y + "\" data-width=\"" + width + "\" data-height=\"" + height + "\" style=\"width:" + (width) + "px; height:" + (height) + "px;\"></div>");
+                }
+            }
+            $('#windshield').empty();
+            for (y = 0; y <= (rows - 1) ; y++) {
+                for (x = 0; x <= (cols - 1) ; x++) {
+                    $('#windshield').append("<div class=\"gridcell " + "x" + x + "y" + y + "\" data-cols=\"" + cols + "\" data-rows=\"" + rows + "\" data-x=\"" + x + "\" data-y=\"" + y + "\" data-width=\"" + width + "\" data-height=\"" + height + "\" style=\"width:" + (width) + "px; height:" + (height) + "px;\"></div>");
+                }
+            }
+        }
+
+        // side1
+        $(document.body).on("click", "#side1 .gridcell", function () {
+            if ($(this).hasClass("g1")) {
+                $(this).removeClass("g1");
+                $(this).addClass("g2");
+            }
+            else {
+                if ($(this).hasClass("g2")) {
+                    $(this).removeClass("g2");
+                    $(this).addClass("g3");
+                }
+                else {
+                    if ($(this).hasClass("g3")) {
+                        $(this).removeClass("g3");
+                        $(this).addClass("g4");
+                    }
+                    else {
+                        if ($(this).hasClass("g4")) {
+                            $(this).removeClass("g4");
+                            $(this).addClass("g5");
+                        }
+                        else {
+                            if ($(this).hasClass("g5")) {
+                                $(this).removeClass("g5");
+                                $(this).addClass("g6");
+                            }
+                            else {
+                                if ($(this).hasClass("g6")) {
+                                    $(this).removeClass("g6");
+                                    $(this).addClass("g7");
+                                }
+                                else {
+                                    if ($(this).hasClass("g7")) {
+                                        $(this).removeClass("g7");
+                                    }
+                                    else {
+                                        $(this).addClass("g1");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            GetGridSide1();
+        });
+
+        function GetGridSide1() {
+            var save1 = "";
+            $("#side1 .g1").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save1 = save1 + "g1" + "x" + x + "y" + y + "es";
+            });
+            $("#side1 .g2").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save1 = save1 + "g2" + "x" + x + "y" + y + "es";
+            });
+            $("#side1 .g3").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save1 = save1 + "g3" + "x" + x + "y" + y + "es";
+            });
+            $("#side1 .g4").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save1 = save1 + "g4" + "x" + x + "y" + y + "es";
+            });
+            $("#side1 .g5").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save1 = save1 + "g5" + "x" + x + "y" + y + "es";
+            });
+            $("#side1 .g6").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save1 = save1 + "g6" + "x" + x + "y" + y + "es";
+            });
+            $("#side1 .g7").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save1 = save1 + "g7" + "x" + x + "y" + y + "es";
+            });
+            $("#ConditionSide1In").val(save1);
+        }
+
+        // side2
+        $(document.body).on("click", "#side2 .gridcell", function () {
+            if ($(this).hasClass("g1")) {
+                $(this).removeClass("g1");
+                $(this).addClass("g2");
+            }
+            else {
+                if ($(this).hasClass("g2")) {
+                    $(this).removeClass("g2");
+                    $(this).addClass("g3");
+                }
+                else {
+                    if ($(this).hasClass("g3")) {
+                        $(this).removeClass("g3");
+                        $(this).addClass("g4");
+                    }
+                    else {
+                        if ($(this).hasClass("g4")) {
+                            $(this).removeClass("g4");
+                            $(this).addClass("g5");
+                        }
+                        else {
+                            if ($(this).hasClass("g5")) {
+                                $(this).removeClass("g5");
+                                $(this).addClass("g6");
+                            }
+                            else {
+                                if ($(this).hasClass("g6")) {
+                                    $(this).removeClass("g6");
+                                    $(this).addClass("g7");
+                                }
+                                else {
+                                    if ($(this).hasClass("g7")) {
+                                        $(this).removeClass("g7");
+                                    }
+                                    else {
+                                        $(this).addClass("g1");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            GetGridSide2();
+        });
+
+        function GetGridSide2() {
+            var save2 = "";
+            $("#side2 .g1").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save2 = save2 + "g1" + "x" + x + "y" + y + "es";
+            });
+            $("#side2 .g2").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save2 = save2 + "g2" + "x" + x + "y" + y + "es";
+            });
+            $("#side2 .g3").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save2 = save2 + "g3" + "x" + x + "y" + y + "es";
+            });
+            $("#side2 .g4").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save2 = save2 + "g4" + "x" + x + "y" + y + "es";
+            });
+            $("#side2 .g5").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save2 = save2 + "g5" + "x" + x + "y" + y + "es";
+            });
+            $("#side2 .g6").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save2 = save2 + "g6" + "x" + x + "y" + y + "es";
+            });
+            $("#side2 .g7").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save2 = save2 + "g7" + "x" + x + "y" + y + "es";
+            });
+            $("#ConditionSide2In").val(save2);
+        }
+
+
+        // front
+        $(document.body).on("click", "#front .gridcell", function () {
+            if ($(this).hasClass("g1")) {
+                $(this).removeClass("g1");
+                $(this).addClass("g2");
+            }
+            else {
+                if ($(this).hasClass("g2")) {
+                    $(this).removeClass("g2");
+                    $(this).addClass("g3");
+                }
+                else {
+                    if ($(this).hasClass("g3")) {
+                        $(this).removeClass("g3");
+                        $(this).addClass("g4");
+                    }
+                    else {
+                        if ($(this).hasClass("g4")) {
+                            $(this).removeClass("g4");
+                            $(this).addClass("g5");
+                        }
+                        else {
+                            if ($(this).hasClass("g5")) {
+                                $(this).removeClass("g5");
+                                $(this).addClass("g6");
+                            }
+                            else {
+                                if ($(this).hasClass("g6")) {
+                                    $(this).removeClass("g6");
+                                    $(this).addClass("g7");
+                                }
+                                else {
+                                    if ($(this).hasClass("g7")) {
+                                        $(this).removeClass("g7");
+                                    }
+                                    else {
+                                        $(this).addClass("g1");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            GetGridFront();
+        });
+
+        function GetGridFront() {
+            var save3 = "";
+            $("#front .g1").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save3 = save3 + "g1" + "x" + x + "y" + y + "es";
+            });
+            $("#front .g2").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save3 = save3 + "g2" + "x" + x + "y" + y + "es";
+            });
+            $("#front .g3").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save3 = save3 + "g3" + "x" + x + "y" + y + "es";
+            });
+            $("#front .g4").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save3 = save3 + "g4" + "x" + x + "y" + y + "es";
+            });
+            $("#front .g5").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save3 = save3 + "g5" + "x" + x + "y" + y + "es";
+            });
+            $("#front .g6").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save3 = save3 + "g6" + "x" + x + "y" + y + "es";
+            });
+            $("#front .g7").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save3 = save3 + "g7" + "x" + x + "y" + y + "es";
+            });
+            $("#ConditionFrontIn").val(save3);
+        }
+
+
+        // back
+        $(document.body).on("click", "#back .gridcell", function () {
+            if ($(this).hasClass("g1")) {
+                $(this).removeClass("g1");
+                $(this).addClass("g2");
+            }
+            else {
+                if ($(this).hasClass("g2")) {
+                    $(this).removeClass("g2");
+                    $(this).addClass("g3");
+                }
+                else {
+                    if ($(this).hasClass("g3")) {
+                        $(this).removeClass("g3");
+                        $(this).addClass("g4");
+                    }
+                    else {
+                        if ($(this).hasClass("g4")) {
+                            $(this).removeClass("g4");
+                            $(this).addClass("g5");
+                        }
+                        else {
+                            if ($(this).hasClass("g5")) {
+                                $(this).removeClass("g5");
+                                $(this).addClass("g6");
+                            }
+                            else {
+                                if ($(this).hasClass("g6")) {
+                                    $(this).removeClass("g6");
+                                    $(this).addClass("g7");
+                                }
+                                else {
+                                    if ($(this).hasClass("g7")) {
+                                        $(this).removeClass("g7");
+                                    }
+                                    else {
+                                        $(this).addClass("g1");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            GetGridBack();
+        });
+
+        function GetGridBack() {
+            var save4 = "";
+            $("#back .g1").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save4 = save4 + "g1" + "x" + x + "y" + y + "es";
+            });
+            $("#back .g2").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save4 = save4 + "g2" + "x" + x + "y" + y + "es";
+            });
+            $("#back .g3").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save4 = save4 + "g3" + "x" + x + "y" + y + "es";
+            });
+            $("#back .g4").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save4 = save4 + "g4" + "x" + x + "y" + y + "es";
+            });
+            $("#back .g5").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save4 = save4 + "g5" + "x" + x + "y" + y + "es";
+            });
+            $("#back .g6").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save4 = save4 + "g6" + "x" + x + "y" + y + "es";
+            });
+            $("#back .g7").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save4 = save4 + "g7" + "x" + x + "y" + y + "es";
+            });
+            $("#ConditionBackIn").val(save4);
+        }
+
+
+        // windshield
+        $(document.body).on("click", "#windshield .gridcell", function () {
+            if ($(this).hasClass("g1")) {
+                $(this).removeClass("g1");
+                $(this).addClass("g2");
+            }
+            else {
+                if ($(this).hasClass("g2")) {
+                    $(this).removeClass("g2");
+                    $(this).addClass("g3");
+                }
+                else {
+                    if ($(this).hasClass("g3")) {
+                        $(this).removeClass("g3");
+                        $(this).addClass("g4");
+                    }
+                    else {
+                        if ($(this).hasClass("g4")) {
+                            $(this).removeClass("g4");
+                            $(this).addClass("g5");
+                        }
+                        else {
+                            if ($(this).hasClass("g5")) {
+                                $(this).removeClass("g5");
+                                $(this).addClass("g6");
+                            }
+                            else {
+                                if ($(this).hasClass("g6")) {
+                                    $(this).removeClass("g6");
+                                    $(this).addClass("g7");
+                                }
+                                else {
+                                    if ($(this).hasClass("g7")) {
+                                        $(this).removeClass("g7");
+                                    }
+                                    else {
+                                        $(this).addClass("g1");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            GetGridWindshield();
+        });
+
+        function GetGridWindshield() {
+            var save5 = "";
+            $("#windshield .g1").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save5 = save5 + "g1" + "x" + x + "y" + y + "es";
+            });
+            $("#windshield .g2").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save5 = save5 + "g2" + "x" + x + "y" + y + "es";
+            });
+            $("#windshield .g3").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save5 = save5 + "g3" + "x" + x + "y" + y + "es";
+            });
+            $("#windshield .g4").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save5 = save5 + "g4" + "x" + x + "y" + y + "es";
+            });
+            $("#windshield .g5").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save5 = save5 + "g5" + "x" + x + "y" + y + "es";
+            });
+            $("#windshield .g6").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save5 = save5 + "g6" + "x" + x + "y" + y + "es";
+            });
+            $("#windshield .g7").each(function () {
+                var x = $(this).data("x");
+                var y = $(this).data("y");
+                save5 = save5 + "g7" + "x" + x + "y" + y + "es";
+            });
+            $("#ConditionWindshieldIn").val(save5);
+        }
+
+</script>
+}

@@ -1,0 +1,304 @@
+﻿@model Sbl.Models.AssociateListViewModel
+
+@{
+    ViewBag.Title = "Associate List";
+}
+
+<style>
+    table .associate-info td {
+        padding: 5px 10px !important;
+    }
+    .col1 {
+        background-color: #f1f1f1;
+        color: #000;
+        font-weight: bold;
+    }
+    .col2 {
+        background-color: #fff;
+        color: #000;
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Associates</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Associates</li>
+                    </ol>
+                    <a href="~/admin/associatecreate" class="btn btn-success d-none d-lg-block m-l-15">
+                        <i class="fa fa-plus-circle"></i> Insert New Associate
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Depot</strong></label>
+                                    <select id="Depot" class="form-control select2 custom-select">
+                                        @if (Model.DepotId == 0)
+                                        {
+                                            <option value="0" selected="selected">All Depots</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="0">All Depots</option>
+                                        }
+                                        @foreach (var depot in Model.Depots)
+                                        {
+                                            if (Model.DepotId == depot.Id)
+                                            {
+                                                <option value="@depot.Id" selected="selected">@depot.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@depot.Id">@depot.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            @foreach (var item in Model.Associates)
+                            {
+                                <table id="tableAccordin" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" style="width:100%;margin-bottom:5px;">
+                                    <tbody class="tbodyAccordin">
+                                        <tr class="trAccordion">
+                                            <td style="padding:5px;">
+                                                <a id="aEdit" title="Edit" class="btn btn-xs btn-success pull-left m-r-10" href="javascript:void(0);"><i class="fa fa-eye" style="color: white;"></i></a>
+                                                <p class="pull-left" style="margin:0;"><strong>@item.Name</strong></p>
+
+                                                <div style="display:none;">
+                                                    @if (item.AssociateStatus == "Inactive")
+                                                    {
+                                                        <div class="label label-table label-warning pull-right m-r-10">Inactive</div>
+                                                    }
+                                                    @if (item.AssociateStatus == "Active")
+                                                    {
+                                                        <div class="label label-table label-success pull-right m-r-10">Active</div>
+                                                    }
+                                                    @if (item.AssociateStatus == "Deactivated")
+                                                    {
+                                                        <div class="label label-table label-danger pull-right m-r-10">Deactivated</div>
+                                                    }
+                                                </div>
+
+                                                @*
+                                                var datenow = DateTime.Now.Date;
+                                                if (item.SubRentals.Any(x => x.DateRented <= datenow && !x.DateReturned.HasValue && x.Active == true && x.Deleted == false))
+                                                {
+                                                    var vehicle = item.SubRentals.FirstOrDefault(x => x.DateRented <= datenow && !x.DateReturned.HasValue && x.Active == true && x.Deleted == false);
+                                                    <span>@vehicle.Vehicle.Make @vehicle.Vehicle.Model @vehicle.Vehicle.Registration</span>
+                                                    <span>@String.Format("{0:dd MMM yyyy}", vehicle.DateRented)</span>
+                                                }
+                                                else
+                                                {
+                                                    if (item.OwnVehicle == true)
+                                                    {
+                                                        <span>Own Vehicle</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>-</span>
+                                                    }
+                                                }
+                                                *@
+
+                                                <a data-id="@item.AssociateId" href="javascript:void(0);" class="btn btn-xs btn-danger pull-right m-r-10 EditAssociate" data-toggle="tooltip" data-original-title="Edit">Edit</a>
+                                                <a data-id="@item.AssociateId" href="javascript:void(0);" class="btn btn-xs btn-info pull-right m-r-10 FilesAssociate" data-toggle="tooltip" data-original-title="Files">Files</a>
+                                                <a data-id="@item.AssociateId" href="javascript:void(0);" class="btn btn-xs btn-warning pull-right m-r-10 ProfileAssociate" data-toggle="tooltip" data-original-title="View Profile">Profile</a>
+                                                @using (Html.BeginForm("DownloadProfileDetail", "admin", new { associateId = item.AssociateId }, FormMethod.Post))
+                                                {
+                                                    <input type="submit" name="btnDownload" data-toggle="tooltip" data-original-title="Download Profile" value="Download" class="btn btn-xs btn-default pull-right m-r-10" style="display:none;" />
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr class="trRouteDetails">
+                                            <td>
+                                                <div class="table-responsive">
+                                                    <table class="table associate-info">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="col1" colspan="3" style="width:50%;">FULL NAME</td>
+                                                                <td class="col2" colspan="3">@item.Name</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="col1" colspan="3">MOBILE NUMBER</td>
+                                                                <td class="col2" colspan="3">@item.Mobile</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="col1" colspan="3">EMAIL</td>
+                                                                <td class="col2" colspan="3">@item.Email</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="col1">NEXT OF KIN</td>
+                                                                <td class="col2">@item.NextOfKinName</td>
+                                                                <td class="col1">RELATIONSHIP</td>
+                                                                <td class="col2">@item.NextOfKinRelationship</td>
+                                                                <td class="col1">MOBILE</td>
+                                                                <td class="col2">@item.NextOfKinMobile</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="col1" colspan="3">ADDRESS</td>
+                                                                <td class="col2" colspan="3">@item.Address</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="col1" colspan="3">CITY</td>
+                                                                <td class="col2" colspan="3">@item.City</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="col1" colspan="3">POSTCODE</td>
+                                                                <td class="col2" colspan="3">@item.Postcode</td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div class="table-responsive">
+                                                    <table class="table associate-info">
+                                                        <tbody>
+
+                                                            <tr>
+                                                                <td class="col1">DATE OF BIRTH</td>
+                                                                <td class="col2" colspan="2">@String.Format("{0:dd/MM/yyyy}", item.DateOfBirth)</td>
+                                                                <td class="col1">BANK</td>
+                                                                <td class="col2" colspan="2">@item.NameOfTheBank</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="col1">NATIONAL INSURANCE NUMBER</td>
+                                                                <td class="col2" colspan="2">@item.NationalInsuranceNumber</td>
+                                                                <td class="col1">SORT CODE</td>
+                                                                <td class="col2" colspan="2">@item.SortCode</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="col1">NATIONALITY</td>
+                                                                <td class="col2" colspan="2">@item.Nationality</td>
+                                                                <td class="col1">ACCOUNT NUMBER</td>
+                                                                <td class="col2" colspan="2">@item.AccountNumber</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="col1">UTR NUMBER</td>
+                                                                <td class="col2" colspan="2">@item.UTRNumber</td>
+                                                                <td class="col1">ACCOUNT NAME</td>
+                                                                <td class="col2" colspan="2">@item.AccountName</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+
+        /* loading */
+        $body = $("body");
+        $(document).on({
+            ajaxStart: function () { $body.addClass("loading"); },
+            ajaxStop: function () { $body.removeClass("loading"); }
+        });
+
+
+        /* select */
+        $("#Depot").select2();
+
+
+        /* download */
+        function downloadProfileDetail(associateId) {
+            $.ajax({
+                url: "@Url.Action("DownloadProfileDetail", "admin")",
+                type: "POST",
+                data: { associateId: associateId },
+                success: function (data) {
+
+                }
+            });
+        };
+
+        $(document.body).on("click", "#aHrefDownloadPdf", function () {
+            var associateId = $(this).data("id");
+            downloadProfileDetail(associateId);
+        });
+
+
+        /* search */
+        $(document.body).on("change", "#Depot", function () {
+            var depotId = $("#Depot").val();
+            var queryString = "";
+            if (depotId != 0) {
+                if (queryString == "") {
+                    queryString = "?depotId=" + depotId;
+                } else {
+                    queryString = queryString + "&depotId=" + depotId;
+                }
+            }
+            window.location.href = "/admin/associatelist" + queryString;
+        });
+
+
+        $(document.body).on("click", ".EditAssociate", function () {
+            var id = $(this).data("id");
+            window.location.href = "/admin/associateedit/" + id;
+        });
+
+        $(document.body).on("click", ".FilesAssociate", function () {
+            var id = $(this).data("id");
+            window.location.href = "/admin/associatefile/" + id;
+        });
+
+        $(document.body).on("click", ".ProfileAssociate", function () {
+            var id = $(this).data("id");
+            window.location.href = "/admin/associateprofile/" + id;
+        });
+
+
+        $(function () {
+            var $contents = $("#tableAccordin .trRouteDetails").hide();
+            var $heads = $("#tableAccordin .trAccordion").on("click", function (e) {
+
+                var $next = $(this).next($contents);
+                console.log($next);
+                $contents.not($next).slideUp();
+                $next.slideToggle();
+                e.preventDefault();
+
+            });
+        });
+
+
+    </script>
+}

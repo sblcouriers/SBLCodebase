@@ -1,0 +1,94 @@
+﻿.skin-megna-dark .topbar {
+    background: #13314C;
+    background: -moz-linear-gradient(left,#13314C 0,#13a89e 100%);
+    background: -webkit-linear-gradient(left,#13314C 0,#13a89e 100%);
+    background: linear-gradient(to right,#13314C 0,#13a89e 100%);
+}
+
+.topbar .top-navbar .navbar-header {
+    border-right: 1px solid #205e5a;
+}
+
+.dt-buttons .dt-button {
+    background: #13a89e;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    border: 1px solid #13a89e;
+    background-color: #13a89e;
+}
+
+.field-validation-error {
+    color: red !important;
+    font-size: 13px !important;
+    margin-top: 5px !important;
+}
+
+.form-control {
+    border: 1px solid #bbbbbb;
+}
+
+.form-control:focus {
+    border-color: #555555;
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before, .custom-checkbox .custom-control-input:indeterminate~.custom-control-label::before {
+    background-color: #13a89e;
+}
+
+.custom-control-input:checked~.custom-control-label::before {
+    background-color: #13a89e;
+}
+
+.custom-control-label:hover {
+    cursor: pointer;
+}
+
+.select2-container--default .select2-selection--single {
+    border: 1px solid #cccccc !important;
+}
+
+.select2-container .select2-selection--single {
+    height: 38px !important;
+    padding: 6px 6px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 4px !important;
+}
+
+.datepicker {
+    z-index: 999 !important;
+}
+
+.btn-xs {
+    color: #fff !important;
+}
+
+
+
+/* loading */
+
+.loading-modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('/img/loading.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+body.loading {
+    overflow: hidden;   
+}
+
+body.loading .loading-modal {
+    display: block;
+}
+
+/* loading */

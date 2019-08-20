@@ -1,0 +1,2044 @@
+﻿@using Sbl.Helpers
+@model Sbl.Models.ScheduleViewModel
+
+@{
+    ViewBag.Title = "Schedule";
+}
+
+<link href="~/css/routeStyle.css" rel="stylesheet">
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Schedule <span>@(Model.POCDepot != "" ? "POC " + Model.POCDepot : "")</span></h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Schedule</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Depot</strong></label>
+                                    <select id="Depot" class="form-control">
+                                        @foreach (var depot in Model.Depots)
+                                        {
+                                            string readOnly = depot.Name == Model.POCDepot ? "" : "(read only)";
+
+                                            if (Model.DepotId == depot.Id)
+                                            {
+                                                <option value="@depot.Id" selected="selected">@depot.Name @readOnly</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@depot.Id">@depot.Name @readOnly</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Period Start</strong></label>
+                                    <select id="Period" class="form-control">
+                                        @foreach (var period in Model.Periods.OrderByDescending(x => x.DateStart))
+                                        {
+                                            if (Model.DateStart == period.DateStart)
+                                            {
+                                                <option value="@String.Format("{0:yyyy-MM-dd}", period.DateStart)" selected="selected">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} (week {2})", period.DateStart, period.DateEnd, period.Week)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@String.Format("{0:yyyy-MM-dd}", period.DateStart)">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} (week {2})", period.DateStart, period.DateEnd, period.Week)</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Days</strong></label>
+                                    <select id="Days" class="form-control">
+                                        <option value="3" @String.Format("{0}", Model.Days == 3 ? "selected=\"selected\"" : "")>3</option>
+                                        <option value="5" @String.Format("{0}", Model.Days == 5 ? "selected=\"selected\"" : "")>5</option>
+                                        <option value="7" @String.Format("{0}", Model.Days == 7 ? "selected=\"selected\"" : "")>7</option>
+                                        <option value="14" @String.Format("{0}", Model.Days == 14 ? "selected=\"selected\"" : "")>14</option>
+                                        <option value="21" @String.Format("{0}", Model.Days == 21 ? "selected=\"selected\"" : "")>21</option>
+                                        <option value="28" @String.Format("{0}", Model.Days == 28 ? "selected=\"selected\"" : "")>28</option>
+                                        <option value="35" @String.Format("{0}", Model.Days == 35 ? "selected=\"selected\"" : "")>35</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+
+                            <div class="freeze-table">
+                                <table class="table table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th style="min-width:350px;">
+                                                @if (Model.ActiveDrivers > 0)
+                                                {
+                                                    <p style="margin:0;text-align:center;font-size:13px;">
+                                                        <span style="font-weight:bold;margin-left:5px;color:green;">@Model.ActiveDrivers</span>
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p style="margin:0;text-align:center;font-size:13px;">
+                                                        <span style="font-weight:bold;margin-left:5px;color:green;">NO</span>
+                                                    </p>
+                                                }
+                                                <p style="margin:0;text-align:center;font-size:13px;">
+                                                    <span style="font-weight:bold;margin-left:5px;color:green;">ACTIVE</span>
+                                                </p>
+                                                <p style="margin:0;text-align:center;font-weight:bold;margin-top:5px;">
+                                                    <span>ASSOCIATES</span>
+                                                </p>
+                                            </th>
+
+                                            @{
+                                                var today = DateTime.Now.Date;
+                                            }
+
+                                            @if (Model.Associates.Any())
+                                            {
+                                                foreach (var route in Model.Associates.FirstOrDefault().Routes)
+                                                {
+                                                    <th>
+                                                        <p style="margin:0;text-align:center;font-size:13px;">
+                                                            @if (route.RoutesOn > 0)
+                                                            {
+                                                                <span style="font-weight:bold;margin-left:5px;color:lightskyblue;">ON: @route.RoutesOn</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span style="font-weight:bold;margin-left:5px;color:lightskyblue;">ON: -</span>
+                                                            }
+                                                        </p>
+                                                        @if (route.RouteDate.Value.AddDays(Model.ScheduleEditDays.Value) < today && !User.IsInRole(WebConstant.SBLUserRole.Admin))
+                                                        {
+                                                            <p style="margin:0;text-align:center;font-size:13px;">
+                                                                @if (route.RoutesOff > 0)
+                                                                {
+                                                                    <span style="font-weight:bold;margin-left:5px;color:red;">OFF: @route.RoutesOff</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span style="font-weight:bold;margin-left:5px;color:red;">OFF: -</span>
+                                                                }
+                                                            </p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p style="margin:0;text-align:center;font-size:13px;">
+                                                                @if (route.RoutesOff > 0)
+                                                                {
+                                                                    <a href="javascript:void(0);" class="SetAllOffToday" data-routedate="@route.RouteDate" data-routedepotid="@route.RouteDepotId"><span style="font-weight:bold;margin-left:5px;color:red;">OFF: @route.RoutesOff</span></a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a href="javascript:void(0);" class="SetAllOffToday" data-routedate="@route.RouteDate" data-routedepotid="@route.RouteDepotId"><span style="font-weight:bold;margin-left:5px;color:red;">OFF: -</span></a>
+                                                                }
+                                                            </p>
+                                                        }
+                                                        <p style="margin:0;text-align:center;font-weight:bold;margin-top:5px;padding:0 10px;">
+                                                            <span>@String.Format("{0:dd/MM/yyyy}", Convert.ToDateTime(route.RouteDate))</span>
+                                                        </p>
+                                                    </th>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <th>
+                                                    <p style="margin:0;text-align:center;font-size:13px;">
+                                                        <span style="font-weight:bold;margin-left:5px;color:lightskyblue;">ON: -</span>
+                                                    </p>
+                                                    <p style="margin:0;text-align:center;font-size:13px;">
+                                                        <a href="javascript:void(0);"><span style="font-weight:bold;margin-left:5px;color:red;">OFF: -</span></a>
+                                                    </p>
+                                                    <p style="margin:0;text-align:center;font-weight:bold;margin-top:5px;padding:0 10px;">
+                                                        <span>-</span>
+                                                    </p>
+                                                </th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var associate in Model.Associates)
+                                        {
+                                            <tr>
+                                                <td style="padding:6px;text-align:center;min-width:350px;">
+                                                    <span class="mytooltip tooltip-effect-1">
+                                                        <span class="tooltip-item">@associate.AssociateName</span>
+                                                        <span class="tooltip-content clearfix" style="width:250px;text-align:center;margin:0 0 20px -100px;">
+                                                            <span class="tooltip-text" style="line-height:16px;padding:5px 10px;">
+                                                                <span>@associate.AssociateName</span><br>
+                                                                <span>@associate.AssociateMobile</span><br>
+                                                                <span>@associate.AssociateVehicleRegistration</span><br>
+                                                                <span>@associate.AssociateDepotName</span>
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </td>
+                                                @foreach (var route in associate.Routes)
+                                                {
+                                                    var associateid = associate.AssociateId;
+                                                    var associatename = associate.AssociateName;
+                                                    var associatedepotid = associate.AssociateDepotId;
+                                                    var associatedepotname = associate.AssociateDepotName;
+                                                    var routeid = route.RouteId;
+                                                    var routedate = String.Format("{0:yyyy-MM-dd}", route.RouteDate);
+                                                    var routedepotid = route.RouteDepotId;
+                                                    var routedepotname = route.RouteDepotName;
+                                                    var allocationstatus = route.AllocationStatus;
+
+                                                    if (!string.IsNullOrWhiteSpace(allocationstatus))
+                                                    {
+                                                        <td style="text-align: center;">
+                                                            <div id="@String.Format("{0}-{1}", associateid, routedate)">
+                                                                @if ((route.RouteDate.Value.AddDays(Model.ScheduleEditDays.Value) < today && !User.IsInRole(WebConstant.SBLUserRole.Admin)) || (User.IsInRole(WebConstant.SBLUserRole.POC) && route.AuthPoc == true) || (User.IsInRole(WebConstant.SBLUserRole.Payroll) && route.AuthPayroll == true) || (User.IsInRole(WebConstant.SBLUserRole.Admin) && route.AuthAdmin == true))
+                                                                {
+                                                                    <span style="font-size:20px;">
+                                                                        @if (allocationstatus == "ON")
+                                                                        {
+                                                                            if (associatedepotid == routedepotid)
+                                                                            {
+                                                                                if (String.IsNullOrEmpty(route.RouteType1) || route.RouteType1 == "0")
+                                                                                {
+                                                                                    <span><i class="fa fa-check" style="color:lightskyblue;"></i></span>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span><i class="fa fa-check" style="color:green;"></i></span>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span style="color:red;font-weight:bold;font-size:15px;">@route.RouteDepotName</span>
+                                                                            }
+                                                                        }
+                                                                        @if (allocationstatus == "OFF")
+                                                                        {
+                                                                            <span><i class="fa fa-times" style="color:red;"></i></span>
+                                                                        }
+                                                                        @if (allocationstatus == "HOLIDAY")
+                                                                        {
+                                                                            <span><i class="fa fa-plane" style="color:darkorange;"></i></span>
+                                                                        }
+                                                                        @if (allocationstatus == "TRAINING")
+                                                                        {
+                                                                            <span><i class="fa fa-graduation-cap" style="color:deepskyblue;"></i></span>
+                                                                        }
+                                                                        @if (allocationstatus == "")
+                                                                        {
+                                                                            <span><i class="fa fa-minus" style="color:#f1f1f1;"></i></span>
+                                                                        }
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a class="edit"
+                                                                       style="font-size:20px;"
+                                                                       data-associateid="@associateid"
+                                                                       data-associatename="@associatename"
+                                                                       data-associatedepotid="@associatedepotid"
+                                                                       data-associatedepotname="@associatedepotname"
+                                                                       data-routeid="@routeid"
+                                                                       data-routedate="@routedate"
+                                                                       data-routedepotid="@routedepotid"
+                                                                       data-routedepotname="@routedepotname"
+                                                                       data-allocationstatus="@allocationstatus"
+                                                                       href="javascript:void(0);">
+                                                                        @if (allocationstatus == "ON")
+                                                                        {
+                                                                            if (associatedepotid == routedepotid)
+                                                                            {
+                                                                                if (String.IsNullOrEmpty(route.RouteType1) || route.RouteType1 == "0")
+                                                                                {
+                                                                                    <span><i class="fa fa-check" style="color:lightskyblue;"></i></span>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span><i class="fa fa-check" style="color:green;"></i></span>
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span style="color:red;font-weight:bold;font-size:15px;">@route.RouteDepotName</span>
+                                                                            }
+                                                                        }
+                                                                        @if (allocationstatus == "OFF")
+                                                                        {
+                                                                            <span><i class="fa fa-times" style="color:red;"></i></span>
+                                                                        }
+                                                                        @if (allocationstatus == "HOLIDAY")
+                                                                        {
+                                                                            <span><i class="fa fa-plane" style="color:darkorange;"></i></span>
+                                                                        }
+                                                                        @if (allocationstatus == "TRAINING")
+                                                                        {
+                                                                            <span><i class="fa fa-graduation-cap" style="color:deepskyblue;"></i></span>
+                                                                        }
+                                                                        @if (allocationstatus == "")
+                                                                        {
+                                                                            <span><i class="fa fa-minus" style="color:#f1f1f1;"></i></span>
+                                                                        }
+                                                                    </a>
+                                                                }
+
+                                                            </div>
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td style="text-align: center;">
+                                                            @if ((route.RouteDate.Value.AddDays(Model.ScheduleEditDays.Value) < today && !User.IsInRole(WebConstant.SBLUserRole.Admin)) || (User.IsInRole(WebConstant.SBLUserRole.POC) && route.AuthPoc == true) || (User.IsInRole(WebConstant.SBLUserRole.Payroll) && route.AuthPayroll == true) || (User.IsInRole(WebConstant.SBLUserRole.Admin) && route.AuthAdmin == true))
+                                                            {
+                                                                <div>
+                                                                    <span style="font-size:20px;">
+                                                                        <span><i class="fa fa-minus" style="color:#f1f1f1;"></i></span>
+                                                                    </span>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div id="@String.Format("{0}-{1}", associateid, routedate)">
+                                                                    <a class="edit"
+                                                                       style="font-size:20px;"
+                                                                       data-associateid="@associateid"
+                                                                       data-associatename="@associatename"
+                                                                       data-associatedepotid="@associatedepotid"
+                                                                       data-associatedepotname="@associatedepotname"
+                                                                       data-routeid="@routeid"
+                                                                       data-routedate="@routedate"
+                                                                       data-routedepotid="@routedepotid"
+                                                                       data-routedepotname="@routedepotname"
+                                                                       data-allocationstatus="@allocationstatus"
+                                                                       href="javascript:void(0);">
+                                                                        <span><i class="fa fa-minus" style="color:#f1f1f1;"></i></span>
+                                                                    </a>
+                                                                </div>
+                                                            }
+                                                        </td>
+                                                    }
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot></tfoot>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="loading-modal"></div>
+
+@section Scripts {
+    <script>
+
+
+        /* loading */
+        $body = $("body");
+        $(document).on({
+            ajaxStart: function () { $body.addClass("loading"); },
+            ajaxStop: function () { $body.removeClass("loading"); }
+        });
+
+
+        /* select */
+        //$("#Depot").select2();
+        $("#Period").select2();
+        $("#Days").select2();
+
+
+
+
+        $(document.body).on("change", "#Depot", function () {
+            Search();
+        });
+        $(document.body).on("change", "#Period", function () {
+            Search();
+        });
+        $(document.body).on("change", "#Days", function () {
+            Search();
+        });
+
+        function Search() {
+            var date = $("#Period").val();
+            var days = $("#Days").val();
+            var depotId = $("#Depot").val();
+            var queryString = "";
+            if (date != 0) {
+                queryString = "?date=" + date;
+            }
+            if (days != 0) {
+                if (queryString == "") {
+                    queryString = "?days=" + days;
+                } else {
+                    queryString = queryString + "&days=" + days;
+                }
+            }
+            if (depotId != 0) {
+                if (queryString == "") {
+                    queryString = "?depotId=" + depotId;
+                } else {
+                    queryString = queryString + "&depotId=" + depotId;
+                }
+            }
+            window.location.href = "/admin/schedule" + queryString;
+        }
+
+
+
+
+
+
+
+        $(".freeze-table").freezeTable({
+            'shadow': true,
+            'scrollBar': true,
+        });
+
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+        var jc;
+        $(document.body).on("click", ".edit", function () {
+
+            var associateId = $(this).data("associateid");
+            var associateName = $(this).data("associatename");
+            var associateDepotId = $(this).data("associatedepotid");
+            var associateDepotName = $(this).data("associatedepotname");
+            var routeId = $(this).data("routeid");
+            var routeDate = $(this).data("routedate");
+            var routeDepotId = $(this).data("routedepotid");
+            var routeDepotName = $(this).data("routedepotname");
+            var allocationStatus = $(this).data("allocationstatus");
+
+
+            jc = $.confirm({
+                title: associateName,
+                content: '<h4>' + moment(routeDate).format('DD MMM YYYY') + '</h4>',
+                boxWidth: '40%',
+                useBootstrap: false,
+                buttons: {
+                    on: {
+                        text: associateDepotName,
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            ScheduleEdit(associateId, routeDate, associateDepotId, "ON");
+                        }
+                    },
+                    off: {
+                        text: 'Off',
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            ScheduleEdit(associateId, routeDate, associateDepotId, "OFF");
+                        }
+                    },
+                    holiday: {
+                        text: 'Holiday',
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            ScheduleEdit(associateId, routeDate, associateDepotId, "HOLIDAY");
+                        }
+                    },
+                    training: {
+                        text: 'Training',
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            ScheduleEdit(associateId, routeDate, associateDepotId, "TRAINING");
+                        }
+                    },
+                    edit: {
+                        text: 'Edit Route',
+                        btnClass: 'btn-yellow lastButton',
+                        action: function () {
+                            $.confirm({
+                                title: associateName,
+                                content: '' +
+                                            '<h4>' + moment(routeDate).format('DD MMM YYYY') + '</h4>' +
+                                            '<hr>' +
+                                            //
+                                            '<div class="row" style=\"margin:0;\">' +
+                                                '<div class="col-md-5">' +
+                                                    '<div class="form-group">' +
+                                                        '<label for="EditRouteCode1"><strong>Route Code</strong></label>' +
+                                                        '<input type="text" id="EditRouteCode1" class="form-control">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-md-7">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Route Type</strong></label>' +
+                                                        '<div class="input-group">' +
+                                                        '<select id="EditRouteType1" class="form-control">' +
+                                                            '<option value=\"0\">-- Select --</option>' +
+                                                            '<option value=\"Full\">Full</option>' +
+                                                            '<option value=\"Half\">Half</option>' +
+                                                            '<option value=\"RemoteDebrief\">Remote Debrief</option>' +
+                                                            '<option value=\"NurseryRoutesLevel1\">Nursery Routes Level 1</option>' +
+                                                            '<option value=\"NurseryRoutesLevel2\">Nursery Routes Level 2</option>' +
+                                                            '<option value=\"Rescue2Hours\">Rescue 2 Hours</option>' +
+                                                            '<option value=\"Rescue4Hours\">Rescue 4 Hours</option>' +
+                                                            '<option value=\"Rescue6Hours\">Rescue 6 Hours</option>' +
+                                                            '<option value=\"ReDelivery2Hours\">Re-Delivery 2 Hours</option>' +
+                                                            '<option value=\"ReDelivery4Hours\">Re-Delivery 4 Hours</option>' +
+                                                            '<option value=\"ReDelivery6Hours\">Re-Delivery 6 Hours</option>' +
+                                                            '<option value=\"Missort2Hours\">Missort 2 Hours</option>' +
+                                                            '<option value=\"Missort4Hours\">Missort 4 Hours</option>' +
+                                                            '<option value=\"Missort6Hours\">Missort 6 Hours</option>' +
+                                                            '<option value=\"SameDay\">Same Day</option>' +
+                                                            '<option value=\"TrainingDay\">Training Day</option>' +
+                                                            '<option value=\"RideAlong\">Ride Along</option>' +
+                                                            '<option value=\"SupportAd1\">Deduction Support AD1</option>' +
+                                                            '<option value=\"SupportAd2\">Deduction Support AD2</option>' +
+                                                            '<option value=\"SupportAd3\">Deduction Support AD3</option>' +
+                                                            '<option value=\"LeadDriver\">Lead Driver</option>' +
+                                                            '<option value=\"LargeVan\">Large Van</option>' +
+                                                            //'<option value=\"Poc\">POC</option>' +
+                                                        '</select>' +
+                                                        '<div id="EditRouteType1Plus" class="input-group-append"><span class="input-group-text"><i class="fa fa-plus"></i></span></div>' +
+                                                        '</div>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>' +
+                                            //
+                                            //
+                                            //
+                                            '<div id="RouteExtraArea" class="row" style=\"margin:0;display:none;\">' +
+                                                //
+                                                '<div id="RouteCode2Area" class="col-md-5" style="display:none;">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Route Code - Extra 1</strong></label>' +
+                                                        '<input type="text" id="EditRouteCode2" class="form-control">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div id="RouteType2Area" class="col-md-7" style="display:none;">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Route Type - Extra 1</strong></label>' +
+                                                        '<div class="input-group">' +
+                                                        '<div id="EditRouteType2Minus" class="input-group-prepend"><span class="input-group-text"><i class="fa fa-times"></i></span></div>' +
+                                                        '<select id="EditRouteType2" class="form-control">' +
+                                                            '<option value=\"0\">-- Select --</option>' +
+                                                            '<option value=\"Full\">Full</option>' +
+                                                            '<option value=\"Half\">Half</option>' +
+                                                            '<option value=\"RemoteDebrief\">Remote Debrief</option>' +
+                                                            '<option value=\"NurseryRoutesLevel1\">Nursery Routes Level 1</option>' +
+                                                            '<option value=\"NurseryRoutesLevel2\">Nursery Routes Level 2</option>' +
+                                                            '<option value=\"Rescue2Hours\">Rescue 2 Hours</option>' +
+                                                            '<option value=\"Rescue4Hours\">Rescue 4 Hours</option>' +
+                                                            '<option value=\"Rescue6Hours\">Rescue 6 Hours</option>' +
+                                                            '<option value=\"ReDelivery2Hours\">Re-Delivery 2 Hours</option>' +
+                                                            '<option value=\"ReDelivery4Hours\">Re-Delivery 4 Hours</option>' +
+                                                            '<option value=\"ReDelivery6Hours\">Re-Delivery 6 Hours</option>' +
+                                                            '<option value=\"Missort2Hours\">Missort 2 Hours</option>' +
+                                                            '<option value=\"Missort4Hours\">Missort 4 Hours</option>' +
+                                                            '<option value=\"Missort6Hours\">Missort 6 Hours</option>' +
+                                                            '<option value=\"SameDay\">Same Day</option>' +
+                                                            '<option value=\"TrainingDay\">Training Day</option>' +
+                                                            '<option value=\"RideAlong\">Ride Along</option>' +
+                                                            '<option value=\"SupportAd1\">Deduction Support AD1</option>' +
+                                                            '<option value=\"SupportAd2\">Deduction Support AD2</option>' +
+                                                            '<option value=\"SupportAd3\">Deduction Support AD3</option>' +
+                                                            '<option value=\"LeadDriver\">Lead Driver</option>' +
+                                                            '<option value=\"LargeVan\">Large Van</option>' +
+                                                            //'<option value=\"Poc\">POC</option>' +
+                                                        '</select>' +
+                                                        '<div id="EditRouteType2Plus" class="input-group-append"><span class="input-group-text"><i class="fa fa-plus"></i></span></div>' +
+                                                        '</div>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                //
+                                                '<div id="RouteCode3Area" class="col-md-5" style="display:none;">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Route Code - Extra 2</strong></label>' +
+                                                        '<input type="text" id="EditRouteCode3" class="form-control">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div id="RouteType3Area" class="col-md-7" style="display:none;">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Route Type - Extra 2</strong></label>' +
+                                                        '<div class="input-group">' +
+                                                        '<div id="EditRouteType3Minus" class="input-group-prepend"><span class="input-group-text"><i class="fa fa-times"></i></span></div>' +
+                                                        '<select id="EditRouteType3" class="form-control">' +
+                                                            '<option value=\"0\">-- Select --</option>' +
+                                                            '<option value=\"Full\">Full</option>' +
+                                                            '<option value=\"Half\">Half</option>' +
+                                                            '<option value=\"RemoteDebrief\">Remote Debrief</option>' +
+                                                            '<option value=\"NurseryRoutesLevel1\">Nursery Routes Level 1</option>' +
+                                                            '<option value=\"NurseryRoutesLevel2\">Nursery Routes Level 2</option>' +
+                                                            '<option value=\"Rescue2Hours\">Rescue 2 Hours</option>' +
+                                                            '<option value=\"Rescue4Hours\">Rescue 4 Hours</option>' +
+                                                            '<option value=\"Rescue6Hours\">Rescue 6 Hours</option>' +
+                                                            '<option value=\"ReDelivery2Hours\">Re-Delivery 2 Hours</option>' +
+                                                            '<option value=\"ReDelivery4Hours\">Re-Delivery 4 Hours</option>' +
+                                                            '<option value=\"ReDelivery6Hours\">Re-Delivery 6 Hours</option>' +
+                                                            '<option value=\"Missort2Hours\">Missort 2 Hours</option>' +
+                                                            '<option value=\"Missort4Hours\">Missort 4 Hours</option>' +
+                                                            '<option value=\"Missort6Hours\">Missort 6 Hours</option>' +
+                                                            '<option value=\"SameDay\">Same Day</option>' +
+                                                            '<option value=\"TrainingDay\">Training Day</option>' +
+                                                            '<option value=\"RideAlong\">Ride Along</option>' +
+                                                            '<option value=\"SupportAd1\">Deduction Support AD1</option>' +
+                                                            '<option value=\"SupportAd2\">Deduction Support AD2</option>' +
+                                                            '<option value=\"SupportAd3\">Deduction Support AD3</option>' +
+                                                            '<option value=\"LeadDriver\">Lead Driver</option>' +
+                                                            '<option value=\"LargeVan\">Large Van</option>' +
+                                                            //'<option value=\"Poc\">POC</option>' +
+                                                        '</select>' +
+                                                        '</div>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                //
+                                                '<div id="RouteCode4Area" class="col-md-5" style="display:none;">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Route Code 4</strong></label>' +
+                                                        '<input type="text" id="EditRouteCode4" class="form-control">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div id="RouteType4Area" class="col-md-7" style="display:none;">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Route Type 4</strong></label>' +
+                                                        '<div class="input-group">' +
+                                                        '<div id="EditRouteType4Minus" class="input-group-prepend"><span class="input-group-text"><i class="fa fa-times"></i></span></div>' +
+                                                        '<select id="EditRouteType4" class="form-control">' +
+                                                            '<option value=\"0\">-- Select --</option>' +
+                                                            '<option value=\"Full\">Full</option>' +
+                                                            '<option value=\"Half\">Half</option>' +
+                                                            '<option value=\"RemoteDebrief\">Remote Debrief</option>' +
+                                                            '<option value=\"NurseryRoutesLevel1\">Nursery Routes Level 1</option>' +
+                                                            '<option value=\"NurseryRoutesLevel2\">Nursery Routes Level 2</option>' +
+                                                            '<option value=\"Rescue2Hours\">Rescue 2 Hours</option>' +
+                                                            '<option value=\"Rescue4Hours\">Rescue 4 Hours</option>' +
+                                                            '<option value=\"Rescue6Hours\">Rescue 6 Hours</option>' +
+                                                            '<option value=\"ReDelivery2Hours\">Re-Delivery 2 Hours</option>' +
+                                                            '<option value=\"ReDelivery4Hours\">Re-Delivery 4 Hours</option>' +
+                                                            '<option value=\"ReDelivery6Hours\">Re-Delivery 6 Hours</option>' +
+                                                            '<option value=\"Missort2Hours\">Missort 2 Hours</option>' +
+                                                            '<option value=\"Missort4Hours\">Missort 4 Hours</option>' +
+                                                            '<option value=\"Missort6Hours\">Missort 6 Hours</option>' +
+                                                            '<option value=\"SameDay\">Same Day</option>' +
+                                                            '<option value=\"TrainingDay\">Training Day</option>' +
+                                                            '<option value=\"RideAlong\">Ride Along</option>' +
+                                                            '<option value=\"SupportAd1\">Deduction Support AD1</option>' +
+                                                            '<option value=\"SupportAd2\">Deduction Support AD2</option>' +
+                                                            '<option value=\"SupportAd3\">Deduction Support AD3</option>' +
+                                                            '<option value=\"LeadDriver\">Lead Driver</option>' +
+                                                            '<option value=\"LargeVan\">Large Van</option>' +
+                                                            //'<option value=\"Poc\">POC</option>' +
+                                                        '</select>' +
+                                                        '</div>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                //
+                                                '<div id="RouteCode5Area" class="col-md-5" style="display:none;">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Route Code 5</strong></label>' +
+                                                        '<input type="text" id="EditRouteCode5" class="form-control">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div id="RouteType5Area" class="col-md-7" style="display:none;">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Route Type 5</strong></label>' +
+                                                        '<div class="input-group">' +
+                                                        '<div id="EditRouteType5Minus" class="input-group-prepend"><span class="input-group-text"><i class="fa fa-times"></i></span></div>' +
+                                                        '<select id="EditRouteType5" class="form-control">' +
+                                                            '<option value=\"0\">-- Select --</option>' +
+                                                            '<option value=\"Full\">Full</option>' +
+                                                            '<option value=\"Half\">Half</option>' +
+                                                            '<option value=\"RemoteDebrief\">Remote Debrief</option>' +
+                                                            '<option value=\"NurseryRoutesLevel1\">Nursery Routes Level 1</option>' +
+                                                            '<option value=\"NurseryRoutesLevel2\">Nursery Routes Level 2</option>' +
+                                                            '<option value=\"Rescue2Hours\">Rescue 2 Hours</option>' +
+                                                            '<option value=\"Rescue4Hours\">Rescue 4 Hours</option>' +
+                                                            '<option value=\"Rescue6Hours\">Rescue 6 Hours</option>' +
+                                                            '<option value=\"ReDelivery2Hours\">Re-Delivery 2 Hours</option>' +
+                                                            '<option value=\"ReDelivery4Hours\">Re-Delivery 4 Hours</option>' +
+                                                            '<option value=\"ReDelivery6Hours\">Re-Delivery 6 Hours</option>' +
+                                                            '<option value=\"Missort2Hours\">Missort 2 Hours</option>' +
+                                                            '<option value=\"Missort4Hours\">Missort 4 Hours</option>' +
+                                                            '<option value=\"Missort6Hours\">Missort 6 Hours</option>' +
+                                                            '<option value=\"SameDay\">Same Day</option>' +
+                                                            '<option value=\"TrainingDay\">Training Day</option>' +
+                                                            '<option value=\"RideAlong\">Ride Along</option>' +
+                                                            '<option value=\"SupportAd1\">Deduction Support AD1</option>' +
+                                                            '<option value=\"SupportAd2\">Deduction Support AD2</option>' +
+                                                            '<option value=\"SupportAd3\">Deduction Support AD3</option>' +
+                                                            '<option value=\"LeadDriver\">Lead Driver</option>' +
+                                                            '<option value=\"LargeVan\">Large Van</option>' +
+                                                            //'<option value=\"Poc\">POC</option>' +
+                                                        '</select>' +
+                                                        '</div>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                //
+                                            '</div>' +
+                                            //
+                                            //
+                                            //
+                                            '<div class="row" style=\"margin:0;\">' +
+                                                '<div class="col-md-3" style=\"display:none;\">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Depot</strong></label>' +
+                                                        '<select id="EditRouteDepot" class="form-control"></select>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-md-2">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Mileage</strong></label>' +
+                                                        '<input type="text" id="EditRouteMileage" class="form-control">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-md-2">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Fuel (£)</strong></label>' +
+                                                        '<input type="text" id="EditRouteFuelCharge" class="form-control">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-md-3">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>BYOD</strong></label>' +
+                                                        '<a id="EditRouteByodAddHalf" class="btn btn-xs btn-success" style="display:none;margin-left:5px;">/</a>' +
+                                                        '<a id="EditRouteByodAdd" class="btn btn-xs btn-success" style="display:none;margin-left:5px;">+</a>' +
+                                                        '<a id="EditRouteByodRemove" class="btn btn-xs btn-danger" style="display:none;margin-left:5px;">-</a>' +
+                                                        '<input type="text" id="EditRouteByod" class="form-control" readonly="readonly" style="background-color:#f1f1f1;">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-md-2">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>CC</strong></label>' +
+                                                        '<a id="EditRouteCongestionChargeAdd" class="btn btn-xs btn-success" style="display:none;margin-left:5px;">+</a>' +
+                                                        '<a id="EditRouteCongestionChargeRemove" class="btn btn-xs btn-danger" style="display:none;margin-left:5px;">-</a>' +
+                                                        '<input type="text" id="EditRouteCongestionCharge" class="form-control" readonly="readonly" style="background-color:#f1f1f1;">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-md-3">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>LateP</strong></label>' +
+                                                        '<a id="EditRouteLatePaymentAdd" class="btn btn-xs btn-success" style="display:none;margin-left:5px;">+</a>' +
+                                                        '<a id="EditRouteLatePaymentRemove" class="btn btn-xs btn-danger" style="display:none;margin-left:5px;">-</a>' +
+                                                        '<input type="text" id="EditRouteLatePayment" class="form-control" readonly="readonly" style="background-color:#f1f1f1;">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>' +
+                                            //
+                                            //
+                                            //
+                                            '<div class="row" style=\"margin:0;\">' +
+                                                '<div class="col-md-4">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Start Time</strong></label>' +
+                                                        '<select id="EditRouteStartTime" class="form-control">' +
+                                                            '<option value="00:00">00:00</option>' +
+                                                            '<option value="00:05">00:05</option>' +
+                                                            '<option value="00:10">00:10</option>' +
+                                                            '<option value="00:15">00:15</option>' +
+                                                            '<option value="00:20">00:20</option>' +
+                                                            '<option value="00:25">00:25</option>' +
+                                                            '<option value="00:30">00:30</option>' +
+                                                            '<option value="00:35">00:35</option>' +
+                                                            '<option value="00:40">00:40</option>' +
+                                                            '<option value="00:45">00:45</option>' +
+                                                            '<option value="00:50">00:50</option>' +
+                                                            '<option value="00:55">00:55</option>' +
+                                                            '<option value="01:00">01:00</option>' +
+                                                            '<option value="01:05">01:05</option>' +
+                                                            '<option value="01:10">01:10</option>' +
+                                                            '<option value="01:15">01:15</option>' +
+                                                            '<option value="01:20">01:20</option>' +
+                                                            '<option value="01:25">01:25</option>' +
+                                                            '<option value="01:30">01:30</option>' +
+                                                            '<option value="01:35">01:35</option>' +
+                                                            '<option value="01:40">01:40</option>' +
+                                                            '<option value="01:45">01:45</option>' +
+                                                            '<option value="01:50">01:50</option>' +
+                                                            '<option value="01:55">01:55</option>' +
+                                                            '<option value="02:00">02:00</option>' +
+                                                            '<option value="02:05">02:05</option>' +
+                                                            '<option value="02:10">02:10</option>' +
+                                                            '<option value="02:15">02:15</option>' +
+                                                            '<option value="02:20">02:20</option>' +
+                                                            '<option value="02:25">02:25</option>' +
+                                                            '<option value="02:30">02:30</option>' +
+                                                            '<option value="02:35">02:35</option>' +
+                                                            '<option value="02:40">02:40</option>' +
+                                                            '<option value="02:45">02:45</option>' +
+                                                            '<option value="02:50">02:50</option>' +
+                                                            '<option value="02:55">02:55</option>' +
+                                                            '<option value="03:00">03:00</option>' +
+                                                            '<option value="03:05">03:05</option>' +
+                                                            '<option value="03:10">03:10</option>' +
+                                                            '<option value="03:15">03:15</option>' +
+                                                            '<option value="03:20">03:20</option>' +
+                                                            '<option value="03:25">03:25</option>' +
+                                                            '<option value="03:30">03:30</option>' +
+                                                            '<option value="03:35">03:35</option>' +
+                                                            '<option value="03:40">03:40</option>' +
+                                                            '<option value="03:45">03:45</option>' +
+                                                            '<option value="03:50">03:50</option>' +
+                                                            '<option value="03:55">03:55</option>' +
+                                                            '<option value="04:00">04:00</option>' +
+                                                            '<option value="04:05">04:05</option>' +
+                                                            '<option value="04:10">04:10</option>' +
+                                                            '<option value="04:15">04:15</option>' +
+                                                            '<option value="04:20">04:20</option>' +
+                                                            '<option value="04:25">04:25</option>' +
+                                                            '<option value="04:30">04:30</option>' +
+                                                            '<option value="04:35">04:35</option>' +
+                                                            '<option value="04:40">04:40</option>' +
+                                                            '<option value="04:45">04:45</option>' +
+                                                            '<option value="04:50">04:50</option>' +
+                                                            '<option value="04:55">04:55</option>' +
+                                                            '<option value="05:00">05:00</option>' +
+                                                            '<option value="05:05">05:05</option>' +
+                                                            '<option value="05:10">05:10</option>' +
+                                                            '<option value="05:15">05:15</option>' +
+                                                            '<option value="05:20">05:20</option>' +
+                                                            '<option value="05:25">05:25</option>' +
+                                                            '<option value="05:30">05:30</option>' +
+                                                            '<option value="05:35">05:35</option>' +
+                                                            '<option value="05:40">05:40</option>' +
+                                                            '<option value="05:45">05:45</option>' +
+                                                            '<option value="05:50">05:50</option>' +
+                                                            '<option value="05:55">05:55</option>' +
+                                                            '<option value="06:00">06:00</option>' +
+                                                            '<option value="06:05">06:05</option>' +
+                                                            '<option value="06:10">06:10</option>' +
+                                                            '<option value="06:15">06:15</option>' +
+                                                            '<option value="06:20">06:20</option>' +
+                                                            '<option value="06:25">06:25</option>' +
+                                                            '<option value="06:30">06:30</option>' +
+                                                            '<option value="06:35">06:35</option>' +
+                                                            '<option value="06:40">06:40</option>' +
+                                                            '<option value="06:45">06:45</option>' +
+                                                            '<option value="06:50">06:50</option>' +
+                                                            '<option value="06:55">06:55</option>' +
+                                                            '<option value="07:00">07:00</option>' +
+                                                            '<option value="07:05">07:05</option>' +
+                                                            '<option value="07:10">07:10</option>' +
+                                                            '<option value="07:15">07:15</option>' +
+                                                            '<option value="07:20">07:20</option>' +
+                                                            '<option value="07:25">07:25</option>' +
+                                                            '<option value="07:30">07:30</option>' +
+                                                            '<option value="07:35">07:35</option>' +
+                                                            '<option value="07:40">07:40</option>' +
+                                                            '<option value="07:45">07:45</option>' +
+                                                            '<option value="07:50">07:50</option>' +
+                                                            '<option value="07:55">07:55</option>' +
+                                                            '<option value="08:00">08:00</option>' +
+                                                            '<option value="08:05">08:05</option>' +
+                                                            '<option value="08:10">08:10</option>' +
+                                                            '<option value="08:15">08:15</option>' +
+                                                            '<option value="08:20">08:20</option>' +
+                                                            '<option value="08:25">08:25</option>' +
+                                                            '<option value="08:30">08:30</option>' +
+                                                            '<option value="08:35">08:35</option>' +
+                                                            '<option value="08:40">08:40</option>' +
+                                                            '<option value="08:45">08:45</option>' +
+                                                            '<option value="08:50">08:50</option>' +
+                                                            '<option value="08:55">08:55</option>' +
+                                                            '<option value="09:00">09:00</option>' +
+                                                            '<option value="09:05">09:05</option>' +
+                                                            '<option value="09:10">09:10</option>' +
+                                                            '<option value="09:15">09:15</option>' +
+                                                            '<option value="09:20">09:20</option>' +
+                                                            '<option value="09:25">09:25</option>' +
+                                                            '<option value="09:30">09:30</option>' +
+                                                            '<option value="09:35">09:35</option>' +
+                                                            '<option value="09:40">09:40</option>' +
+                                                            '<option value="09:45">09:45</option>' +
+                                                            '<option value="09:50">09:50</option>' +
+                                                            '<option value="09:55">09:55</option>' +
+                                                            '<option value="10:00">10:00</option>' +
+                                                            '<option value="10:05">10:05</option>' +
+                                                            '<option value="10:10">10:10</option>' +
+                                                            '<option value="10:15">10:15</option>' +
+                                                            '<option value="10:20">10:20</option>' +
+                                                            '<option value="10:25">10:25</option>' +
+                                                            '<option value="10:30">10:30</option>' +
+                                                            '<option value="10:35">10:35</option>' +
+                                                            '<option value="10:40">10:40</option>' +
+                                                            '<option value="10:45">10:45</option>' +
+                                                            '<option value="10:50">10:50</option>' +
+                                                            '<option value="10:55">10:55</option>' +
+                                                            '<option value="11:00">11:00</option>' +
+                                                            '<option value="11:05">11:05</option>' +
+                                                            '<option value="11:10">11:10</option>' +
+                                                            '<option value="11:15">11:15</option>' +
+                                                            '<option value="11:20">11:20</option>' +
+                                                            '<option value="11:25">11:25</option>' +
+                                                            '<option value="11:30">11:30</option>' +
+                                                            '<option value="11:35">11:35</option>' +
+                                                            '<option value="11:40">11:40</option>' +
+                                                            '<option value="11:45">11:45</option>' +
+                                                            '<option value="11:50">11:50</option>' +
+                                                            '<option value="11:55">11:55</option>' +
+                                                            '<option value="12:00">12:00</option>' +
+                                                            '<option value="12:05">12:05</option>' +
+                                                            '<option value="12:10">12:10</option>' +
+                                                            '<option value="12:15">12:15</option>' +
+                                                            '<option value="12:20">12:20</option>' +
+                                                            '<option value="12:25">12:25</option>' +
+                                                            '<option value="12:30">12:30</option>' +
+                                                            '<option value="12:35">12:35</option>' +
+                                                            '<option value="12:40">12:40</option>' +
+                                                            '<option value="12:45">12:45</option>' +
+                                                            '<option value="12:50">12:50</option>' +
+                                                            '<option value="12:55">12:55</option>' +
+                                                            '<option value="13:00">13:00</option>' +
+                                                            '<option value="13:05">13:05</option>' +
+                                                            '<option value="13:10">13:10</option>' +
+                                                            '<option value="13:15">13:15</option>' +
+                                                            '<option value="13:20">13:20</option>' +
+                                                            '<option value="13:25">13:25</option>' +
+                                                            '<option value="13:30">13:30</option>' +
+                                                            '<option value="13:35">13:35</option>' +
+                                                            '<option value="13:40">13:40</option>' +
+                                                            '<option value="13:45">13:45</option>' +
+                                                            '<option value="13:50">13:50</option>' +
+                                                            '<option value="13:55">13:55</option>' +
+                                                            '<option value="14:00">14:00</option>' +
+                                                            '<option value="14:05">14:05</option>' +
+                                                            '<option value="14:10">14:10</option>' +
+                                                            '<option value="14:15">14:15</option>' +
+                                                            '<option value="14:20">14:20</option>' +
+                                                            '<option value="14:25">14:25</option>' +
+                                                            '<option value="14:30">14:30</option>' +
+                                                            '<option value="14:35">14:35</option>' +
+                                                            '<option value="14:40">14:40</option>' +
+                                                            '<option value="14:45">14:45</option>' +
+                                                            '<option value="14:50">14:50</option>' +
+                                                            '<option value="14:55">14:55</option>' +
+                                                            '<option value="15:00">15:00</option>' +
+                                                            '<option value="15:05">15:05</option>' +
+                                                            '<option value="15:10">15:10</option>' +
+                                                            '<option value="15:15">15:15</option>' +
+                                                            '<option value="15:20">15:20</option>' +
+                                                            '<option value="15:25">15:25</option>' +
+                                                            '<option value="15:30">15:30</option>' +
+                                                            '<option value="15:35">15:35</option>' +
+                                                            '<option value="15:40">15:40</option>' +
+                                                            '<option value="15:45">15:45</option>' +
+                                                            '<option value="15:50">15:50</option>' +
+                                                            '<option value="15:55">15:55</option>' +
+                                                            '<option value="16:00">16:00</option>' +
+                                                            '<option value="16:05">16:05</option>' +
+                                                            '<option value="16:10">16:10</option>' +
+                                                            '<option value="16:15">16:15</option>' +
+                                                            '<option value="16:20">16:20</option>' +
+                                                            '<option value="16:25">16:25</option>' +
+                                                            '<option value="16:30">16:30</option>' +
+                                                            '<option value="16:35">16:35</option>' +
+                                                            '<option value="16:40">16:40</option>' +
+                                                            '<option value="16:45">16:45</option>' +
+                                                            '<option value="16:50">16:50</option>' +
+                                                            '<option value="16:55">16:55</option>' +
+                                                            '<option value="17:00">17:00</option>' +
+                                                            '<option value="17:05">17:05</option>' +
+                                                            '<option value="17:10">17:10</option>' +
+                                                            '<option value="17:15">17:15</option>' +
+                                                            '<option value="17:20">17:20</option>' +
+                                                            '<option value="17:25">17:25</option>' +
+                                                            '<option value="17:30">17:30</option>' +
+                                                            '<option value="17:35">17:35</option>' +
+                                                            '<option value="17:40">17:40</option>' +
+                                                            '<option value="17:45">17:45</option>' +
+                                                            '<option value="17:50">17:50</option>' +
+                                                            '<option value="17:55">17:55</option>' +
+                                                            '<option value="18:00">18:00</option>' +
+                                                            '<option value="18:05">18:05</option>' +
+                                                            '<option value="18:10">18:10</option>' +
+                                                            '<option value="18:15">18:15</option>' +
+                                                            '<option value="18:20">18:20</option>' +
+                                                            '<option value="18:25">18:25</option>' +
+                                                            '<option value="18:30">18:30</option>' +
+                                                            '<option value="18:35">18:35</option>' +
+                                                            '<option value="18:40">18:40</option>' +
+                                                            '<option value="18:45">18:45</option>' +
+                                                            '<option value="18:50">18:50</option>' +
+                                                            '<option value="18:55">18:55</option>' +
+                                                            '<option value="19:00">19:00</option>' +
+                                                            '<option value="19:05">19:05</option>' +
+                                                            '<option value="19:10">19:10</option>' +
+                                                            '<option value="19:15">19:15</option>' +
+                                                            '<option value="19:20">19:20</option>' +
+                                                            '<option value="19:25">19:25</option>' +
+                                                            '<option value="19:30">19:30</option>' +
+                                                            '<option value="19:35">19:35</option>' +
+                                                            '<option value="19:40">19:40</option>' +
+                                                            '<option value="19:45">19:45</option>' +
+                                                            '<option value="19:50">19:50</option>' +
+                                                            '<option value="19:55">19:55</option>' +
+                                                            '<option value="20:00">20:00</option>' +
+                                                            '<option value="20:05">20:05</option>' +
+                                                            '<option value="20:10">20:10</option>' +
+                                                            '<option value="20:15">20:15</option>' +
+                                                            '<option value="20:20">20:20</option>' +
+                                                            '<option value="20:25">20:25</option>' +
+                                                            '<option value="20:30">20:30</option>' +
+                                                            '<option value="20:35">20:35</option>' +
+                                                            '<option value="20:40">20:40</option>' +
+                                                            '<option value="20:45">20:45</option>' +
+                                                            '<option value="20:50">20:50</option>' +
+                                                            '<option value="20:55">20:55</option>' +
+                                                            '<option value="21:00">21:00</option>' +
+                                                            '<option value="21:05">21:05</option>' +
+                                                            '<option value="21:10">21:10</option>' +
+                                                            '<option value="21:15">21:15</option>' +
+                                                            '<option value="21:20">21:20</option>' +
+                                                            '<option value="21:25">21:25</option>' +
+                                                            '<option value="21:30">21:30</option>' +
+                                                            '<option value="21:35">21:35</option>' +
+                                                            '<option value="21:40">21:40</option>' +
+                                                            '<option value="21:45">21:45</option>' +
+                                                            '<option value="21:50">21:50</option>' +
+                                                            '<option value="21:55">21:55</option>' +
+                                                            '<option value="22:00">22:00</option>' +
+                                                            '<option value="22:05">22:05</option>' +
+                                                            '<option value="22:10">22:10</option>' +
+                                                            '<option value="22:15">22:15</option>' +
+                                                            '<option value="22:20">22:20</option>' +
+                                                            '<option value="22:25">22:25</option>' +
+                                                            '<option value="22:30">22:30</option>' +
+                                                            '<option value="22:35">22:35</option>' +
+                                                            '<option value="22:40">22:40</option>' +
+                                                            '<option value="22:45">22:45</option>' +
+                                                            '<option value="22:50">22:50</option>' +
+                                                            '<option value="22:55">22:55</option>' +
+                                                            '<option value="23:00">23:00</option>' +
+                                                            '<option value="23:05">23:05</option>' +
+                                                            '<option value="23:10">23:10</option>' +
+                                                            '<option value="23:15">23:15</option>' +
+                                                            '<option value="23:20">23:20</option>' +
+                                                            '<option value="23:25">23:25</option>' +
+                                                            '<option value="23:30">23:30</option>' +
+                                                            '<option value="23:35">23:35</option>' +
+                                                            '<option value="23:40">23:40</option>' +
+                                                            '<option value="23:45">23:45</option>' +
+                                                            '<option value="23:50">23:50</option>' +
+                                                            '<option value="23:55">23:55</option>' +
+                                                        '</select>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-md-4">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>End Time</strong></label>' +
+                                                        '<select id="EditRouteEndTime" class="form-control">' +
+                                                            '<option value="00:00">00:00</option>' +
+                                                            '<option value="00:05">00:05</option>' +
+                                                            '<option value="00:10">00:10</option>' +
+                                                            '<option value="00:15">00:15</option>' +
+                                                            '<option value="00:20">00:20</option>' +
+                                                            '<option value="00:25">00:25</option>' +
+                                                            '<option value="00:30">00:30</option>' +
+                                                            '<option value="00:35">00:35</option>' +
+                                                            '<option value="00:40">00:40</option>' +
+                                                            '<option value="00:45">00:45</option>' +
+                                                            '<option value="00:50">00:50</option>' +
+                                                            '<option value="00:55">00:55</option>' +
+                                                            '<option value="01:00">01:00</option>' +
+                                                            '<option value="01:05">01:05</option>' +
+                                                            '<option value="01:10">01:10</option>' +
+                                                            '<option value="01:15">01:15</option>' +
+                                                            '<option value="01:20">01:20</option>' +
+                                                            '<option value="01:25">01:25</option>' +
+                                                            '<option value="01:30">01:30</option>' +
+                                                            '<option value="01:35">01:35</option>' +
+                                                            '<option value="01:40">01:40</option>' +
+                                                            '<option value="01:45">01:45</option>' +
+                                                            '<option value="01:50">01:50</option>' +
+                                                            '<option value="01:55">01:55</option>' +
+                                                            '<option value="02:00">02:00</option>' +
+                                                            '<option value="02:05">02:05</option>' +
+                                                            '<option value="02:10">02:10</option>' +
+                                                            '<option value="02:15">02:15</option>' +
+                                                            '<option value="02:20">02:20</option>' +
+                                                            '<option value="02:25">02:25</option>' +
+                                                            '<option value="02:30">02:30</option>' +
+                                                            '<option value="02:35">02:35</option>' +
+                                                            '<option value="02:40">02:40</option>' +
+                                                            '<option value="02:45">02:45</option>' +
+                                                            '<option value="02:50">02:50</option>' +
+                                                            '<option value="02:55">02:55</option>' +
+                                                            '<option value="03:00">03:00</option>' +
+                                                            '<option value="03:05">03:05</option>' +
+                                                            '<option value="03:10">03:10</option>' +
+                                                            '<option value="03:15">03:15</option>' +
+                                                            '<option value="03:20">03:20</option>' +
+                                                            '<option value="03:25">03:25</option>' +
+                                                            '<option value="03:30">03:30</option>' +
+                                                            '<option value="03:35">03:35</option>' +
+                                                            '<option value="03:40">03:40</option>' +
+                                                            '<option value="03:45">03:45</option>' +
+                                                            '<option value="03:50">03:50</option>' +
+                                                            '<option value="03:55">03:55</option>' +
+                                                            '<option value="04:00">04:00</option>' +
+                                                            '<option value="04:05">04:05</option>' +
+                                                            '<option value="04:10">04:10</option>' +
+                                                            '<option value="04:15">04:15</option>' +
+                                                            '<option value="04:20">04:20</option>' +
+                                                            '<option value="04:25">04:25</option>' +
+                                                            '<option value="04:30">04:30</option>' +
+                                                            '<option value="04:35">04:35</option>' +
+                                                            '<option value="04:40">04:40</option>' +
+                                                            '<option value="04:45">04:45</option>' +
+                                                            '<option value="04:50">04:50</option>' +
+                                                            '<option value="04:55">04:55</option>' +
+                                                            '<option value="05:00">05:00</option>' +
+                                                            '<option value="05:05">05:05</option>' +
+                                                            '<option value="05:10">05:10</option>' +
+                                                            '<option value="05:15">05:15</option>' +
+                                                            '<option value="05:20">05:20</option>' +
+                                                            '<option value="05:25">05:25</option>' +
+                                                            '<option value="05:30">05:30</option>' +
+                                                            '<option value="05:35">05:35</option>' +
+                                                            '<option value="05:40">05:40</option>' +
+                                                            '<option value="05:45">05:45</option>' +
+                                                            '<option value="05:50">05:50</option>' +
+                                                            '<option value="05:55">05:55</option>' +
+                                                            '<option value="06:00">06:00</option>' +
+                                                            '<option value="06:05">06:05</option>' +
+                                                            '<option value="06:10">06:10</option>' +
+                                                            '<option value="06:15">06:15</option>' +
+                                                            '<option value="06:20">06:20</option>' +
+                                                            '<option value="06:25">06:25</option>' +
+                                                            '<option value="06:30">06:30</option>' +
+                                                            '<option value="06:35">06:35</option>' +
+                                                            '<option value="06:40">06:40</option>' +
+                                                            '<option value="06:45">06:45</option>' +
+                                                            '<option value="06:50">06:50</option>' +
+                                                            '<option value="06:55">06:55</option>' +
+                                                            '<option value="07:00">07:00</option>' +
+                                                            '<option value="07:05">07:05</option>' +
+                                                            '<option value="07:10">07:10</option>' +
+                                                            '<option value="07:15">07:15</option>' +
+                                                            '<option value="07:20">07:20</option>' +
+                                                            '<option value="07:25">07:25</option>' +
+                                                            '<option value="07:30">07:30</option>' +
+                                                            '<option value="07:35">07:35</option>' +
+                                                            '<option value="07:40">07:40</option>' +
+                                                            '<option value="07:45">07:45</option>' +
+                                                            '<option value="07:50">07:50</option>' +
+                                                            '<option value="07:55">07:55</option>' +
+                                                            '<option value="08:00">08:00</option>' +
+                                                            '<option value="08:05">08:05</option>' +
+                                                            '<option value="08:10">08:10</option>' +
+                                                            '<option value="08:15">08:15</option>' +
+                                                            '<option value="08:20">08:20</option>' +
+                                                            '<option value="08:25">08:25</option>' +
+                                                            '<option value="08:30">08:30</option>' +
+                                                            '<option value="08:35">08:35</option>' +
+                                                            '<option value="08:40">08:40</option>' +
+                                                            '<option value="08:45">08:45</option>' +
+                                                            '<option value="08:50">08:50</option>' +
+                                                            '<option value="08:55">08:55</option>' +
+                                                            '<option value="09:00">09:00</option>' +
+                                                            '<option value="09:05">09:05</option>' +
+                                                            '<option value="09:10">09:10</option>' +
+                                                            '<option value="09:15">09:15</option>' +
+                                                            '<option value="09:20">09:20</option>' +
+                                                            '<option value="09:25">09:25</option>' +
+                                                            '<option value="09:30">09:30</option>' +
+                                                            '<option value="09:35">09:35</option>' +
+                                                            '<option value="09:40">09:40</option>' +
+                                                            '<option value="09:45">09:45</option>' +
+                                                            '<option value="09:50">09:50</option>' +
+                                                            '<option value="09:55">09:55</option>' +
+                                                            '<option value="10:00">10:00</option>' +
+                                                            '<option value="10:05">10:05</option>' +
+                                                            '<option value="10:10">10:10</option>' +
+                                                            '<option value="10:15">10:15</option>' +
+                                                            '<option value="10:20">10:20</option>' +
+                                                            '<option value="10:25">10:25</option>' +
+                                                            '<option value="10:30">10:30</option>' +
+                                                            '<option value="10:35">10:35</option>' +
+                                                            '<option value="10:40">10:40</option>' +
+                                                            '<option value="10:45">10:45</option>' +
+                                                            '<option value="10:50">10:50</option>' +
+                                                            '<option value="10:55">10:55</option>' +
+                                                            '<option value="11:00">11:00</option>' +
+                                                            '<option value="11:05">11:05</option>' +
+                                                            '<option value="11:10">11:10</option>' +
+                                                            '<option value="11:15">11:15</option>' +
+                                                            '<option value="11:20">11:20</option>' +
+                                                            '<option value="11:25">11:25</option>' +
+                                                            '<option value="11:30">11:30</option>' +
+                                                            '<option value="11:35">11:35</option>' +
+                                                            '<option value="11:40">11:40</option>' +
+                                                            '<option value="11:45">11:45</option>' +
+                                                            '<option value="11:50">11:50</option>' +
+                                                            '<option value="11:55">11:55</option>' +
+                                                            '<option value="12:00">12:00</option>' +
+                                                            '<option value="12:05">12:05</option>' +
+                                                            '<option value="12:10">12:10</option>' +
+                                                            '<option value="12:15">12:15</option>' +
+                                                            '<option value="12:20">12:20</option>' +
+                                                            '<option value="12:25">12:25</option>' +
+                                                            '<option value="12:30">12:30</option>' +
+                                                            '<option value="12:35">12:35</option>' +
+                                                            '<option value="12:40">12:40</option>' +
+                                                            '<option value="12:45">12:45</option>' +
+                                                            '<option value="12:50">12:50</option>' +
+                                                            '<option value="12:55">12:55</option>' +
+                                                            '<option value="13:00">13:00</option>' +
+                                                            '<option value="13:05">13:05</option>' +
+                                                            '<option value="13:10">13:10</option>' +
+                                                            '<option value="13:15">13:15</option>' +
+                                                            '<option value="13:20">13:20</option>' +
+                                                            '<option value="13:25">13:25</option>' +
+                                                            '<option value="13:30">13:30</option>' +
+                                                            '<option value="13:35">13:35</option>' +
+                                                            '<option value="13:40">13:40</option>' +
+                                                            '<option value="13:45">13:45</option>' +
+                                                            '<option value="13:50">13:50</option>' +
+                                                            '<option value="13:55">13:55</option>' +
+                                                            '<option value="14:00">14:00</option>' +
+                                                            '<option value="14:05">14:05</option>' +
+                                                            '<option value="14:10">14:10</option>' +
+                                                            '<option value="14:15">14:15</option>' +
+                                                            '<option value="14:20">14:20</option>' +
+                                                            '<option value="14:25">14:25</option>' +
+                                                            '<option value="14:30">14:30</option>' +
+                                                            '<option value="14:35">14:35</option>' +
+                                                            '<option value="14:40">14:40</option>' +
+                                                            '<option value="14:45">14:45</option>' +
+                                                            '<option value="14:50">14:50</option>' +
+                                                            '<option value="14:55">14:55</option>' +
+                                                            '<option value="15:00">15:00</option>' +
+                                                            '<option value="15:05">15:05</option>' +
+                                                            '<option value="15:10">15:10</option>' +
+                                                            '<option value="15:15">15:15</option>' +
+                                                            '<option value="15:20">15:20</option>' +
+                                                            '<option value="15:25">15:25</option>' +
+                                                            '<option value="15:30">15:30</option>' +
+                                                            '<option value="15:35">15:35</option>' +
+                                                            '<option value="15:40">15:40</option>' +
+                                                            '<option value="15:45">15:45</option>' +
+                                                            '<option value="15:50">15:50</option>' +
+                                                            '<option value="15:55">15:55</option>' +
+                                                            '<option value="16:00">16:00</option>' +
+                                                            '<option value="16:05">16:05</option>' +
+                                                            '<option value="16:10">16:10</option>' +
+                                                            '<option value="16:15">16:15</option>' +
+                                                            '<option value="16:20">16:20</option>' +
+                                                            '<option value="16:25">16:25</option>' +
+                                                            '<option value="16:30">16:30</option>' +
+                                                            '<option value="16:35">16:35</option>' +
+                                                            '<option value="16:40">16:40</option>' +
+                                                            '<option value="16:45">16:45</option>' +
+                                                            '<option value="16:50">16:50</option>' +
+                                                            '<option value="16:55">16:55</option>' +
+                                                            '<option value="17:00">17:00</option>' +
+                                                            '<option value="17:05">17:05</option>' +
+                                                            '<option value="17:10">17:10</option>' +
+                                                            '<option value="17:15">17:15</option>' +
+                                                            '<option value="17:20">17:20</option>' +
+                                                            '<option value="17:25">17:25</option>' +
+                                                            '<option value="17:30">17:30</option>' +
+                                                            '<option value="17:35">17:35</option>' +
+                                                            '<option value="17:40">17:40</option>' +
+                                                            '<option value="17:45">17:45</option>' +
+                                                            '<option value="17:50">17:50</option>' +
+                                                            '<option value="17:55">17:55</option>' +
+                                                            '<option value="18:00">18:00</option>' +
+                                                            '<option value="18:05">18:05</option>' +
+                                                            '<option value="18:10">18:10</option>' +
+                                                            '<option value="18:15">18:15</option>' +
+                                                            '<option value="18:20">18:20</option>' +
+                                                            '<option value="18:25">18:25</option>' +
+                                                            '<option value="18:30">18:30</option>' +
+                                                            '<option value="18:35">18:35</option>' +
+                                                            '<option value="18:40">18:40</option>' +
+                                                            '<option value="18:45">18:45</option>' +
+                                                            '<option value="18:50">18:50</option>' +
+                                                            '<option value="18:55">18:55</option>' +
+                                                            '<option value="19:00">19:00</option>' +
+                                                            '<option value="19:05">19:05</option>' +
+                                                            '<option value="19:10">19:10</option>' +
+                                                            '<option value="19:15">19:15</option>' +
+                                                            '<option value="19:20">19:20</option>' +
+                                                            '<option value="19:25">19:25</option>' +
+                                                            '<option value="19:30">19:30</option>' +
+                                                            '<option value="19:35">19:35</option>' +
+                                                            '<option value="19:40">19:40</option>' +
+                                                            '<option value="19:45">19:45</option>' +
+                                                            '<option value="19:50">19:50</option>' +
+                                                            '<option value="19:55">19:55</option>' +
+                                                            '<option value="20:00">20:00</option>' +
+                                                            '<option value="20:05">20:05</option>' +
+                                                            '<option value="20:10">20:10</option>' +
+                                                            '<option value="20:15">20:15</option>' +
+                                                            '<option value="20:20">20:20</option>' +
+                                                            '<option value="20:25">20:25</option>' +
+                                                            '<option value="20:30">20:30</option>' +
+                                                            '<option value="20:35">20:35</option>' +
+                                                            '<option value="20:40">20:40</option>' +
+                                                            '<option value="20:45">20:45</option>' +
+                                                            '<option value="20:50">20:50</option>' +
+                                                            '<option value="20:55">20:55</option>' +
+                                                            '<option value="21:00">21:00</option>' +
+                                                            '<option value="21:05">21:05</option>' +
+                                                            '<option value="21:10">21:10</option>' +
+                                                            '<option value="21:15">21:15</option>' +
+                                                            '<option value="21:20">21:20</option>' +
+                                                            '<option value="21:25">21:25</option>' +
+                                                            '<option value="21:30">21:30</option>' +
+                                                            '<option value="21:35">21:35</option>' +
+                                                            '<option value="21:40">21:40</option>' +
+                                                            '<option value="21:45">21:45</option>' +
+                                                            '<option value="21:50">21:50</option>' +
+                                                            '<option value="21:55">21:55</option>' +
+                                                            '<option value="22:00">22:00</option>' +
+                                                            '<option value="22:05">22:05</option>' +
+                                                            '<option value="22:10">22:10</option>' +
+                                                            '<option value="22:15">22:15</option>' +
+                                                            '<option value="22:20">22:20</option>' +
+                                                            '<option value="22:25">22:25</option>' +
+                                                            '<option value="22:30">22:30</option>' +
+                                                            '<option value="22:35">22:35</option>' +
+                                                            '<option value="22:40">22:40</option>' +
+                                                            '<option value="22:45">22:45</option>' +
+                                                            '<option value="22:50">22:50</option>' +
+                                                            '<option value="22:55">22:55</option>' +
+                                                            '<option value="23:00">23:00</option>' +
+                                                            '<option value="23:05">23:05</option>' +
+                                                            '<option value="23:10">23:10</option>' +
+                                                            '<option value="23:15">23:15</option>' +
+                                                            '<option value="23:20">23:20</option>' +
+                                                            '<option value="23:25">23:25</option>' +
+                                                            '<option value="23:30">23:30</option>' +
+                                                            '<option value="23:35">23:35</option>' +
+                                                            '<option value="23:40">23:40</option>' +
+                                                            '<option value="23:45">23:45</option>' +
+                                                            '<option value="23:50">23:50</option>' +
+                                                            '<option value="23:55">23:55</option>' +
+                                                        '</select>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                                '<div class="col-md-4">' +
+                                                    '<div class="form-group">' +
+                                                        '<label><strong>Total Hours</strong></label>' +
+                                                        '<input type="text" id="EditRouteTotalTime" class="form-control" readonly="readonly" style="background-color:#f1f1f1;">' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>' +
+                                            //
+                                            //
+                                            //
+                                            '<div class="row" style=\"margin:0;\">' +
+                                                '<div class="col-md-12">' +
+                                                    '<div class="form-group" style=\"margin:0;\">' +
+                                                        '<label><strong>Notes</strong></label>' +
+                                                        '<textarea id="EditRouteNotes" class="form-control"></textarea>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>' +
+                                            '',
+                                boxWidth: '40%',
+                                useBootstrap: false,
+                                buttons: {
+                                    save: {
+                                        text: 'SAVE',
+                                        btnClass: 'btn-blue',
+                                        action: function () {
+                                            var AssociateId = associateId;
+                                            var RouteDate = routeDate;
+                                            var RouteId = routeId;
+                                            var RouteCode1 = $("#EditRouteCode1").val();
+                                            var RouteType1 = $("#EditRouteType1").val();
+                                            var RouteCode2 = $("#EditRouteCode2").val();
+                                            var RouteType2 = $("#EditRouteType2").val();
+                                            var RouteCode3 = $("#EditRouteCode3").val();
+                                            var RouteType3 = $("#EditRouteType3").val();
+                                            var RouteCode4 = $("#EditRouteCode4").val();
+                                            var RouteType4 = $("#EditRouteType4").val();
+                                            var RouteCode5 = $("#EditRouteCode5").val();
+                                            var RouteType5 = $("#EditRouteType5").val();
+                                            var RouteDepotId = $("#EditRouteDepot").val();
+                                            var Mileage = $("#EditRouteMileage").val();
+                                            if (!$.isNumeric(Mileage)) {
+                                                Mileage = 0;
+                                            }
+                                            var FuelCharge = $("#EditRouteFuelCharge").val();
+                                            if (!$.isNumeric(FuelCharge)) {
+                                                FuelCharge = 0;
+                                            }
+                                            var Byod = $("#EditRouteByod").val();
+                                            if (!$.isNumeric(Byod)) {
+                                                Byod = 0;
+                                            }
+                                            var CongestionCharge = $("#EditRouteCongestionCharge").val();
+                                            if (!$.isNumeric(CongestionCharge)) {
+                                                CongestionCharge = 0;
+                                            }
+                                            var LatePayment = $("#EditRouteLatePayment").val();
+                                            if (!$.isNumeric(LatePayment)) {
+                                                LatePayment = 0;
+                                            }
+                                            var StartTime = $("#EditRouteStartTime").val();
+                                            var EndTime = $("#EditRouteEndTime").val();
+                                            var TotalTime = $("#EditRouteTotalTime").val();
+                                            var Notes = $("#EditRouteNotes").val();
+                                            RouteEdit(AssociateId, RouteDate, RouteId, RouteCode1, RouteType1, RouteCode2, RouteType2, RouteCode3, RouteType3, RouteCode4, RouteType4, RouteCode5, RouteType5, RouteDepotId, Mileage, FuelCharge, Byod, CongestionCharge, LatePayment, StartTime, EndTime, TotalTime, Notes);
+                                        }
+                                    },
+                                    cancel: {
+                                        text: 'Cancel',
+                                        btnClass: 'btn-red',
+                                        action: function () {
+                                            //close
+                                        }
+                                    },
+                                },
+                                onContentReady: function () {
+                                    $.ajax({
+                                        url: "@Url.Action("getroutedetails", "admin")",
+                                        type: "GET",
+                                        data: { RouteId: routeId },
+                                        success: function (data) {
+                                            if (data.status == 1)
+                                            {
+                                                $("#EditRouteCode1").val(data.RouteCode1);
+                                                if (data.RouteType1 == "0" || data.RouteType1 == "" || data.RouteType1 == null) {
+                                                    $("#EditRouteType1").val("0");
+                                                }
+                                                else {
+                                                    $("#EditRouteType1").val(data.RouteType1);
+                                                }
+
+                                                if (data.RouteType2 == "0" || data.RouteType2 == "" || data.RouteType2 == null) {
+                                                    $("#RouteTypeExtraArea").hide();
+                                                }
+                                                else {
+                                                    $("#RouteExtraArea").show();
+                                                    $("#RouteCode2Area").show();
+                                                    $("#EditRouteCode2").val(data.RouteCode2);
+                                                    $("#RouteType2Area").show();
+                                                    $("#EditRouteType2").val(data.RouteType2);
+                                                }
+
+                                                if (data.RouteType3 == "0" || data.RouteType3 == "" || data.RouteType3 == null) {
+                                                    $("#RouteType3Area").hide();
+                                                }
+                                                else {
+                                                    $("#RouteExtraArea").show();
+                                                    $("#RouteCode3Area").show();
+                                                    $("#EditRouteCode3").val(data.RouteCode3);
+                                                    $("#RouteType3Area").show();
+                                                    $("#EditRouteType3").val(data.RouteType3);
+                                                }
+
+                                                $.each(data.depots, function (i, x) {
+                                                    if (data.Depot == x.Id) {
+                                                        $("#EditRouteDepot").append("<option value=\"" + x.Id + "\" selected=\"selected\">" + x.Name + "</option>");
+                                                    }
+                                                    else {
+                                                        $("#EditRouteDepot").append("<option value=\"" + x.Id + "\">" + x.Name + "</option>");
+                                                    }
+                                                });
+
+                                                $("#EditRouteMileage").val(data.Mileage);
+                                                $("#EditRouteFuelCharge").val(data.FuelCharge);
+
+                                                if (data.Byod == "0" || data.Byod == 0 || data.Byod == null || data.Byod == "")
+                                                {
+                                                    $("#EditRouteByod").val(data.Byod);
+                                                    $("#EditRouteByodAddHalf").show();
+                                                    $("#EditRouteByodAdd").show();
+                                                    $("#EditRouteByodRemove").hide();
+                                                }
+                                                else
+                                                {
+                                                    $("#EditRouteByod").val(data.Byod);
+                                                    $("#EditRouteByodAddHalf").hide();
+                                                    $("#EditRouteByodAdd").hide();
+                                                    $("#EditRouteByodRemove").show();
+                                                }
+
+                                                if (data.CongestionCharge == "0" || data.CongestionCharge == 0 || data.CongestionCharge == null || data.CongestionCharge == "") {
+                                                    $("#EditRouteCongestionCharge").val(data.CongestionCharge);
+                                                    $("#EditRouteCongestionChargeAdd").show();
+                                                    $("#EditRouteCongestionChargeRemove").hide();
+                                                }
+                                                else {
+                                                    $("#EditRouteCongestionCharge").val(data.CongestionCharge);
+                                                    $("#EditRouteCongestionChargeAdd").hide();
+                                                    $("#EditRouteCongestionChargeRemove").show();
+                                                }
+
+                                                if (data.LatePayment == "0" || data.LatePayment == 0 || data.LatePayment == null || data.LatePayment == "") {
+                                                    $("#EditRouteLatePayment").val(data.LatePayment);
+                                                    $("#EditRouteLatePaymentAdd").show();
+                                                    $("#EditRouteLatePaymentRemove").hide();
+                                                }
+                                                else {
+                                                    $("#EditRouteLatePayment").val(data.LatePayment);
+                                                    $("#EditRouteLatePaymentAdd").show();
+                                                    $("#EditRouteLatePaymentRemove").show();
+                                                }
+
+                                                $("#EditRouteStartTime").val(data.StartTime);
+                                                $("#EditRouteEndTime").val(data.EndTime);
+                                                $("#EditRouteTotalTime").val(data.TotalTime);
+
+                                                $("#EditRouteNotes").text(data.Notes);
+                                            }
+                                            else
+                                            {
+                                                $("#EditRouteByodAddHalf").show();
+                                                $("#EditRouteByodAdd").show();
+                                                $("#EditRouteCongestionChargeAdd").show();
+                                                $("#EditRouteLatePaymentAdd").show();
+                                                $.each(data.depots, function (i, x) {
+                                                    if (data.Depot == x.Id) {
+                                                        $("#EditRouteDepot").append("<option value=\"" + x.Id + "\" selected=\"selected\">" + x.Name + "</option>");
+                                                    }
+                                                    else {
+                                                        $("#EditRouteDepot").append("<option value=\"" + x.Id + "\">" + x.Name + "</option>");
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    },
+                    remove: {
+                        text: 'Remove',
+                        btnClass: 'btn-red',
+                        action: function () {
+                            ScheduleEdit(associateId, routeDate, associateDepotId, "REMOVE");
+                        }
+                    },
+                    cancel: {
+                        text: 'Cancel',
+                        btnClass: 'btn-red',
+                        action: function () {
+                            //close
+                        }
+                    },
+                },
+                onContentReady: function () {
+                    $.ajax({
+                        url: "@Url.Action("getdepots", "admin")",
+                        type: "GET",
+                        data: {
+                            associateDepotId: associateDepotId
+                        },
+                        success: function (data) {
+                            $.each(data.depots, function (i, x) {
+                                $(".lastButton").before("<button type=\"button\" class=\"btn btn-green depot-buttons\" data-associateid=\"" + associateId + "\" data-routedate=\"" + routeDate + "\" data-routedepotid=\"" + x.Id + "\">" + x.Name + "</button>");
+                            });
+                        }
+                    });
+                }
+            });
+
+
+        });
+
+
+
+
+
+
+        $(document.body).on("click", "#EditRouteType1Plus", function () {
+            $("#RouteExtraArea").show();
+            $("#RouteCode2Area").show();
+            $("#EditRouteCode2").val("");
+            $("#RouteType2Area").show();
+            $("#EditRouteType2").val("0");
+            $("#RouteCode3Area").hide();
+            $("#EditRouteCode3").val("");
+            $("#RouteType3Area").hide();
+            $("#EditRouteType3").val("0");
+        });
+
+        $(document.body).on("click", "#EditRouteType2Minus", function () {
+            $("#RouteExtraArea").hide();
+            $("#RouteCode2Area").hide();
+            $("#EditRouteCode2").val("");
+            $("#RouteType2Area").hide();
+            $("#EditRouteType2").val("0");
+            $("#RouteCode3Area").hide();
+            $("#EditRouteCode3").val("");
+            $("#RouteType3Area").hide();
+            $("#EditRouteType3").val("0");
+        });
+
+        $(document.body).on("click", "#EditRouteType2Plus", function () {
+            $("#RouteExtraArea").show();
+            $("#RouteCode3Area").show();
+            $("#EditRouteCode3").val("");
+            $("#RouteType3Area").show();
+            $("#EditRouteType3").val("0");
+        });
+
+        $(document.body).on("click", "#EditRouteType3Minus", function () {
+            $("#RouteExtraArea").show();
+            $("#RouteCode3Area").hide();
+            $("#EditRouteCode3").val("");
+            $("#RouteType3Area").hide();
+            $("#EditRouteType3").val("0");
+        });
+
+
+
+        $(document.body).on("click", "#EditRouteByodAddHalf", function () {
+            $.ajax({
+                url: "@Url.Action("getbyodprice", "admin")",
+                type: "GET",
+                data: {},
+                success: function (data) {
+                    $("#EditRouteByod").val(parseFloat(data.byodprice) / 2);
+                    $("#EditRouteByodAddHalf").hide();
+                    $("#EditRouteByodAdd").show();
+                    $("#EditRouteByodRemove").show();
+                }
+            });
+        });
+
+        $(document.body).on("click", "#EditRouteByodAdd", function () {
+            $.ajax({
+                url: "@Url.Action("getbyodprice", "admin")",
+                type: "GET",
+                data: {},
+                success: function (data) {
+                    $("#EditRouteByod").val(data.byodprice);
+                    $("#EditRouteByodAddHalf").show();
+                    $("#EditRouteByodAdd").hide();
+                    $("#EditRouteByodRemove").show();
+                }
+            });
+        });
+
+        $(document.body).on("click", "#EditRouteByodRemove", function () {
+            $("#EditRouteByod").val("0");
+            $("#EditRouteByodAddHalf").show();
+            $("#EditRouteByodAdd").show();
+            $("#EditRouteByodRemove").hide();
+        });
+
+
+
+
+        $(document.body).on("click", "#EditRouteCongestionChargeAdd", function () {
+            $.ajax({
+                url: "@Url.Action("GetCongestionChargePrice", "admin")",
+                type: "GET",
+                data: {},
+                success: function (data) {
+                    $("#EditRouteCongestionCharge").val(data.congestionchargeprice);
+                    $("#EditRouteCongestionChargeAdd").hide();
+                    $("#EditRouteCongestionChargeRemove").show();
+                }
+            });
+        });
+
+        $(document.body).on("click", "#EditRouteCongestionChargeRemove", function () {
+            $("#EditRouteCongestionCharge").val("0");
+            $("#EditRouteCongestionChargeAdd").show();
+            $("#EditRouteCongestionChargeRemove").hide();
+        });
+
+
+
+        $(document.body).on("click", "#EditRouteLatePaymentAdd", function () {
+            var count = $("#EditRouteLatePayment").val();
+            $("#EditRouteLatePaymentRemove").show();
+            count++;
+            $("#EditRouteLatePayment").val(count);
+        });
+
+        $(document.body).on("click", "#EditRouteLatePaymentRemove", function () {
+            var count = $("#EditRouteLatePayment").val();
+            if (count == 1) {
+                $("#EditRouteLatePaymentRemove").hide();
+            }
+            else {
+                $("#EditRouteLatePaymentRemove").show();
+            }
+            count--;
+            $("#EditRouteLatePayment").val(count);
+        });
+
+
+
+
+
+
+
+
+        $(document.body).on("click", ".depot-buttons", function () {
+            jc.close();
+            var associateId = $(this).data("associateid");
+            var routeDate = $(this).data("routedate");
+            var routeDepotId = $(this).data("routedepotid");
+            ScheduleEdit(associateId, routeDate, routeDepotId, "ON");
+        });
+
+        function RouteEdit(AssociateId, RouteDate, RouteId, RouteCode1, RouteType1, RouteCode2, RouteType2, RouteCode3, RouteType3, RouteCode4, RouteType4, RouteCode5, RouteType5, RouteDepotId, Mileage, FuelCharge, Byod, CongestionCharge, LatePayment, StartTime, EndTime, TotalTime, Notes) {
+            $.ajax({
+                url: "@Url.Action("RouteEdit", "admin")",
+                type: "GET",
+                data: {
+                    AssociateId: AssociateId,
+                    RouteDate: RouteDate,
+                    RouteId: RouteId,
+                    RouteCode1: RouteCode1,
+                    RouteType1: RouteType1,
+                    RouteCode2: RouteCode2,
+                    RouteType2: RouteType2,
+                    RouteCode3: RouteCode3,
+                    RouteType3: RouteType3,
+                    RouteCode4: RouteCode4,
+                    RouteType4: RouteType4,
+                    RouteCode5: RouteCode5,
+                    RouteType5: RouteType5,
+                    RouteDepotId: RouteDepotId,
+                    Mileage: Mileage,
+                    FuelCharge: FuelCharge,
+                    Byod: Byod,
+                    CongestionCharge: CongestionCharge,
+                    LatePayment: LatePayment,
+                    StartTime: StartTime,
+                    EndTime: EndTime,
+                    TotalTime: TotalTime,
+                    Notes: Notes
+                },
+                success: function (data) {
+                    if (data.status == 2) {
+                        swal({
+                            title: "Warning",
+                            text: "Associate not allowed to work 7 consecutive days!",
+                            type: "warning",
+                            button: "Close",
+                        });
+                    }
+                    else {
+
+                        if (data.status == 1) {
+
+                            var associateid = data.associateid;
+                            var associatename = data.associatename;
+                            var associatedepotid = data.associatedepotid;
+                            var associatedepotname = data.associatedepotname;
+                            var routeid = data.routeid;
+                            var routedate = data.routedate;
+                            var routedepotid = data.routedepotid;
+                            var routedepotname = data.routedepotname;
+                            var allocationstatus = data.allocationstatus;
+                            var authadmin = data.authadmin;
+                            var routetype1 = data.routetype1;
+                            var routetypeextra1 = data.routetypeextra1;
+                            var routetypeextra2 = data.routetypeextra2;
+                            //
+                            var $id = $("#" + associateid + "-" + routedate);
+                            $id.empty();
+                            if (allocationstatus == "ON") {
+                                if (associatedepotid == routedepotid) {
+                                    if (routetype1 == "0" || routetype1 == null) {
+                                        $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                            "data-associateid=\"" + associateid + "\"" +
+                                            "data-associatename=\"" + associatename + "\"" +
+                                            "data-associatedepotid=\"" + associatedepotid + "\"" +
+                                            "data-associatedepotname=\"" + associatedepotname + "\"" +
+                                            "data-routeid=\"" + routeid + "\"" +
+                                            "data-routedate=\"" + routedate + "\"" +
+                                            "data-routedepotid=\"" + routedepotid + "\"" +
+                                            "data-routedepotname=\"" + routedepotname + "\"" +
+                                            "data-allocationstatus=\"" + allocationstatus + "\"" +
+                                            "href=\"javascript:void(0);\"><span><i class=\"fa fa-check\" style=\"color:lightskyblue;\"></i></span></a>");
+                                    }
+                                    else {
+                                        $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                            "data-associateid=\"" + associateid + "\"" +
+                                            "data-associatename=\"" + associatename + "\"" +
+                                            "data-associatedepotid=\"" + associatedepotid + "\"" +
+                                            "data-associatedepotname=\"" + associatedepotname + "\"" +
+                                            "data-routeid=\"" + routeid + "\"" +
+                                            "data-routedate=\"" + routedate + "\"" +
+                                            "data-routedepotid=\"" + routedepotid + "\"" +
+                                            "data-routedepotname=\"" + routedepotname + "\"" +
+                                            "data-allocationstatus=\"" + allocationstatus + "\"" +
+                                            "href=\"javascript:void(0);\"><span><i class=\"fa fa-check\" style=\"color:green;\"></i></span></a>");
+                                    }
+                                }
+                                else {
+                                    $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                        "data-associateid=\"" + associateid + "\"" +
+                                        "data-associatename=\"" + associatename + "\"" +
+                                        "data-associatedepotid=\"" + associatedepotid + "\"" +
+                                        "data-associatedepotname=\"" + associatedepotname + "\"" +
+                                        "data-routeid=\"" + routeid + "\"" +
+                                        "data-routedate=\"" + routedate + "\"" +
+                                        "data-routedepotid=\"" + routedepotid + "\"" +
+                                        "data-routedepotname=\"" + routedepotname + "\"" +
+                                        "data-allocationstatus=\"" + allocationstatus + "\"" +
+                                        "href=\"javascript:void(0);\"><span style=\"color:red;font-weight:bold;font-size:15px;\">" + data.depotname + "</span></a>");
+                                }
+                            }
+
+                        }
+                        else {
+                            location.reload();
+                        }
+                    }
+                }
+            });
+        }
+
+        function ScheduleEdit(associateId, routeDate, routeDepotId, allocationStatus) {
+            $.ajax({
+                url: "@Url.Action("ScheduleEdit", "admin")",
+                type: "GET",
+                data: {
+                    associateId: associateId,
+                    routeDate: routeDate,
+                    routeDepotId: routeDepotId,
+                    allocationStatus: allocationStatus
+                },
+                success: function (data) {
+                    if (data.status == 2) {
+                        swal({
+                            title: "Warning",
+                            text: "Associate not allowed to work 7 consecutive days!",
+                            type: "warning",
+                            button: "Close",
+                        });
+                    }
+                    else
+                    {
+                        if (data.status == 1) {
+                            var associateid = data.associateid;
+                            var associatename = data.associatename;
+                            var associatedepotid = data.associatedepotid;
+                            var associatedepotname = data.associatedepotname;
+                            var routeid = data.routeid;
+                            var routedate = data.routedate;
+                            var routedepotid = data.routedepotid;
+                            var routedepotname = data.routedepotname;
+                            var allocationstatus = data.allocationstatus;
+                            //
+                            var authadmin = data.authadmin;
+                            var routetype1 = data.routetype1;
+                            var routetypeextra1 = data.routetypeextra1;
+                            var routetypeextra2 = data.routetypeextra2;
+                            //
+                            var $id = $("#" + associateid + "-" + routedate);
+                            $id.empty();
+                            if (allocationstatus == "ON") {
+                                if (associatedepotid == routedepotid) {
+                                    if (routetype1 == "0" || routetype1 == null) {
+                                        $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                            "data-associateid=\"" + associateid + "\"" +
+                                            "data-associatename=\"" + associatename + "\"" +
+                                            "data-associatedepotid=\"" + associatedepotid + "\"" +
+                                            "data-associatedepotname=\"" + associatedepotname + "\"" +
+                                            "data-routeid=\"" + routeid + "\"" +
+                                            "data-routedate=\"" + routedate + "\"" +
+                                            "data-routedepotid=\"" + routedepotid + "\"" +
+                                            "data-routedepotname=\"" + routedepotname + "\"" +
+                                            "data-allocationstatus=\"" + allocationstatus + "\"" +
+                                            "href=\"javascript:void(0);\"><span><i class=\"fa fa-check\" style=\"color:lightskyblue;\"></i></span></a>");
+                                    }
+                                    else {
+                                        $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                            "data-associateid=\"" + associateid + "\"" +
+                                            "data-associatename=\"" + associatename + "\"" +
+                                            "data-associatedepotid=\"" + associatedepotid + "\"" +
+                                            "data-associatedepotname=\"" + associatedepotname + "\"" +
+                                            "data-routeid=\"" + routeid + "\"" +
+                                            "data-routedate=\"" + routedate + "\"" +
+                                            "data-routedepotid=\"" + routedepotid + "\"" +
+                                            "data-routedepotname=\"" + routedepotname + "\"" +
+                                            "data-allocationstatus=\"" + allocationstatus + "\"" +
+                                            "href=\"javascript:void(0);\"><span><i class=\"fa fa-check\" style=\"color:green;\"></i></span></a>");
+                                    }
+                                }
+                                else {
+                                    $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                        "data-associateid=\"" + associateid + "\"" +
+                                        "data-associatename=\"" + associatename + "\"" +
+                                        "data-associatedepotid=\"" + associatedepotid + "\"" +
+                                        "data-associatedepotname=\"" + associatedepotname + "\"" +
+                                        "data-routeid=\"" + routeid + "\"" +
+                                        "data-routedate=\"" + routedate + "\"" +
+                                        "data-routedepotid=\"" + routedepotid + "\"" +
+                                        "data-routedepotname=\"" + routedepotname + "\"" +
+                                        "data-allocationstatus=\"" + allocationstatus + "\"" +
+                                        "href=\"javascript:void(0);\"><span style=\"color:red;font-weight:bold;font-size:15px;\">" + data.depotname + "</span></a>");
+                                }
+                            }
+                            if (allocationstatus == "OFF") {
+                                $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                    "data-associateid=\"" + associateid + "\"" +
+                                    "data-associatename=\"" + associatename + "\"" +
+                                    "data-associatedepotid=\"" + associatedepotid + "\"" +
+                                    "data-associatedepotname=\"" + associatedepotname + "\"" +
+                                    "data-routeid=\"" + routeid + "\"" +
+                                    "data-routedate=\"" + routedate + "\"" +
+                                    "data-routedepotid=\"" + routedepotid + "\"" +
+                                    "data-routedepotname=\"" + routedepotname + "\"" +
+                                    "data-allocationstatus=\"" + allocationstatus + "\"" +
+                                    "href=\"javascript:void(0);\"><span><i class=\"fa fa-times\" style=\"color:red;\"></i></span></a>");
+                            }
+                            if (allocationstatus == "HOLIDAY") {
+                                $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                    "data-associateid=\"" + associateid + "\"" +
+                                    "data-associatename=\"" + associatename + "\"" +
+                                    "data-associatedepotid=\"" + associatedepotid + "\"" +
+                                    "data-associatedepotname=\"" + associatedepotname + "\"" +
+                                    "data-routeid=\"" + routeid + "\"" +
+                                    "data-routedate=\"" + routedate + "\"" +
+                                    "data-routedepotid=\"" + routedepotid + "\"" +
+                                    "data-routedepotname=\"" + routedepotname + "\"" +
+                                    "data-allocationstatus=\"" + allocationstatus + "\"" +
+                                    "href=\"javascript:void(0);\"><span><i class=\"fa fa-plane\" style=\"color:darkorange;\"></i></span></a>");
+                            }
+                            if (allocationstatus == "TRAINING") {
+                                $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                    "data-associateid=\"" + associateid + "\"" +
+                                    "data-associatename=\"" + associatename + "\"" +
+                                    "data-associatedepotid=\"" + associatedepotid + "\"" +
+                                    "data-associatedepotname=\"" + associatedepotname + "\"" +
+                                    "data-routeid=\"" + routeid + "\"" +
+                                    "data-routedate=\"" + routedate + "\"" +
+                                    "data-routedepotid=\"" + routedepotid + "\"" +
+                                    "data-routedepotname=\"" + routedepotname + "\"" +
+                                    "data-allocationstatus=\"" + allocationstatus + "\"" +
+                                    "href=\"javascript:void(0);\"><span><i class=\"fa fa-graduation-cap\" style=\"color:deepskyblue;\"></i></span></a>");
+                            }
+                            if (allocationstatus == "") {
+                                $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                    "data-associateid=\"" + associateid + "\"" +
+                                    "data-associatename=\"" + associatename + "\"" +
+                                    "data-associatedepotid=\"" + associatedepotid + "\"" +
+                                    "data-associatedepotname=\"" + associatedepotname + "\"" +
+                                    "data-routeid=\"" + routeid + "\"" +
+                                    "data-routedate=\"" + routedate + "\"" +
+                                    "data-routedepotid=\"" + routedepotid + "\"" +
+                                    "data-routedepotname=\"" + routedepotname + "\"" +
+                                    "data-allocationstatus=\"" + allocationstatus + "\"" +
+                                    "href=\"javascript:void(0);\"><span><i class=\"fa fa-minus\" style=\"color:#f1f1f1;\"></i></span></a>");
+                            }
+                        }
+                        else {
+                            location.reload();
+                        }
+                    }
+                }
+            });
+        }
+
+
+
+        var off;
+        $(document.body).on("click", ".SetAllOffToday", function () {
+            var RouteDate = $(this).data("routedate");
+            var RouteDepotId = $("#Depot").val();
+            off = $.confirm({
+                title: "",
+                content: '' +
+                    '<p>Do you want to set all empty dates to OFF this date?</p>' +
+                    '',
+                boxWidth: '30%',
+                useBootstrap: false,
+                buttons: {
+                    save: {
+                        text: 'YES',
+                        btnClass: 'btn-green',
+                        action: function () {
+                            $.ajax({
+                                url: "@Url.Action("UpdateAllOffDateDepotId", "admin")",
+                                type: "GET",
+                                data: {
+                                    RouteDate: RouteDate,
+                                    RouteDepotId: RouteDepotId
+                                },
+                                success: function (data) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        text: 'CANCEL',
+                        btnClass: 'btn-red'
+                    },
+                }
+            });
+        });
+
+
+
+
+
+        $(document.body).on("change", "#EditRouteStartTime", function () {
+            CalculateTime();
+        });
+
+        $(document.body).on("change", "#EditRouteEndTime", function () {
+            CalculateTime();
+        });
+
+        function CalculateTime() {
+            var time1 = $("#EditRouteStartTime").val().split(':'), time2 = $("#EditRouteEndTime").val().split(':');
+            var hours1 = parseInt(time1[0], 10),
+                hours2 = parseInt(time2[0], 10),
+                mins1 = parseInt(time1[1], 10),
+                mins2 = parseInt(time2[1], 10);
+            var hours = hours2 - hours1, mins = 0;
+            if (hours < 0) hours = 24 + hours;
+            if (mins2 >= mins1) {
+                mins = mins2 - mins1;
+            }
+            else {
+                mins = (mins2 + 60) - mins1;
+                hours--;
+            }
+            mins = mins / 60;
+            hours += mins;
+            hours = hours.toFixed(2);
+            $("#EditRouteTotalTime").val(hours);
+        }
+
+
+
+    </script>
+}

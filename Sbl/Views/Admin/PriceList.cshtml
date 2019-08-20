@@ -1,0 +1,501 @@
+﻿@model Sbl.Models.Setting
+
+@{
+    ViewBag.Title = "Price List";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Price List</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Price List</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("pricelist", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            <div class="form-body">
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FullRouteAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.FullRouteAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.FullRouteAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.FullRouteSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.FullRouteSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.FullRouteSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.HalfRouteAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.HalfRouteAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.HalfRouteAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.HalfRouteSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.HalfRouteSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.HalfRouteSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.RemoteDebriefAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.RemoteDebriefAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.RemoteDebriefAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.RemoteDebriefSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.RemoteDebriefSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.RemoteDebriefSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.NurseryRoutesLevel1Amazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.NurseryRoutesLevel1Amazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.NurseryRoutesLevel1Amazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.NurseryRoutesLevel1SBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.NurseryRoutesLevel1SBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.NurseryRoutesLevel1SBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.NurseryRoutesLevel2Amazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.NurseryRoutesLevel2Amazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.NurseryRoutesLevel2Amazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.NurseryRoutesLevel2SBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.NurseryRoutesLevel2SBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.NurseryRoutesLevel2SBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Rescue2HoursAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Rescue2HoursAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Rescue2HoursAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Rescue2HoursSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Rescue2HoursSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Rescue2HoursSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Rescue4HoursAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Rescue4HoursAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Rescue4HoursAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Rescue4HoursSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Rescue4HoursSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Rescue4HoursSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Rescue6HoursAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Rescue6HoursAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Rescue6HoursAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Rescue6HoursSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Rescue6HoursSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Rescue6HoursSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.ReDelivery2HoursAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.ReDelivery2HoursAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.ReDelivery2HoursAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.ReDelivery2HoursSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.ReDelivery2HoursSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.ReDelivery2HoursSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.ReDelivery4HoursAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.ReDelivery4HoursAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.ReDelivery4HoursAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.ReDelivery4HoursSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.ReDelivery4HoursSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.ReDelivery4HoursSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.ReDelivery6HoursAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.ReDelivery6HoursAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.ReDelivery6HoursAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.ReDelivery6HoursSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.ReDelivery6HoursSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.ReDelivery6HoursSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Missort2HoursAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Missort2HoursAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Missort2HoursAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Missort2HoursSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Missort2HoursSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Missort2HoursSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Missort4HoursAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Missort4HoursAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Missort4HoursAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Missort4HoursSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Missort4HoursSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Missort4HoursSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Missort6HoursAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Missort6HoursAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Missort6HoursAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Missort6HoursSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Missort6HoursSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Missort6HoursSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SamedayAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SamedayAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SamedayAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SamedaySBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SamedaySBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SamedaySBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.TrainingDayAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.TrainingDayAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.TrainingDayAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.TrainingDaySBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.TrainingDaySBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.TrainingDaySBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.RideAlongAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.RideAlongAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.RideAlongAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.RideAlongSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.RideAlongSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.RideAlongSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SupportAd1Amazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SupportAd1Amazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SupportAd1Amazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SupportAd1Sbl, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SupportAd1Sbl, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SupportAd1Sbl)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SupportAd2Amazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SupportAd2Amazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SupportAd2Amazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SupportAd2Sbl, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SupportAd2Sbl, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SupportAd2Sbl)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SupportAd3Amazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SupportAd3Amazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SupportAd3Amazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SupportAd3Sbl, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SupportAd3Sbl, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SupportAd3Sbl)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.LeadDriverAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.LeadDriverAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.LeadDriverAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.LeadDriverSbl, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.LeadDriverSbl, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.LeadDriverSbl)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.LargeVanAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.LargeVanAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.LargeVanAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.LargeVanSbl, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.LargeVanSbl, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.LargeVanSbl)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Mileage1MileAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Mileage1MileAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Mileage1MileAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Mileage1MileSBL, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Mileage1MileSBL, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Mileage1MileSBL)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.BYODAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.BYODAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.BYODAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.BYODSbl, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.BYODSbl, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.BYODSbl)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.CongestionChargeAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.CongestionChargeAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.CongestionChargeAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.CongestionChargeSbl, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.CongestionChargeSbl, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.CongestionChargeSbl)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.LatePaymentAmazon, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.LatePaymentAmazon, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.LatePaymentAmazon)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.LatePaymentSbl, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.LatePaymentSbl, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.LatePaymentSbl)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.VanRentalPrice, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.VanRentalPrice, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.VanRentalPrice)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.InsurancePrice, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.InsurancePrice, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.InsurancePrice)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.GoodsInTransitPrice, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.GoodsInTransitPrice, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.GoodsInTransitPrice)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.PublicLiabilityPrice, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.PublicLiabilityPrice, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.PublicLiabilityPrice)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                <a href="~/admin/dashboard" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page Content -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Container fluid  -->
+    <!-- ============================================================== -->
+</div>
+
+@section Scripts {
+    <script>
+    </script>
+}

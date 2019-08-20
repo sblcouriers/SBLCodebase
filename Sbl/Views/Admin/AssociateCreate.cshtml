@@ -1,0 +1,333 @@
+﻿@using Sbl.Helpers
+@model Sbl.Models.Associate
+ 
+@{
+    ViewBag.Title = "Insert Associate";
+}
+
+
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Insert New Associate</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/associatelist">Associates</a></li>
+                        <li class="breadcrumb-item active">Insert New Associate</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("associatecreate", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.Name, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Name)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Email)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.Position, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.Position, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Position)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.Address, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Address)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.City, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.City)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.Postcode, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.Postcode, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Postcode)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.Mobile, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Mobile)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.NextOfKinName, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.NextOfKinName, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.NextOfKinName)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.NextOfKinRelationship, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.NextOfKinRelationship, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.NextOfKinRelationship)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.NextOfKinMobile, new { @class = "control-label" })
+                                                    @Html.TextBoxFor(m => m.NextOfKinMobile, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.NextOfKinMobile)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.Bio, new { @class = "control-label" })
+                                                    @Html.TextAreaFor(m => m.Bio, new { @class = "form-control", @rows = "9" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Photo</label>
+                                                    <input type="file" id="PhotoUpload" name="PhotoUpload" class="dropify" data-max-file-size="3M" data-max-width="1000" data-max-height="1000" data-allowed-file-extensions="jpg jpeg png" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Driving Licence</label>
+                                                    <input type="file" id="DrivingLicenceUpload" name="DrivingLicenceUpload" class="dropify" data-max-file-size="3M" data-max-width="1000" data-max-height="1000" data-allowed-file-extensions="jpg jpeg png pdf" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">ID/Passport</label>
+                                                    <input type="file" id="PassportUpload" name="PassportUpload" class="dropify" data-max-file-size="3M" data-max-width="1000" data-max-height="1000" data-allowed-file-extensions="jpg jpeg png pdf" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Proof of Address</label>
+                                                    <input type="file" id="ProofOfAddressUpload" name="ProofOfAddressUpload" class="dropify" data-max-file-size="3M" data-max-width="1000" data-max-height="1000" data-allowed-file-extensions="jpg jpeg png pdf" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Nino</label>
+                                                    <input type="file" id="NinoUpload" name="NinoUpload" class="dropify" data-max-file-size="3M" data-max-width="1000" data-max-height="1000" data-allowed-file-extensions="jpg jpeg png pdf" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.AssociateStatus, new { @class = "control-label" })
+                                                    @Html.DropDownListFor(m => m.AssociateStatus, DropdownListBinder.PopulatAssociateStatus(), "-- Select --", new { @class = "form-control", @style = "background-color: #13a89e; color: #fff;" })
+                                                    @Html.ValidationMessageFor(m => m.AssociateStatus)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.ApplicationStatus, new { @class = "control-label" })
+                                                    @Html.DropDownListFor(m => m.ApplicationStatus, DropdownListBinder.PopulatApplicationStatus(), "-- Select --", new { @class = "form-control", @style = "background-color: #13a89e; color: #fff;" })
+                                                    @Html.ValidationMessageFor(m => m.ApplicationStatus)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.IsEmployed, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.IsEmployed, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.IsThirdParty, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.IsThirdParty, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.OwnVehicle, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.OwnVehicle, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Depot</label>
+                                                    @Html.DropDownListFor(m => m.DepotId, (IEnumerable<SelectListItem>)ViewBag.Depots, "-- N/A --", new { @class = "form-control select2 custom-select" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.StartDate, new { @class = "control-label" })
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control sbl-datepicker" })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.InductionCompleted, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.InductionCompleted, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.InductionCompletedDate, new { @class = "control-label" })
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.InductionCompletedDate, new { @class = "form-control sbl-datepicker" })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.FirstRideAlong, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.FirstRideAlong, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.FirstRideAlongDate, new { @class = "control-label" })
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.FirstRideAlongDate, new { @class = "form-control sbl-datepicker" })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        @Html.CheckBoxFor(m => m.SecondRideAlong, new { @class = "custom-control-input" })
+                                                        @Html.LabelFor(m => m.SecondRideAlong, new { @class = "custom-control-label" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.SecondRideAlongDate, new { @class = "control-label" })
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.SecondRideAlongDate, new { @class = "form-control sbl-datepicker" })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                <a href="~/admin/associatelist" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page Content -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+</div>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            $('.dropify').dropify();
+        });
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+    </script>
+}

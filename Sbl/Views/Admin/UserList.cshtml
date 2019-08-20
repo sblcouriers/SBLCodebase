@@ -1,0 +1,158 @@
+﻿@using Sbl.Helpers
+@model IEnumerable<Sbl.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "User List";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Users</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Users</li>
+                    </ol>
+                    <a href="~/account/register" class="btn btn-success d-none d-lg-block m-l-15">
+                        <i class="fa fa-plus-circle"></i> Insert New User
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="main-table" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Depot</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Email</td>
+                                            <td>
+                                                @{
+                                                    if (item.Roles.FirstOrDefault().RoleId == WebConstant.SBLUserRoleId.AdminRoleId)
+                                                    {
+                                                        <span>Admin</span>
+                                                    }
+                                                    if (item.Roles.FirstOrDefault().RoleId == WebConstant.SBLUserRoleId.FleetRoleId)
+                                                    {
+                                                        <span>Fleet</span>
+                                                    }
+                                                    if (item.Roles.FirstOrDefault().RoleId == WebConstant.SBLUserRoleId.MasterRoleId)
+                                                    {
+                                                        <span>-</span>
+                                                    }
+                                                    if (item.Roles.FirstOrDefault().RoleId == WebConstant.SBLUserRoleId.PayrollRoleId)
+                                                    {
+                                                        <span>Payroll</span>
+                                                    }
+                                                    if (item.Roles.FirstOrDefault().RoleId == WebConstant.SBLUserRoleId.POCRoleId)
+                                                    {
+                                                        <span>POC</span>
+                                                    }
+                                                    if (item.Roles.FirstOrDefault().RoleId == WebConstant.SBLUserRoleId.RecruitmentRoleId)
+                                                    {
+                                                        <span>Recruitment</span>
+                                                    }
+                                                    if (item.Roles.FirstOrDefault().RoleId == WebConstant.SBLUserRoleId.DriverRoleId)
+                                                    {
+                                                        <span>Driver</span>
+                                                    }
+                                                }
+                                            </td>
+                                            <td>@(item.DepotId.HasValue ? item.Depot.Name : "-")</td>
+                                            <td class="text-nowrap">
+                                                <a href="~/admin/useredit/@item.Id" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                                <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="Delete"> <i class="fa fa-times-circle text-inverse m-r-10 DeleteUser" style="color:red;" data-id="@item.Id"></i> </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loading-modal"></div>
+
+@section Scripts {
+    <script>
+
+
+        /* loading */
+        $body = $("body");
+        $(document).on({
+            ajaxStart: function () { $body.addClass("loading"); },
+            ajaxStop: function () { $body.removeClass("loading"); }
+        });
+
+    
+ 
+
+
+        var off;
+        $(document.body).on("click", ".DeleteUser", function () {
+            var UserId = $(this).data("id");
+            //alert(UserId);
+            off = $.confirm({
+                title: "",
+                content: '' +
+                    '<p>Do you want delete this user?</p>' +
+                    '',
+                boxWidth: '30%',
+                useBootstrap: false,
+                buttons: {
+                    save: {
+                        text: 'YES',
+                        btnClass: 'btn-green',
+                        action: function () {
+                            $.ajax({
+                                url: "@Url.Action("DeleteUser", "admin")",
+                                type: "GET",
+                                data: {
+                                    UserId: UserId
+                                },
+                                success: function (data) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        text: 'CANCEL',
+                        btnClass: 'btn-red'
+                    },
+                }
+            });
+        });
+
+
+
+
+
+
+
+
+
+    </script>
+}

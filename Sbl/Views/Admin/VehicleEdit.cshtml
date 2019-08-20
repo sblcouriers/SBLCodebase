@@ -1,0 +1,134 @@
+﻿@model Sbl.Models.Vehicle
+
+@{
+    ViewBag.Title = "Edit Vehicle";
+}
+
+@{
+    List<SelectListItem> status = new List<SelectListItem>();
+    status.Add(new SelectListItem { Text = "Rented", Value = "Rented" });
+    status.Add(new SelectListItem { Text = "Available", Value = "Available" });
+    status.Add(new SelectListItem { Text = "Repair", Value = "Repair" });
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Edit Vehicle</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/vehiclelist">Vehicles</a></li>
+                        <li class="breadcrumb-item active">Edit Vehicle</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("vehicleedit", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label">Rental Company</label>
+                                                    @Html.DropDownListFor(m => m.RentalId, (IEnumerable<SelectListItem>)ViewBag.Rentals, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                                    @Html.ValidationMessageFor(m => m.RentalId)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label">Make</label>
+                                                    @Html.TextBoxFor(m => m.Make, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Make)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label">Model</label>
+                                                    @Html.TextBoxFor(m => m.Model, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Model)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label">Registration</label>
+                                                    @Html.TextBoxFor(m => m.Registration, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.Registration)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label">Mileage when Rented</label>
+                                                    @Html.TextBoxFor(m => m.MileageRented, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.MileageRented)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(m => m.DateRented, new { @class = "control-label" })
+                                                    <div class="input-group">
+                                                        @Html.EditorFor(m => m.DateRented, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                        </div>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.DateRented)
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label">Date Next Service</label>
+                                                    <div class="input-group">
+                                                        @Html.EditorFor(m => m.NextServiceDate, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="control-label">Status</label>
+                                                    @Html.DropDownListFor(m => m.Status, status, null, new { @class = "form-control", @style = "background-color: #13a89e; color: #fff;" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                <a href="~/admin/vehiclelist" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+    </script>
+}

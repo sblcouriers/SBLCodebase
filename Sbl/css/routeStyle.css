@@ -1,0 +1,257 @@
+﻿ #week-table.table {
+        font-size: 11px;
+    }
+
+        #week-table.table tr th, #week-table.table tr td {
+            margin: 0;
+            padding: 1px 5px;
+        }
+
+            #week-table.table tr th p, #week-table.table tr td p {
+                margin: 0;
+                padding: 1px 5px;
+            }
+
+    .week-title {
+        text-align: right;
+        background-color: #f1f1f1;
+        color: #222222;
+    }
+
+    .week-sbl-quantity {
+        width: 40px;
+        text-align: center;
+        background-color: #36bea6;
+        color: #fff;
+    }
+
+    .week-sbl-price {
+        width: 50px;
+        text-align: center;
+        background-color: #36bea6;
+        color: #fff;
+    }
+
+    .week-amazon-quantity {
+        width: 50px;
+        text-align: center;
+        background-color: #ffbc34;
+        color: #fff;
+    }
+
+    .week-amazon-price {
+        width: 50px;
+        text-align: center;
+        background-color: #ffbc34;
+        color: #fff;
+    }
+
+    .week-diff-quantity {
+        width: 50px;
+        text-align: center;
+        background-color: #009efb;
+        color: #fff;
+    }
+
+    .week-diff-price {
+        width: 50px;
+        text-align: center;
+        background-color: #009efb;
+        color: #fff;
+    }
+
+    .week-red {
+        background-color: red;
+    }
+
+
+    #day-table.table th {
+        text-align: center;
+        font-size: 12px;
+        color: #36bea6;
+        padding: 5px;
+    }
+
+    #day-table.table tr {
+        text-align: center;
+        font-size: 12px;
+        color: #36bea6;
+        padding: 1px;
+    }
+
+    #day-table.table th {
+        background-color: #f1f1f1;
+        text-align: center;
+        color: #000;
+        padding: 0px;
+        font-size: 10px;
+    }
+
+    #day-table.table td {
+        padding: 0px;
+    }
+
+    #day-table .form-control {
+        border: 0px solid #fff;
+        border-radius: 0;
+        padding: 1px;
+        font-size: 12px;
+        line-height: 10px;
+        min-height: 22px;
+    }
+
+        #day-table .form-control:focus {
+            background-color: #f1f1f1;
+        }
+
+    .day-title p {
+        text-align: center;
+        padding: 0px 3px;
+        color: #fff;
+        margin: 0;
+    }
+
+    .day-amazon-quantity p {
+        background-color: #ffbc34;
+        text-align: center;
+        padding: 0px 3px;
+        color: #fff;
+        margin: 0;
+    }
+
+    .day-amazon-quantity td input {
+        text-align: center;
+        background-color: #ffbc34;
+        color: #fff;
+    }
+
+    .day-amazon-price p {
+        background-color: #ffbc34;
+    }
+
+    .day-amazon-price td p {
+        text-align: center;
+        margin: 0;
+        color: #fff;
+    }
+
+
+    .day-sbl-quantity {
+        background-color: #36bea6;
+    }
+
+        .day-sbl-quantity td p {
+            text-align: center;
+            margin: 0;
+            color: #fff;
+        }
+
+    .day-sbl-price {
+        background-color: #36bea6;
+    }
+
+        .day-sbl-price td p {
+            text-align: center;
+            margin: 0;
+            color: #fff;
+        }
+
+    .day-diff-quantity {
+        background-color: #009efb;
+    }
+
+        .day-diff-quantity td p {
+            text-align: center;
+            margin: 0;
+            color: #fff;
+        }
+
+    .day-diff-price {
+        background-color: #009efb;
+    }
+
+        .day-diff-price td p {
+            text-align: center;
+            margin: 0;
+            color: #fff;
+        }
+
+    .day-red {
+        background-color: red;
+    }
+
+    #route-table.table th {
+        text-align: center;
+        font-size: 16px;
+        color: #36bea6;
+        padding: 5px 10px;
+    }
+
+    #route-table.table td, #route-table.table th {
+        padding: 1px !important;
+        margin: 0 !important;
+        vertical-align: auto !important;
+    }
+
+        #route-table.table td p {
+            margin: 0 !important;
+            padding: 2px;
+        }
+
+    .ad1-format, .ad2-format, .ad3-format {
+        width: 50px;
+    }
+
+        .ad1-format input, .ad2-format input, .ad3-format input {
+            text-align: center;
+        }
+
+    .remove-route i {
+        font-size: 15px;
+        padding-top: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
+        line-height: 15px;
+    }
+
+    .remove-route:hover {
+        cursor: pointer;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #ffbc34;
+    }
+
+    .table-condensed {
+        width: 359px;
+    }
+
+    .datepicker-inline {
+        width: 450px;
+    }
+
+
+    .table td, .table th {
+        padding:0;
+    }
+
+    .tableXXXXXXXXXXX th {
+        padding:5px;
+        vertical-align: unset;
+    }
+
+    .tableXXXXXXXXXXX td {
+        padding:5px 10px;
+        vertical-align: unset;
+    }
+
+    .clone-head-table-wrap {
+        z-index: 99999!important;
+    }
+
+    .clone-column-table-wrap {
+        z-index: 99999!important;
+    }
+
+    
+    

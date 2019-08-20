@@ -1,0 +1,134 @@
+﻿@model IEnumerable<Sbl.Models.Vehicle>
+
+@{
+    ViewBag.Title = "Vehicles Rented by SBL";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Vehicles Rented by SBL</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Vehicles Rented by SBL</li>
+                    </ol>
+                    <a href="~/admin/vehiclecreate" class="btn btn-success d-none d-lg-block m-l-15">
+                        <i class="fa fa-plus-circle"></i> Insert New</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="main-table" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Rental Company</th>
+                                        <th>Make</th>
+                                        <th>Model</th>
+                                        <th>Registration</th>
+                                        <th>Date Rented</th>
+                                        <th>Date Returned</th>
+                                        <th>Next Service Date</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Rental.Name</td>
+                                            <td>@item.Make</td>
+                                            <td>@item.Model</td>
+                                            <td>@item.Registration</td>
+                                            <td>@String.Format("{0:dd MMM yyyy}", item.DateRented)</td>
+                                            <td>
+                                                @if (item.DateReturned.HasValue)
+                                                {
+                                                    <span>@String.Format("{0:dd MMM yyyy}", item.DateReturned)</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>-</span>
+                                                }
+                                            </td>
+                                            <td>@String.Format("{0:dd MMM yyyy}", item.NextServiceDate)</td>
+                                            <td>
+                                                @if (item.Status == "Rented")
+                                                {
+                                                    <div class="label label-table label-info">Rented</div>
+                                                }
+                                                @if (item.Status == "Available")
+                                                {
+                                                    <div class="label label-table label-success">Available</div>
+                                                }
+                                                @if (item.Status == "Repair")
+                                                {
+                                                    <div class="label label-table label-warning">Repair</div>
+                                                }
+                                                @if (item.Status == "Returned")
+                                                {
+                                                    <div class="label label-table label-danger">Returned</div>
+                                                }
+                                            </td>
+                                            <td class="text-nowrap">
+                                                @if (item.Status == "Returned")
+                                                {
+                                                    <a href="~/admin/vehiclefile/@item.Id" data-toggle="tooltip" data-original-title="Vehicle Files"> <i class="fa fa-files-o text-inverse m-r-10"></i> </a>
+                                                    <a href="~/admin/vehiclecancelreturn/@item.Id" data-toggle="tooltip" data-original-title="Cancel Return"> <i class="fa fa-arrow-circle-right text-inverse m-r-10"></i> </a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="~/admin/vehiclefile/@item.Id" data-toggle="tooltip" data-original-title="Vehicle Files"> <i class="fa fa-files-o text-inverse m-r-10"></i> </a>
+                                                    <a href="~/admin/vehicleedit/@item.Id" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                                    <a href="~/admin/vehiclereturn/@item.Id" data-toggle="tooltip" data-original-title="Return Vehicle"> <i class="fa fa-arrow-circle-left text-inverse m-r-10"></i> </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- This is data table -->
+    <script src="~/assets/node_modules/datatables/jquery.dataTables.min.js"></script>
+    <!-- start - This is for export functionality only -->
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+    <!-- end - This is for export functionality only -->
+    <script>
+
+        $(document).ready(function() {
+            $('#main-table').DataTable();
+        });
+
+        $('#main-table').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+
+    </script>
+}

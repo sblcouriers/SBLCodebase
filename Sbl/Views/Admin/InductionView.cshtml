@@ -1,0 +1,729 @@
+﻿@model Sbl.Models.Induction
+
+@{
+    ViewBag.Title = "View Induction";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">View Induction</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/inductionlist">Inductions</a></li>
+                        <li class="breadcrumb-item active">View Induction</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.FullName)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.FullName</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.MobileNumber)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.MobileNumber</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Email)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Email</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NextOfKinName)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NextOfKinName</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NextOfKinRelationship)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NextOfKinRelationship</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NextOfKinMobile)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NextOfKinMobile</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Address)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Address</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.City)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.City</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Postcode)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Postcode</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.DateOfBirth)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.DateOfBirth</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NationalInsuranceNumber)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NationalInsuranceNumber</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Nationality)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Nationality</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.UTRNumber)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.UTRNumber</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.OwnVehicle)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.OwnVehicle</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.VehicleType)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.VehicleType</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.VehicleInsuranceRenewalDate)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.VehicleInsuranceRenewalDate</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.VehicleMOTDue)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.VehicleMOTDue</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NameOfTheBank)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NameOfTheBank</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.SortCode)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.SortCode</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.AccountNumber)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.AccountNumber</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.AccountName)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.AccountName</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.UnspentCriminalConviction)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.UnspentCriminalConviction</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CriminalConvictionDetails)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CriminalConvictionDetails</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRTitle)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRTitle</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRSurname)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRSurname</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRForename)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRForename</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRMotherSurnameBirth)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRMotherSurnameBirth</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRMotherForenameBirth)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRMotherForenameBirth</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRMaidenFamilyName)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRMaidenFamilyName</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CROtherName1)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CROtherName1</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CROtherName2)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CROtherName2</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CROtherName3)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CROtherName3</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRDateOfBirth)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRDateOfBirth</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRGender)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRGender</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRTownOfBirth)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRTownOfBirth</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRCountryOfBirth)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRCountryOfBirth</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPassportNumber)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPassportNumber</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRIsUKPassport)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRIsUKPassport</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPassportCountryOfIssue)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPassportCountryOfIssue</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPassportIssueDate)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPassportIssueDate</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRNationalInsuranceNumber)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRNationalInsuranceNumber</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRDriverLicense)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRDriverLicense</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRDriverLicenseCountryOfIssue)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRDriverLicenseCountryOfIssue</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRCurrentAddressNumberStreet)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRCurrentAddressNumberStreet</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRCurrentAddressTownCity)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRCurrentAddressTownCity</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRCurrentAddressCountyDistrict)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRCurrentAddressCountyDistrict</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRCurrentAddressPostcode)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRCurrentAddressPostcode</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRCurrentAddressDateMovedIn)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRCurrentAddressDateMovedIn</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRCurrentAddressCountry)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRCurrentAddressCountry</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress1NumberStreet)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress1NumberStreet</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress1TownCity)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress1TownCity</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress1CountyDistrict)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress1CountyDistrict</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress1Postcode)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress1Postcode</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress1DateMovedIn)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress1DateMovedIn</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress1Country)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress1Country</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress2NumberStreet)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress2NumberStreet</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress2TownCity)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress2TownCity</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress2CountyDistrict)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress2CountyDistrict</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress2Postcode)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress2Postcode</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress2DateMovedIn)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress2DateMovedIn</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress2Country)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress2Country</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress3NumberStreet)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress3NumberStreet</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress3TownCity)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress3TownCity</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress3CountyDistrict)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress3CountyDistrict</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress3Postcode)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress3Postcode</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress3DateMovedIn)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress3DateMovedIn</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress3Country)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress3Country</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress4NumberStreet)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress4NumberStreet</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress4TownCity)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress4TownCity</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress4CountyDistrict)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress4CountyDistrict</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress4Postcode)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress4Postcode</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress4DateMovedIn)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress4DateMovedIn</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress4Country)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress4Country</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress5NumberStreet)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress5NumberStreet</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress5TownCity)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress5TownCity</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress5CountyDistrict)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress5CountyDistrict</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress5Postcode)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress5Postcode</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress5DateMovedIn)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress5DateMovedIn</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress5Country)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress5Country</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress6NumberStreet)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress6NumberStreet</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress6TownCity)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress6TownCity</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress6CountyDistrict)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress6CountyDistrict</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress6Postcode)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress6Postcode</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress6DateMovedIn)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress6DateMovedIn</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.CRPreviousAddress6Country)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.CRPreviousAddress6Country</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.PhysicallyFit)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.PhysicallyFit</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NotTakingMedication)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NotTakingMedication</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NoMedicalConditions)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NoMedicalConditions</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.ComplyWithGuidelines)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.ComplyWithGuidelines</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NoMentalOrPhysicalConditions)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NoMentalOrPhysicalConditions</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.InformSblChanges)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.InformSblChanges</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Status)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Status</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    </script>
+}

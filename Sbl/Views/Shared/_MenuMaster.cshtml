@@ -1,0 +1,76 @@
+﻿<nav class="sidebar-nav">
+    <ul id="sidebarnav">
+        <li>
+            <a class="waves-effect waves-dark" href="~/admin/dashboard">
+                <i class="icon-speedometer"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-user"></i><span class="hide-menu">Associates</span></a>
+            <ul aria-expanded="false" class="collapse">
+                <li>@Html.ActionLink("Associates", "associatelist", "admin")</li>
+                <li>@Html.ActionLink("Remittances", "AssociateRemittanceList", "admin")</li>
+                <li>@Html.ActionLink("Associates Remittances", "AssociateRemittanceList", "admin")</li>
+                <li>@Html.ActionLink("Charges/Credits", "chargelist", "admin")</li>
+
+            </ul>
+        </li>
+        <li>
+            <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-write"></i><span class="hide-menu">POC</span></a>
+            <ul aria-expanded="false" class="collapse">
+                <li>@Html.ActionLink("Route Allocation", "routeallocation", "admin")</li>
+                <li>@Html.ActionLink("Schedule", "schedule", "admin")</li>
+                <li>@Html.ActionLink("TBC DA's Performance", "dashboard", "admin")</li>
+                <li>@Html.ActionLink("TBC Bonus", "bonus", "admin")</li>
+            </ul>
+        </li>
+        <li>
+            <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-truck"></i><span class="hide-menu">Vehicles</span></a>
+            <ul aria-expanded="false" class="collapse">
+                <li>@Html.ActionLink("Rental Companies", "rentallist", "admin")</li>
+                <li>@Html.ActionLink("Rented by SBL", "vehiclelist", "admin")</li>
+                <li>@Html.ActionLink("Services", "vehicleservicelist", "admin")</li>
+                <li>@Html.ActionLink("Accidents", "accidentlist", "admin")</li>
+                <li>@Html.ActionLink("Rented by Associates", "subrentallist", "admin")</li>
+                <li>@Html.ActionLink("Inspections", "inspectionlist", "admin")</li>
+            </ul>
+        </li>
+        <li>
+            <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-clipboard"></i><span class="hide-menu">Recruitment</span></a>
+            <ul aria-expanded="false" class="collapse">
+                <li>@Html.ActionLink("Start New Induction", "index", "induction")</li>
+                <li>@Html.ActionLink("Inductions", "inductionlist", "admin")</li>
+                <li>@Html.ActionLink("TBC Induction Schedule", "dashboard", "admin")</li>
+                <li>@Html.ActionLink("TBC Induction Calendar", "inductioncalendar", "admin")</li>
+                <li>@Html.ActionLink("Induction Daily Code", "inductioncode", "admin")</li>
+            </ul>
+        </li>
+        <li>
+            <a class="waves-effect waves-dark" href="/admin/financelist">
+                <i class="icon-credit-card"></i>
+                <span>Finances</span>
+            </a>
+        </li>
+        <li>
+            <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-settings"></i><span class="hide-menu">Settings</span></a>
+            <ul aria-expanded="false" class="collapse">
+                <li>@Html.ActionLink("Depots", "depotlist", "admin")</li>
+                <li>@Html.ActionLink("Prices", "pricelist", "admin")</li>
+                <li>@Html.ActionLink("Remittance Info", "remittanceinfo", "admin")</li>
+                <li>@Html.ActionLink("Users", "userlist", "admin")</li>
+            </ul>
+        </li>
+        <li>
+            <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-light-bulb"></i><span class="hide-menu">Master</span></a>
+            <ul aria-expanded="false" class="collapse">
+                <li>@Html.ActionLink("Users", "userlist", "admin")</li>
+                <li>@Html.ActionLink("Roles", "rolelist", "admin")</li>
+                <li>@Html.ActionLink("Settings", "settingedit", "admin")</li>
+            </ul>
+        </li>
+        <li><a href="javascript:document.getElementById('logoutForm').submit()">Logout</a></li>
+    </ul>
+</nav>
+
+

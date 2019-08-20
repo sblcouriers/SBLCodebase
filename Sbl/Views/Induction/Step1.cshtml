@@ -1,0 +1,176 @@
+﻿@model Sbl.Models.InductionStep1ViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutInduction.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Step 1</h4>
+                <h6 class="card-subtitle">Please complete the form signing each page</h6>
+                <div class='row'>
+                    <div class="col-md-12">
+                        <ul class='nav nav-wizard nav-wizard-backnav'>
+                            <li class="active"><a>Step 1</a></li>
+                            <li><a>Step 2</a></li>
+                            <li><a>Step 3</a></li>
+                            <li><a>Step 4</a></li>
+                            <li><a>Step 5</a></li>
+                            <li><a>Step 6</a></li>
+                            <li><a>Step 7</a></li>
+                            <li><a>Step 8</a></li>
+                            <li><a>Step 9</a></li>
+                            <li><a>Step 10</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("step1", "induction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.GuidId)
+                    <div class="form-body">
+
+                        <h4 class="text-success">Complete all personal information in full</h4>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.FullName, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.FullName)
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.MobileNumber, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.MobileNumber, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.MobileNumber)
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Email)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.NextOfKinName, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.NextOfKinName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.NextOfKinName)
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.NextOfKinRelationship, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.NextOfKinRelationship, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.NextOfKinRelationship)
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.NextOfKinMobile, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.NextOfKinMobile, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.NextOfKinMobile)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Address, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Address)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.City, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.City)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.County, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.County, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.County)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Postcode, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Postcode, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Postcode)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Country, new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.Country, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                    @Html.ValidationMessageFor(m => m.Country)
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step1Signature, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Step1Signature, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Step1Signature)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step1DateSigned, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.Step1DateSigned, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Step1DateSigned)
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-success" style="margin-top: 30px; float: right;">
+                                    <i class="fa fa-check"></i>
+                                    <span> Next </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+    </script>
+}

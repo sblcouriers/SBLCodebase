@@ -1,0 +1,210 @@
+﻿@model Sbl.Models.AssociateProfileViewModel
+
+@{
+    ViewBag.Title = "Associate Profile";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Associate Profile</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/associatelist">Associates</a></li>
+                        <li class="breadcrumb-item active">Associate Profile</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Column -->
+            <div class="col-lg-4 col-xlg-3 col-md-5">
+                <div class="card">
+                    <div class="card-body">
+                        <center class="m-t-30">
+                            @if (Model.DataPhoto != null)
+                            {
+                                <img src="@String.Format("data:{0};base64,{1}", Model.DataPhotoContentType, Convert.ToBase64String(Model.DataPhoto, 0, Model.DataPhoto.Length))" class="img-circle" width="150" />
+                            }
+                            <h4 class="card-title m-t-10">@Model.Name</h4>
+                            <h6 class="card-subtitle">@Model.Position</h6>
+                        </center>
+                    </div>
+                    <div>
+                        <hr>
+                    </div>
+                    <div class="card-body">
+                        <small class="text-muted">Email address </small>
+                        <h6>@Model.Email</h6> <small class="text-muted p-t-30 db">Mobile</small>
+                        <h6>@Model.Mobile</h6> <small class="text-muted p-t-30 db">Address</small>
+                        <h6>@Model.Address, @Model.City @Model.Postcode</h6>
+                        <div class="map-box">
+                            @{ string map = String.Format("http://maps.google.co.uk/maps?q={0}&output=embed", Model.Postcode); }
+                            <iframe src="@map" width="100%" height="150" frameborder="0" style="border:0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-xlg-9 col-md-7">
+                <div class="card">
+                    <ul class="nav nav-tabs profile-tab" role="tablist">
+                        <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#profile" role="tab">Profile</a> </li>
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#files" role="tab">Files</a> </li>
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#invoices" role="tab">Invoices</a> </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="profile" role="tabpanel">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Name)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Name</p>
+                                    </div>
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Email)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Email</p>
+                                    </div>
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Position)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Position</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Address)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Address</p>
+                                    </div>
+                                    <div class="col-md-3 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.City)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.City</p>
+                                    </div>
+                                    <div class="col-md-3 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Postcode)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Postcode</p>
+                                    </div>
+                                    <div class="col-md-3 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.Mobile)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.Mobile</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NextOfKinName)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NextOfKinName</p>
+                                    </div>
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NextOfKinRelationship)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NextOfKinRelationship</p>
+                                    </div>
+                                    <div class="col-md-4 col-xs-6 b-r">
+                                        <strong>@Html.LabelFor(m => m.NextOfKinMobile)</strong>
+                                        <br>
+                                        <p class="text-muted">@Model.NextOfKinMobile</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <p class="m-t-30">@Model.Bio</p>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="files" role="tabpanel">
+                            <div class="card-body">
+                                @if (Model.AssociateFiles.Any())
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            @foreach (var file in Model.AssociateFiles)
+                                            {
+                                                <div class="@String.Format("file-{0}", file.Id)" style="border:1px solid #cccccc; padding:10px; margin-right: 5px; display: inline-block;">
+                                                    @if (!String.IsNullOrEmpty(file.DataFileDescription))
+                                                    {
+                                                        <p><strong>Description:</strong> @file.DataFileDescription</p>
+                                                    }
+                                                    @if (file.DataFileExpiryDate.HasValue)
+                                                    {
+                                                        <p><strong>Expiry Date:</strong> @String.Format("{0:dd MMM yyyy}", file.DataFileExpiryDate)</p>
+                                                    }
+                                                    <p><strong>File Name:</strong> @file.DataFileName</p>
+                                                    <a href="~/admin/associatefiledownload/@file.Id" class="btn btn-xs btn-success"> <i class="fa fa-cloud"></i> Download</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="invoices" role="tabpanel">
+                            <div class="card-body">
+                                @if (Model.AssociateRemittances.Any())
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            @foreach (var rem in Model.AssociateRemittances)
+                                            {
+                                                <div style="border: 1px solid #cccccc; padding: 10px; margin-right: 5px; display: inline-block; width: 100%; margin-bottom: 10px;">
+                                                    @if (rem.Date != null)
+                                                    {
+                                                        <p><strong>Remittance Period:</strong> @String.Format("{0:dd MMM yyyy} - {1:dd MMM yyyy}", rem.Date.Value.AddDays(-(int)rem.Date.Value.DayOfWeek + (int)DayOfWeek.Sunday), rem.Date.Value.AddDays(-(int)rem.Date.Value.DayOfWeek + (int)DayOfWeek.Sunday).AddDays(6))</p>
+                                                    }
+                                                    <p><strong>Status:</strong> <span style="color: red;">@rem.Status</span></p>
+                                                    @if (rem.Date != null)
+                                                    {
+                                                        <a href="~/admin/associateremittance?associateid=@Model.Id&fromdate=@String.Format("{0:dd MMM yyyy}", rem.Date.Value.AddDays(-(int) rem.Date.Value.DayOfWeek + (int) DayOfWeek.Sunday))" class="btn btn-xs btn-success"> <i class="fa fa-file"></i> View Remittance</a>
+                                                    }
+
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        $(document.body).on("click", ".remove-existing-file", function () {
+            var AssociateFileId = $(this).data("id");
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this file!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: "@Url.Action("associatefileremove", "admin")",
+                    type: "GET",
+                    data: { AssociateFileId: AssociateFileId },
+                    success: function (data) {
+                        $(".file-" + AssociateFileId).remove();
+                        swal("Deleted!", "The file has been deleted.", "success");
+                    }
+                });
+            });
+        });
+
+    </script>
+}

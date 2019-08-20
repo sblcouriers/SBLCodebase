@@ -1,0 +1,193 @@
+﻿@using Sbl.Helpers
+@model IEnumerable<Sbl.Models.ChargePcn>
+
+@{
+    ViewBag.Title = "Charges PCN";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Charges PCN</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Charges PCN</li>
+                    </ol>
+                    <a href="~/admin/chargepcncreate" class="btn btn-success d-none d-lg-block m-l-15">
+                        <i class="fa fa-plus-circle"></i> Insert New Charge PCN
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Associate</strong></label>
+                                    @Html.DropDownList("associateId", (IEnumerable<SelectListItem>)ViewBag.Associates, "Select Associate", new { @class = "form-control select2 custom-select", @id = "ddlAssociateId" })
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Depot</strong></label>
+                                    @Html.DropDownList("depotId", (IEnumerable<SelectListItem>)ViewBag.Depots, "Select Depot", new { @class = "form-control select2 custom-select", @id = "ddlDepotId" })
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Week</strong></label>
+                                    @Html.DropDownList("weekNumber", DropdownListBinder.PopulatWeeks(), "Select Week", new { @class = "form-control select2 custom-select", @id = "ddlWeekNumber" })
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <br />
+                                    <input type="button" id="btnSearch" name="Search" class="btn btn-success" style="color: #fff; margin-top: 10px;" value="Search" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="main-table" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Associate</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>PCN Fee</th>
+                                        <th>Admin Fee</th>
+                                        <th>Total</th>
+                                        <th>Date First Instalment</th>
+                                        <th>Frequency</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Associate.Name</td>
+                                            <td>@String.Format("{0:dd MMM yyyy}", item.Date)</td>
+                                            <td>@item.Description</td>
+                                            <td>@String.Format("£{0:N2}", item.PcnFee)</td>
+                                            <td>@String.Format("£{0:N2}", item.AdminFee)</td>
+                                            <td>@String.Format("£{0:N2}", item.PcnFee + item.AdminFee)</td>
+                                            <td>@String.Format("{0:dd MMM yyyy}", item.DateFirstInstalment)</td>
+                                            <td>@(item.WeekFrequency == 1 ? "Every " + item.WeekFrequency + " week" : "Every " + item.WeekFrequency + " weeks"),</td>
+                                            <td class="text-nowrap">
+                                                <a href="~/admin/chargepcnedit/@item.Id" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                                <a href="javascript:void(0);" data-toggle="tooltip" data-original-title="Delete"> <i class="fa fa-times-circle text-inverse m-r-10 ChargePcnDelete" style="color:red;" data-id="@item.Id"></i> </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="loading-modal"></div>
+
+@section Scripts {
+
+    <!-- This is data table -->
+    <script src="~/assets/node_modules/datatables/jquery.dataTables.min.js"></script>
+    <!-- start - This is for export functionality only -->
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+    <!-- end - This is for export functionality only -->
+
+    <script>
+
+        /* loading */
+        $body = $("body");
+        $(document).on({
+            ajaxStart: function () { $body.addClass("loading"); },
+            ajaxStop: function () { $body.removeClass("loading"); }
+        });
+
+
+        $(document).ready(function () {
+            $('#main-table').DataTable();
+        });
+        $('#main-table').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+        $("#ddlAssociateId").select2();
+        $(document.body).on("click", "#btnSearch", function () {
+
+            var depotId = $("#ddlDepotId").val();
+            var weekNumber = $("#ddlWeekNumber").val();
+            var associateId = $("#ddlAssociateId").val();
+            window.location.href = "/admin/chargepcnlist?depotId=" + depotId + "&weekNumber=" + weekNumber + "&associateId=" + associateId;
+        });
+
+
+         
+
+        var off;
+        $(document.body).on("click", ".ChargePcnDelete", function () {
+            var ChargePcnId = $(this).data("id");
+            //alert(ChargeId);
+            off = $.confirm({
+                title: "",
+                content: '' +
+                    '<p>Do you want delete this entry?</p>' +
+                    '',
+                boxWidth: '30%',
+                useBootstrap: false,
+                buttons: {
+                    save: {
+                        text: 'YES',
+                        btnClass: 'btn-green',
+                        action: function () {
+                            $.ajax({
+                                url: "@Url.Action("ChargePcnDelete", "admin")",
+                                type: "GET",
+                                data: {
+                                    ChargePcnId: ChargePcnId
+                                },
+                                success: function (data) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        text: 'CANCEL',
+                        btnClass: 'btn-red'
+                    },
+                }
+            });
+        });
+
+
+
+
+
+
+
+
+
+    </script>
+}

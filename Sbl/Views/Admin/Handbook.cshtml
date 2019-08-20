@@ -1,0 +1,418 @@
+﻿@using Sbl.Helpers
+@model Sbl.Models.HandbookViewModel
+
+@{
+    ViewBag.Title = "Handbook";
+}
+
+<link href="~/css/routeStyle.css" rel="stylesheet">
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Handbook</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Handbook</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Depot</strong></label>
+                                    <select id="Depot" class="form-control">
+                                        @foreach (var depot in Model.Depots)
+                                        {
+                                            string readOnly = depot.Name == Model.POCDepot ? "" : "(read only)";
+
+                                            if (Model.DepotId == depot.Id)
+                                            {
+                                                <option value="@depot.Id" selected="selected">@depot.Name @readOnly</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@depot.Id">@depot.Name @readOnly</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Period Start</strong></label>
+                                    <select id="Period" class="form-control">
+                                        @foreach (var period in Model.Periods.OrderByDescending(x => x.DateStart))
+                                        {
+                                            if (Model.DateStart == period.DateStart)
+                                            {
+                                                <option value="@String.Format("{0:yyyy-MM-dd}", period.DateStart)" selected="selected">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} (week {2})", period.DateStart, period.DateEnd, period.Week)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@String.Format("{0:yyyy-MM-dd}", period.DateStart)">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} (week {2})", period.DateStart, period.DateEnd, period.Week)</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Days</strong></label>
+                                    <select id="Days" class="form-control">
+                                        <option value="3" @String.Format("{0}", Model.Days == 3 ? "selected=\"selected\"" : "")>3</option>
+                                        <option value="5" @String.Format("{0}", Model.Days == 5 ? "selected=\"selected\"" : "")>5</option>
+                                        <option value="7" @String.Format("{0}", Model.Days == 7 ? "selected=\"selected\"" : "")>7</option>
+                                        <option value="14" @String.Format("{0}", Model.Days == 14 ? "selected=\"selected\"" : "")>14</option>
+                                        <option value="21" @String.Format("{0}", Model.Days == 21 ? "selected=\"selected\"" : "")>21</option>
+                                        <option value="28" @String.Format("{0}", Model.Days == 28 ? "selected=\"selected\"" : "")>28</option>
+                                        <option value="35" @String.Format("{0}", Model.Days == 35 ? "selected=\"selected\"" : "")>35</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+
+                            <div class="freeze-table">
+                                <table class="table table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th style="min-width:350px;">
+                                                <p style="margin:0;text-align:center;font-weight:bold;margin-top:5px;">
+                                                    <span>VEHICLES</span>
+                                                </p>
+                                            </th>
+
+                                            @{ 
+                                                var today = DateTime.Now.Date;
+                                            }
+
+                                            @if (Model.Vehicles.Any())
+                                            {
+                                                foreach (var handbook in Model.Vehicles.FirstOrDefault().Handbooks)
+                                                {
+                                                    <th>
+                                                        <p style="margin:0;text-align:center;font-weight:bold;margin-top:5px;padding:0 10px;">
+                                                            <span>@String.Format("{0:dd/MM/yyyy}", Convert.ToDateTime(handbook.BookDate))</span>
+                                                        </p>
+                                                    </th>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <th>
+                                                    <p style="margin:0;text-align:center;font-weight:bold;margin-top:5px;padding:0 10px;">
+                                                        <span>-</span>
+                                                    </p>
+                                                </th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var vehicle in Model.Vehicles)
+                                        {
+                                            <tr>
+                                                <td style="padding:6px;text-align:center;min-width:350px;">
+                                                    <span class="mytooltip tooltip-effect-1">
+                                                        <span class="tooltip-item">@vehicle.Registration - @vehicle.AssociateName - @vehicle.DepotName</span>
+                                                    </span>
+                                                </td>
+                                                @foreach (var handbook in vehicle.Handbooks)
+                                                {
+                                                    var vehicleid = vehicle.VehicleId;
+                                                    var description = vehicle.Make + "-" + vehicle.Model + "-" + vehicle.Registration;
+                                                    var handbookid = handbook.HandbookId;
+                                                    var bookdate = String.Format("{0:yyyy-MM-dd}", handbook.BookDate);
+                                                    var status = handbook.Status;
+
+                                                    <td style="text-align: center;">
+                                                        <div id="@String.Format("{0}-{1}", vehicleid, bookdate)">
+
+                                                            <a class="edit"
+                                                               style="font-size:20px;"
+                                                               data-vehicleid="@vehicleid"
+                                                               data-handbookid="@handbookid"
+                                                               data-description="@description"
+                                                               data-bookdate="@bookdate"
+                                                               data-status="@status"
+                                                               href="javascript:void(0);">
+                                                                @if (status == "YES")
+                                                                {
+                                                                    <span><i class="fa fa-check" style="color:green;"></i></span>
+                                                                }
+                                                                @if (status == "NO")
+                                                                {
+                                                                    <span><i class="fa fa-times" style="color:red;"></i></span>
+                                                                }
+                                                                @if (status == "")
+                                                                {
+                                                                    <span><i class="fa fa-minus" style="color:#f1f1f1;"></i></span>
+                                                                }
+                                                            </a>
+
+                                                        </div>
+                                                    </td>
+
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot></tfoot>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="loading-modal"></div>
+
+@section Scripts {
+    <script>
+
+
+        /* loading */
+        $body = $("body");
+        $(document).on({
+            ajaxStart: function () { $body.addClass("loading"); },
+            ajaxStop: function () { $body.removeClass("loading"); }
+        });
+
+
+        /* select */
+        $("#Depot").select2();
+        $("#Period").select2();
+        $("#Days").select2();
+
+
+
+
+        $(document.body).on("change", "#Depot", function () {
+            Search();
+        });
+        $(document.body).on("change", "#Period", function () {
+            Search();
+        });
+        $(document.body).on("change", "#Days", function () {
+            Search();
+        });
+
+        function Search() {
+            var date = $("#Period").val();
+            var days = $("#Days").val();
+            var depotId = $("#Depot").val();
+            var queryString = "";
+            if (date != 0) {
+                queryString = "?date=" + date;
+            }
+            if (days != 0) {
+                if (queryString == "") {
+                    queryString = "?days=" + days;
+                } else {
+                    queryString = queryString + "&days=" + days;
+                }
+            }
+            if (depotId != 0) {
+                if (queryString == "") {
+                    queryString = "?depotId=" + depotId;
+                } else {
+                    queryString = queryString + "&depotId=" + depotId;
+                }
+            }
+            window.location.href = "/admin/handbook" + queryString;
+        }
+
+
+
+        $(".freeze-table").freezeTable({
+            'shadow': true,
+            'scrollBar': true,
+        });
+
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+
+        var jc;
+        $(document.body).on("click", ".edit", function () {
+
+            var vehicleid = $(this).data("vehicleid");
+            var description = $(this).data("description");
+            var handbookid = $(this).data("handbookid");
+            var bookdate = $(this).data("bookdate");
+            var status = $(this).data("status");
+
+            jc = $.confirm({
+                title: moment(bookdate).format('DD MMM YYYY'),
+                content: '' +
+                            '<h4>Is the van ' + description + ' Roadworthy?</h4>' +
+                            '',
+                boxWidth: '40%',
+                useBootstrap: false,
+                buttons: {
+                    yes: {
+                        text: 'YES',
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            HandbookEdit(vehicleid, bookdate, "YES", "");
+                        }
+                    },
+                    no: {
+                        text: 'NO',
+                        btnClass: 'btn-yellow',
+                        action: function () {
+                            $.confirm({
+                                title: moment(bookdate).format('DD MMM YYYY'),
+                                content: '' +
+                                            '<h4>Notes for van ' + description + '</h4>' +
+                                            '<hr>' +
+                                            '<div class="row" style=\"margin:0;\">' +
+                                                '<div class="col-md-12">' +
+                                                    '<div class="form-group" style=\"margin:0;\">' +
+                                                        '<label><strong>Notes</strong></label>' +
+                                                        '<textarea id="EditHandbookNotes" class="form-control"></textarea>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>' +
+                                            '',
+                                boxWidth: '40%',
+                                useBootstrap: false,
+                                buttons: {
+                                    save: {
+                                        text: 'SAVE',
+                                        btnClass: 'btn-blue',
+                                        action: function () {
+                                            var notes = $("#EditHandbookNotes").val();
+                                            HandbookEdit(vehicleid, bookdate, "NO", notes);
+                                        }
+                                    },
+                                    cancel: {
+                                        text: 'Cancel',
+                                        btnClass: 'btn-red',
+                                        action: function () {
+                                            //close
+                                        }
+                                    },
+                                },
+                                onContentReady: function () {
+                                    $.ajax({
+                                        url: "@Url.Action("GetHandbookDetails", "admin")",
+                                        type: "GET",
+                                        data: {
+                                            HandbookId: handbookid
+                                        },
+                                        success: function (data) {
+                                            if (data.status == 0)
+                                            {
+                                                //
+                                            }
+                                            else
+                                            {
+                                                $("#EditHandbookNotes").val(data.Notes);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        text: 'CANCEL',
+                        btnClass: 'btn-red',
+                        action: function () {
+                            //close
+                        }
+                    },
+                }
+            });
+
+        });
+
+
+
+    
+        function HandbookEdit(vehicleid, bookdate, status, notes) {
+            $.ajax({
+                url: "@Url.Action("HandbookEdit", "admin")",
+                type: "GET",
+                data: {
+                    vehicleid: vehicleid,
+                    bookdate: bookdate,
+                    status: status,
+                    notes: notes
+                },
+                success: function (data) {
+                    if (data.status == 0) {
+                        location.reload();
+                    }
+                    else
+                    {
+                        var vehicleid = data.vehicleid;
+                        var handbookid = data.handbookid;
+                        var bookdate = data.bookdate;
+                        var description = data.description;
+                        var status = data.status;
+                        //
+                        var $id = $("#" + vehicleid + "-" + bookdate);
+                        $id.empty();
+                        if (status == "YES") {
+                            $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                "data-vehicleid=\"" + vehicleid + "\"" +
+                                "data-handbookid=\"" + handbookid + "\"" +
+                                "data-description=\"" + description + "\"" +
+                                "data-bookdate=\"" + bookdate + "\"" +
+                                "data-status=\"" + status + "\"" +
+                                "href=\"javascript:void(0);\"><span><i class=\"fa fa-check\" style=\"color:lightskyblue;\"></i></span></a>");
+                        }
+                        //
+                        if (status == "NO") {
+                            $id.append("<a class=\"edit\" style=\"font-size:20px;\"" +
+                                "data-vehicleid=\"" + vehicleid + "\"" +
+                                "data-handbookid=\"" + handbookid + "\"" +
+                                "data-description=\"" + description + "\"" +
+                                "data-bookdate=\"" + bookdate + "\"" +
+                                "data-status=\"" + status + "\"" +
+                                "href=\"javascript:void(0);\"><span><i class=\"fa fa-times\" style=\"color:red;\"></i></span></a>");
+                        }
+                        //
+                    }
+                }
+            });
+        }
+
+
+
+
+
+    </script>
+}

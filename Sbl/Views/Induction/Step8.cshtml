@@ -1,0 +1,131 @@
+﻿@model Sbl.Models.InductionStep8ViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutInduction.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Step 8</h4>
+                <h6 class="card-subtitle">Please complete the form signing each page</h6>
+                <div class='row'>
+                    <div class="col-md-12">
+                        <ul class='nav nav-wizard nav-wizard-backnav'>
+                            <li><a>Step 1</a></li>
+                            <li><a>Step 2</a></li>
+                            <li><a>Step 3</a></li>
+                            <li><a>Step 4</a></li>
+                            <li><a>Step 5</a></li>
+                            <li><a>Step 6</a></li>
+                            <li><a>Step 7</a></li>
+                            <li class="active"><a>Step 8</a></li>
+                            <li><a>Step 9</a></li>
+                            <li><a>Step 10</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("step8", "induction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.GuidId)
+                    @Html.HiddenFor(m => m.FullName)
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1>DVLA Check Declaration</h1>
+                                <p>It is an offence for a person to drive on a road any vehicle otherwise than in accordance with a license authorising him to drive it.</p>
+                                <p>This is a declaration that I <span style="font-weight:bold;">@Model.FullName</span> have produced my latest license, and that I have no pending convictions, endorsements or disqualifications, and I will inform my point of contact of any road traffic incidents, convictions, endorsements or disqualifications that occur, which could affect my entitlement to drive, as soon as possible. I have had no change in my health, which could affect my entitlement to drive, in particular, for ALL licences:</p>
+                                <p>You must tell DVLA if you have a driving licence and:</p>
+                                <ul>
+                                    <li>you develop a ‘notifiable’ medical condition or disability</li>
+                                    <li>a condition or disability has got worse since you got your licence</li>
+                                </ul>
+                                <p>Notifiable conditions are anything that could affect your ability to drive safely. They can include:</p>
+                                <ul>
+                                    <li>epilepsy</li>
+                                    <li>strokes</li>
+                                    <li>other neurological and mental health conditions</li>
+                                    <li>physical disabilities</li>
+                                    <li>visual impairments</li>
+                                </ul>
+                                <p>Any of the following penalties or disqualification are not acceptable at Amazon: AC10, AC20, BA10, BA30,	CD10, CD20,	CD40, CD50,	CD60 CD70, CD80, CD90, DD10, DD40, DD60, DD80, DD90, DR10, DR20, DR80, IN10, MS90, UT50 and ALL MR Codes.</p>
+                                <p>If any of the above affects me, I will inform my superior as soon as possible. I understand that I must also inform DVLA by writing to the Drivers Medical Group, DVLA, Swansea SA99 1TU (the appropriate medical questionnaires can be downloaded from www.direct.gov.uk/driverhealth). Failure to do so is a criminal offence punishable by a fine of up to £1,000.</p>
+                                <p>I have read and fully understand the above and will comply with what is requested of me, and I agree to release to SBL information from my Driving Record.</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <a href="/induction/step7?guidid=@Model.GuidId" class="btn btn-lg btn-default"> Back to previous page</a>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step8Signature, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Step8Signature, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Step8Signature)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step8DateSigned, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.Step8DateSigned, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Step8DateSigned)
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-success" style="margin-top: 30px; float: right;">
+                                    <i class="fa fa-check"></i>
+                                    <span> Next </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+        FillSignature();
+        function FillSignature() {
+            $("#Step8Signature").val($("#FullName").val());
+            $("#Step8DateSigned").datepicker("setDate", new Date());
+        }
+
+        swal({
+            title: "Warning",
+            text: "Please read carefully sign and date",
+            type: "warning",
+            button: "Close",
+        });
+
+    </script>
+}

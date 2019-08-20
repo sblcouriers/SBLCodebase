@@ -1,0 +1,94 @@
+﻿@model Sbl.Models.Setting
+
+@{
+    ViewBag.Title = "Remittance Info";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Remittance Info</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Remittance Info</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("remittanceinfo", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SblRemittanceBusinessName, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SblRemittanceBusinessName, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SblRemittanceBusinessName)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SblRemittanceBusinessVatNumber, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SblRemittanceBusinessVatNumber, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SblRemittanceBusinessVatNumber)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SblRemittanceThankYouMessage, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SblRemittanceThankYouMessage, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SblRemittanceThankYouMessage)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SblRemittanceBusinessAddress, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SblRemittanceBusinessAddress, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SblRemittanceBusinessAddress)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SblRemittanceBusinessCity, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SblRemittanceBusinessCity, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SblRemittanceBusinessCity)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.SblRemittanceBusinessPostcode, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.SblRemittanceBusinessPostcode, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.SblRemittanceBusinessPostcode)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                <a href="~/admin/dashboard" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    </script>
+}

@@ -1,0 +1,122 @@
+﻿@model IEnumerable<Sbl.Models.Finance>
+
+@{
+    ViewBag.Title = "Finance List";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Manage Finance List</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Manage Finance List</li>
+                    </ol>
+                    <a href="~/admin/Financecreate" class="btn btn-success d-none d-lg-block m-l-15">
+                        <i class="fa fa-plus-circle"></i> Add New Finance
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="main-table" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@String.Format("{0:dd MMM yyyy}", item.DateCreated)</td>
+                                            <td>@item.Description</td>
+                                            <td>
+                                                @if (item.SetAsCredit == true)
+                                                {
+                                                    <div class="label label-table label-danger">Credit</div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="label label-table label-success">Charge</div>
+                                                }
+                                            </td>
+                                            <td>@String.Format("£{0:N2}", item.Amount)</td>
+                                            <td class="text-nowrap">
+                                                <a href="~/admin/Financeedit/@item.Id" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                                <a id="aDeleteFinance" data-toggle="tooltip" data-original-title="Delete" data-id="@item.Id"><i class="fa fa-trash text-inverse"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- This is data table -->
+    <script src="~/assets/node_modules/datatables/jquery.dataTables.min.js"></script>
+    <!-- start - This is for export functionality only -->
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+    <!-- end - This is for export functionality only -->
+    <script>
+        $(document).ready(function () {
+            $('#main-table').DataTable();
+        });
+        $('#main-table').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+
+
+        $(document.body).on("click", "#aDeleteFinance", function (e) {
+            var id = $(this).attr("data-id");
+            swal({
+                title: "Are you sure?, You want to delete this finance.",
+                text: "You will not be able to recover this again!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: "@Url.Action("DeleteFinance", "admin")",
+                    type: "GET",
+                    data: { id: id },
+                    success: function (data) {
+                        window.location = "/admin/financelist";
+                    }
+                });
+            });
+        });
+
+    </script>
+}

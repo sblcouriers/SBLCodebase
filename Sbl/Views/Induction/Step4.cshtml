@@ -1,0 +1,497 @@
+﻿@model Sbl.Models.InductionStep4ViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutInduction.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Step 4</h4>
+                <h6 class="card-subtitle">Please complete the form signing each page</h6>
+                <div class='row'>
+                    <div class="col-md-12">
+                        <ul class='nav nav-wizard nav-wizard-backnav'>
+                            <li><a>Step 1</a></li>
+                            <li><a>Step 2</a></li>
+                            <li><a>Step 3</a></li>
+                            <li class="active"><a>Step 4</a></li>
+                            <li><a>Step 5</a></li>
+                            <li><a>Step 6</a></li>
+                            <li><a>Step 7</a></li>
+                            <li><a>Step 8</a></li>
+                            <li><a>Step 9</a></li>
+                            <li><a>Step 10</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("step4", "induction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.GuidId)
+                    @Html.HiddenFor(m => m.FullName)
+                    @Html.HiddenFor(m => m.Address)
+                    @Html.HiddenFor(m => m.City)
+                    @Html.HiddenFor(m => m.County)
+                    @Html.HiddenFor(m => m.Postcode)
+                    @Html.HiddenFor(m => m.Country)
+                    <div class="form-body">
+
+                        <h4 class="text-success">Current Address (Proof of Current Address Required i.e., Utility Bill)</h4>
+
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRCurrentAddressNumberStreet, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRCurrentAddressNumberStreet, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRCurrentAddressNumberStreet)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRCurrentAddressTownCity, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRCurrentAddressTownCity, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRCurrentAddressTownCity)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRCurrentAddressCountyDistrict, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRCurrentAddressCountyDistrict, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRCurrentAddressCountyDistrict)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRCurrentAddressPostcode, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRCurrentAddressPostcode, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRCurrentAddressPostcode)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRCurrentAddressDateMovedIn, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.CRCurrentAddressDateMovedIn, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.CRCurrentAddressDateMovedIn)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRCurrentAddressCountry, new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.CRCurrentAddressCountry, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                    @Html.ValidationMessageFor(m => m.CRCurrentAddressCountry)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="address1" style="display:inherit;">
+                            <h4 class="text-success">Previous Address History - Most recent first - 7 years required</h4>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress1NumberStreet, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress1NumberStreet, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress1NumberStreet)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress1TownCity, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress1TownCity, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress1TownCity)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress1CountyDistrict, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress1CountyDistrict, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress1CountyDistrict)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress1Postcode, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress1Postcode, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress1Postcode)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress1DateMovedIn, new { @class = "control-label" })
+                                        <div class="input-group">
+                                            @Html.EditorFor(m => m.CRPreviousAddress1DateMovedIn, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="icon-calender"></i></span>
+                                            </div>
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress1DateMovedIn)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress1Country, new { @class = "control-label" })
+                                        @Html.DropDownListFor(m => m.CRPreviousAddress1Country, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress1Country)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="address2" style="display:inherit;">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress2NumberStreet, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress2NumberStreet, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress2NumberStreet)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress2TownCity, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress2TownCity, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress2TownCity)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress2CountyDistrict, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress2CountyDistrict, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress2CountyDistrict)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress2Postcode, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress2Postcode, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress2Postcode)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress2DateMovedIn, new { @class = "control-label" })
+                                        <div class="input-group">
+                                            @Html.EditorFor(m => m.CRPreviousAddress2DateMovedIn, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="icon-calender"></i></span>
+                                            </div>
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress2DateMovedIn)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress2Country, new { @class = "control-label" })
+                                        @Html.DropDownListFor(m => m.CRPreviousAddress2Country, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress2Country)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="address3" style="display:inherit;">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress3NumberStreet, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress3NumberStreet, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress3NumberStreet)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress3TownCity, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress3TownCity, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress3TownCity)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress3CountyDistrict, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress3CountyDistrict, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress3CountyDistrict)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress3Postcode, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress3Postcode, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress3Postcode)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress3DateMovedIn, new { @class = "control-label" })
+                                        <div class="input-group">
+                                            @Html.EditorFor(m => m.CRPreviousAddress3DateMovedIn, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="icon-calender"></i></span>
+                                            </div>
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress3DateMovedIn)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress3Country, new { @class = "control-label" })
+                                        @Html.DropDownListFor(m => m.CRPreviousAddress3Country, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress3Country)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="address4" style="display:inherit;">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress4NumberStreet, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress4NumberStreet, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress4NumberStreet)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress4TownCity, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress4TownCity, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress4TownCity)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress4CountyDistrict, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress4CountyDistrict, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress4CountyDistrict)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress4Postcode, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress4Postcode, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress4Postcode)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress4DateMovedIn, new { @class = "control-label" })
+                                        <div class="input-group">
+                                            @Html.EditorFor(m => m.CRPreviousAddress4DateMovedIn, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="icon-calender"></i></span>
+                                            </div>
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress4DateMovedIn)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress4Country, new { @class = "control-label" })
+                                        @Html.DropDownListFor(m => m.CRPreviousAddress4Country, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress4Country)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="address5" style="display:inherit;">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress5NumberStreet, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress5NumberStreet, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress5NumberStreet)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress5TownCity, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress5TownCity, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress5TownCity)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress5CountyDistrict, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress5CountyDistrict, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress5CountyDistrict)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress5Postcode, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress5Postcode, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress5Postcode)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress5DateMovedIn, new { @class = "control-label" })
+                                        <div class="input-group">
+                                            @Html.EditorFor(m => m.CRPreviousAddress5DateMovedIn, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="icon-calender"></i></span>
+                                            </div>
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress5DateMovedIn)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress5Country, new { @class = "control-label" })
+                                        @Html.DropDownListFor(m => m.CRPreviousAddress5Country, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress5Country)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="address6" style="display:inherit;">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress6NumberStreet, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress6NumberStreet, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress6NumberStreet)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress6TownCity, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress6TownCity, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress6TownCity)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress6CountyDistrict, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress6CountyDistrict, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress6CountyDistrict)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress6Postcode, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.CRPreviousAddress6Postcode, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress6Postcode)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress6DateMovedIn, new { @class = "control-label" })
+                                        <div class="input-group">
+                                            @Html.EditorFor(m => m.CRPreviousAddress6DateMovedIn, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="icon-calender"></i></span>
+                                            </div>
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress6DateMovedIn)
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.CRPreviousAddress6Country, new { @class = "control-label" })
+                                        @Html.DropDownListFor(m => m.CRPreviousAddress6Country, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                        @Html.ValidationMessageFor(m => m.CRPreviousAddress6Country)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <a href="/induction/step3?guidid=@Model.GuidId" class="btn btn-lg btn-default"> Back to previous page</a>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step4Signature, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Step4Signature, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Step4Signature)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step4DateSigned, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.Step4DateSigned, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Step4DateSigned)
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-success" style="margin-top: 30px; float: right;">
+                                    <i class="fa fa-check"></i>
+                                    <span> Next </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+        AutoFill();
+        function AutoFill() {
+            $("#CRCurrentAddressNumberStreet").val($("#Address").val());
+            $("#CRCurrentAddressTownCity").val($("#City").val());
+            $("#CRCurrentAddressCountyDistrict").val($("#County").val());
+            $("#CRCurrentAddressPostcode").val($("#Postcode").val());
+            $("#CRCurrentAddressCountry").val($("#Country").val());
+            $("#Step4Signature").val($("#FullName").val());
+            $("#Step4DateSigned").datepicker("setDate", new Date());
+        }
+
+        $(document.body).on("change", "#CRCurrentAddressDateMovedInXXXXXXXXXXXXXXXXXXXXX", function () {
+            var day1 = $(this).val().substring(0, 2);
+            var month1 = $(this).val().substring(2, 2);
+            var year1 = $(this).val().substring(4, 4);
+            var day2 = "";
+            var month2 = "";
+            var year2 = "";
+            alert(day1 + "" + month1 + "" + year1);
+            CalculateDate("2015-11-01", "2018-11-30");
+        });
+
+        function CalculateDate(MoveDate, EndDate) {
+            var start = new Date(MoveDate);
+            var end = new Date(EndDate);
+            var millisecondsPerDay = 1000 * 60 * 60 * 24;
+            var millisBetween = start.getTime() - end.getTime();
+            var days = millisBetween / millisecondsPerDay;
+            alert(days);
+        }
+
+    </script>
+}

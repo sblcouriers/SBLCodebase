@@ -1,0 +1,187 @@
+﻿@using Sbl.Helpers
+@model Sbl.Models.Accident
+
+@{
+    ViewBag.Title = "Edit Accident";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Edit Accident</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/accidentlist">Accidents</a></li>
+                        <li class="breadcrumb-item active">Edit Accident</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("accidentedit", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Vehicle</label>
+                                            @Html.DropDownListFor(m => m.VehicleId, (IEnumerable<SelectListItem>)ViewBag.Vehicles, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                            @Html.ValidationMessageFor(m => m.VehicleId)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Associate</label>
+                                            @Html.DropDownListFor(m => m.AssociateId, (IEnumerable<SelectListItem>)ViewBag.Associates, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                            @Html.ValidationMessageFor(m => m.AssociateId)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Date</label>
+                                            <div class="input-group">
+                                                @Html.EditorFor(m => m.Date, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                </div>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.Date)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Status</label>
+                                            @Html.DropDownListFor(m => m.Status, DropdownListBinder.PopulatAccidentStatus(), "-- Select --", new { @class = "form-control", @style = "background-color: #13a89e; color: #fff;" })
+                                            @Html.ValidationMessageFor(m => m.Status)
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (Model.AccidentFiles.Where(x => x.Active == true && x.Deleted == false).Any())
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label">Files</label><br />
+                                                @foreach (var file in Model.AccidentFiles.Where(x => x.Active == true && x.Deleted == false))
+                                                {
+                                                    <div class="@String.Format("file-{0}", file.Id)" style="border:1px solid #cccccc; padding:10px; margin-right: 5px; display: inline-block;">
+                                                        <p><strong>File Name:</strong> @file.DataFileName</p>
+                                                        <a href="~/admin/accidentfiledownload/@file.Id" class="btn btn-xs btn-success"> <i class="fa fa-cloud"></i> Download</a>
+                                                        <a data-id="@file.Id" class="btn btn-xs btn-danger remove-existing-file"> <i class="fa fa-times"></i> Remove</a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                }
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <button id="add-file" class="btn btn-outline-secondary btn-rounded" type="button"><span class="btn-label"> <i class="fa fa-plus"></i></span> Add File</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="files-area">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                <a href="~/admin/accidentlist" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="responsive-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">File Preview</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="control-label">Recipient:</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Message:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger waves-effect waves-light">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            $('.dropify').dropify();
+        });
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+        $("#VehicleId").select2();
+        $("#AssociateId").select2();
+
+        $(document.body).on("click", "#add-file", function () {
+            $("#files-area").append("<div class=\"col-md-3\"><div class=\"form-group\"><label class=\"control-label\">New File</label><input type=\"file\" name=\"FileUpload\" class=\"dropify\" data-max-file-size=\"99M\" /><button class=\"btn btn-xs btn-danger remove-file\" type=\"button\" style=\"margin-top:5px;\"><span class=\"btn-label\"> <i class=\"fa fa-times\"></i></span> Remove</button></div></div>");
+            $('.dropify').dropify();
+        });
+
+        $(document.body).on("click", ".remove-file", function () {
+            $(this).parent().parent().remove();
+        });
+
+        $(document.body).on("click", ".remove-existing-file", function () {
+            var AccidentFileId = $(this).data("id");
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this file!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: "@Url.Action("accidentfileremove", "admin")",
+                    type: "GET",
+                    data: { AccidentFileId: AccidentFileId },
+                    success: function (data) {
+                        $(".file-" + AccidentFileId).remove();
+                        swal("Deleted!", "The file has been deleted.", "success");
+                    }
+                });
+            });
+        });
+
+    </script>
+}

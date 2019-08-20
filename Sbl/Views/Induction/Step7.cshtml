@@ -1,0 +1,123 @@
+﻿@model Sbl.Models.InductionStep7ViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutInduction.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Step 7</h4>
+                <h6 class="card-subtitle">Please complete the form signing each page</h6>
+                <div class='row'>
+                    <div class="col-md-12">
+                        <ul class='nav nav-wizard nav-wizard-backnav'>
+                            <li><a>Step 1</a></li>
+                            <li><a>Step 2</a></li>
+                            <li><a>Step 3</a></li>
+                            <li><a>Step 4</a></li>
+                            <li><a>Step 5</a></li>
+                            <li><a>Step 6</a></li>
+                            <li class="active"><a>Step 7</a></li>
+                            <li><a>Step 8</a></li>
+                            <li><a>Step 9</a></li>
+                            <li><a>Step 10</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("step7", "induction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.GuidId)
+                    @Html.HiddenFor(m => m.FullName)
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1>Stop and Search Policy</h1>
+                                <p style="font-weight:bold;">Please read the following carefully and sign and the end to confirm that you understand and agree</p>
+                                <p style="font-weight:bold;">This policy applies to all employees and anyone working at or visiting Amazon's sites. Amazon reserves the right to search you and/ or any of your property on its premises(this includes Amazon's car parks) and you agree that Amazon may search you/and or your property:</p>
+                                <ul>
+                                    <li>at any time, if Amazon honestly and reasonably believes or suspects that you may be in possession of, have destroyed, tampered with, concealed or handled stolen goods or has evidence of any theft or attempted theft; or</li>
+                                    <li>if it reasonably believes or suspects that you may have drugs and or alcohol and / or other inappropriate items in the workplace; or</li>
+                                    <li>as part of its random searching policy; or</li>
+                                    <li>when you enter or leave Amazon's premises.</li>
+                                </ul>
+                                <p>Issued badges must be worn and displayed at all times onsite.</p>
+                                <p>Failure to comply with this may result in restricting your access to Amazon building.</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <a href="/induction/step6?guidid=@Model.GuidId" class="btn btn-lg btn-default"> Back to previous page</a>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step7Signature, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Step7Signature, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Step7Signature)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step7DateSigned, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.Step7DateSigned, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Step7DateSigned)
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-success" style="margin-top: 30px; float: right;">
+                                    <i class="fa fa-check"></i>
+                                    <span> Next </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+        FillSignature();
+        function FillSignature() {
+            $("#Step7Signature").val($("#FullName").val());
+            $("#Step7DateSigned").datepicker("setDate", new Date());
+        }
+
+        swal({
+            title: "Warning",
+            text: "Please read carefully sign and date",
+            type: "warning",
+            button: "Close",
+        });
+
+    </script>
+}

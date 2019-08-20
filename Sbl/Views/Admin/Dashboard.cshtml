@@ -1,0 +1,571 @@
+﻿@using Sbl.Helpers
+@model Sbl.Models.DashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<style>
+    .table-depot td, .table-depot th {
+        padding: 5px;
+    }
+    #route-allocation-table.table td, #route-allocation-table.table th {
+        padding: 3px;
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Dashboard</h4>
+            </div>
+        </div>
+
+        @if (User.IsInRole(WebConstant.SBLUserRole.Master) || User.IsInRole(WebConstant.SBLUserRole.Admin))
+        {                             
+            <div class="card-group">
+                <div class="card o-income">
+                    <div class="card-body">
+                        <table class="table-striped table-hover table-bordered table-depot" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>DEPOTS</th>
+                                    <th>ACTIVE DRIVERS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var depot in Model.Depots)
+                                {
+                                    <tr>
+                                        <td>@depot.Name</td>
+                                        <td>@depot.ActiveDrivers</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div style="display:none;">
+                            <div class="d-flex m-b-30 no-block">
+                                <h4 class="card-title m-b-0 align-self-center">Profits</h4>
+                                <div class="ml-auto">
+                                    <select id="profit-period" class="custom-select border-0">
+                                        <option value="1" selected="">Today</option>
+                                        <option value="2">Last 7 days</option>
+                                        <option value="3">Last 4 weeks</option>
+                                        <option value="4">Last 3 months</option>
+                                        <option value="5">Last Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="profit-chart" style="height:260px; width:100%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex m-b-30 no-block">
+                            <h4 class="card-title m-b-0 pull-left">Vehicle Status</h4>
+                            <h4 class="card-title m-b-0 pull-right" style="margin-left: 150px;"><span id="spnTotalVehicle"></span></h4>
+                        </div>
+                        <div id="vehicle-status-chart" style="height:260px; width:100%;"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="p-20 p-t-25">
+                        <h4 class="card-title">Stats</h4>
+                    </div>
+                    <div class="d-flex no-block p-15 align-items-center">
+                        <div class="round round-info"><i class="icon-people font-16"></i></div>
+                        <div class="m-l-10 ">
+                            <h3 id="drivers-depot" class="m-b-0"></h3>
+                            <h6 class="text-muted font-light m-b-0">Total of drivers allocated to depots</h6>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex no-block p-15 align-items-center">
+                        <div class="round round-primary"><i class="icon-note font-16"></i></div>
+                        <div class="m-l-10">
+                            <h3 id="induction-pending" class="m-b-0"></h3>
+                            <h6 class="text-muted font-light m-b-0">Total of pending inductions</h6>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex no-block p-15 m-b-15 align-items-center">
+                        <div class="round round-warning"><i class="icon-map font-16"></i></div>
+                        <div class="m-l-10">
+                            <h3 id="routes-week" class="m-b-0"></h3>
+                            <h6 class="text-muted font-light m-b-0">Average number of routes per week</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div>
+                                    <h5 class="card-title">Overview</h5>
+                                    <h6 class="card-subtitle">SBL In & Out</h6>
+                                </div>
+                                <div class="ml-auto" style="display:none;">
+                                    <select class="custom-select b-0">
+                                        <option>January</option>
+                                        <option value="1">February</option>
+                                        <option value="2">March</option>
+                                        <option value="3" selected="">April</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>PERIOD</th>
+                                        <th>SBL</th>
+                                        <th>AMZL</th>
+                                        <th>STATUS</th>
+                                        <th>DIFF</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="overview-area"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body bg-light">
+                            <div class="d-flex">
+                                <div>
+                                    <h5 class="card-title">Route Allocations</h5>
+                                </div>
+                                <div class="ml-auto" style="display:none;">
+                                    <select class="custom-select b-0">
+                                        <option>January</option>
+                                        <option value="1">February</option>
+                                        <option value="2">March</option>
+                                        <option value="3" selected="">April</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="route-allocation-table" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Week</th>
+                                        <th>Date of Allocation</th>
+                                        <th>Routes</th>
+                                        <th>Full</th>
+                                        <th>Half</th>
+                                        <th>Remote</th>
+                                        <th>Nus1</th>
+                                        <th>Nus2</th>
+                                        <th>Res2</th>
+                                        <th>Res4</th>
+                                        <th>Res6</th>
+                                        <th>Rdev2</th>
+                                        <th>Rdev4</th>
+                                        <th>Rdev6</th>
+                                        <th>Mis2</th>
+                                        <th>Mis4</th>
+                                        <th>Mis6</th>
+                                        <th>Same</th>
+                                        <th>Tran</th>
+                                        <th>Ride</th>
+                                        <th>AD1</th>
+                                        <th>AD2</th>
+                                        <th>AD3</th>
+                                        <th>Mile</th>
+                                        <th>Ltrs</th>
+                                        <th>Deduct</th>
+                                        <th>View</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="route-allocation-area"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (User.IsInRole(WebConstant.SBLUserRole.POC))
+        {
+            <div class="card-group">
+                <div class="card o-income">
+                    <div class="card-body">
+                        <table class="table-striped table-hover table-bordered table-depot" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>DEPOTS</th>
+                                    <th>ACTIVE DRIVERS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var depot in Model.Depots)
+                                {
+                                    <tr>
+                                        <td>@depot.Name</td>
+                                        <td>@depot.ActiveDrivers</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex m-b-30 no-block">
+                            <h4 class="card-title m-b-0 pull-left">Vehicle Status</h4>
+                            <h4 class="card-title m-b-0 pull-right" style="margin-left: 150px;"><span id="spnTotalVehicle"></span></h4>
+                        </div>
+                        <div id="vehicle-status-chart" style="height:260px; width:100%;"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="p-20 p-t-25">
+                        <h4 class="card-title">Stats</h4>
+                    </div>
+                    <div class="d-flex no-block p-15 align-items-center">
+                        <div class="round round-info"><i class="icon-people font-16"></i></div>
+                        <div class="m-l-10 ">
+                            <h3 id="drivers-depot" class="m-b-0"></h3>
+                            <h6 class="text-muted font-light m-b-0">Total of drivers allocated to depots</h6>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex no-block p-15 align-items-center">
+                        <div class="round round-primary"><i class="icon-note font-16"></i></div>
+                        <div class="m-l-10">
+                            <h3 id="induction-pending" class="m-b-0"></h3>
+                            <h6 class="text-muted font-light m-b-0">Total of pending inductions</h6>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex no-block p-15 m-b-15 align-items-center">
+                        <div class="round round-warning"><i class="icon-map font-16"></i></div>
+                        <div class="m-l-10">
+                            <h3 id="routes-week" class="m-b-0"></h3>
+                            <h6 class="text-muted font-light m-b-0">Average number of routes per week</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body bg-light">
+                            <div class="d-flex">
+                                <div>
+                                    <h5 class="card-title">Route Allocations</h5>
+                                </div>
+                                <div class="ml-auto" style="display:none;">
+                                    <select class="custom-select b-0">
+                                        <option>January</option>
+                                        <option value="1">February</option>
+                                        <option value="2">March</option>
+                                        <option value="3" selected="">April</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="route-allocation-table" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Week</th>
+                                        <th>Date of Allocation</th>
+                                        <th>Routes</th>
+                                        <th>Full</th>
+                                        <th>Half</th>
+                                        <th>Remote</th>
+                                        <th>Nus1</th>
+                                        <th>Nus2</th>
+                                        <th>Res2</th>
+                                        <th>Res4</th>
+                                        <th>Res6</th>
+                                        <th>Rdev2</th>
+                                        <th>Rdev4</th>
+                                        <th>Rdev6</th>
+                                        <th>Mis2</th>
+                                        <th>Mis4</th>
+                                        <th>Mis6</th>
+                                        <th>Same</th>
+                                        <th>Tran</th>
+                                        <th>Ride</th>
+                                        <th>AD1</th>
+                                        <th>AD2</th>
+                                        <th>AD3</th>
+                                        <th>Mile</th>
+                                        <th>Ltrs</th>
+                                        <th>Deduct</th>
+                                        <th>View</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="route-allocation-area"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div id="divViewRoute" class="modal fade bs-example-modal-lg in">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><strong>Route Detail - <span id="spnRouteDate"></span></strong></h4>
+                       
+                        <a id="aHrefDownload" class="btn btn-xs btn-success pull-right m-l-50"> <i class="fa fa-cloud"></i> Download</a>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table-striped table-hover table-bordered" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Driver</th>
+                                        <th scope="col">Depot</th>
+                                        <th scope="col">Code</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">AD1</th>
+                                        <th scope="col">AD2</th>
+                                        <th scope="col">AD3</th>
+                                        <th scope="col">Fuel</th>
+                                        <th scope="col">Deduct</th>
+                                        <th scope="col">Mileage</th>
+                                        <th scope="col">Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyRouteDetail"></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    
+    </div>
+</div>
+
+@section Scripts {
+    <!--morris JavaScript -->
+    <script src="~/assets/node_modules/raphael/raphael-min.js"></script>
+    <script src="~/assets/node_modules/morrisjs/morris.min.js"></script>
+    <script src="~/assets/node_modules/jquery-sparkline/jquery.sparkline.min.js"></script>
+    <!--c3 JavaScript -->
+    <script src="~/assets/node_modules/d3/d3.min.js"></script>
+    <script src="~/assets/node_modules/c3-master/c3.min.js"></script>
+    <!-- Popup message jquery -->
+    <script src="~/assets/node_modules/toast-master/js/jquery.toast.js"></script>
+    <!-- Chart JS -->
+    <script src="~/js/dashboard1.js"></script>
+
+    <script>
+
+        // get profit
+        GetDashboardProfit(1);
+
+        function GetDashboardProfit(period) {
+            $.ajax({
+                url: "@Url.Action("getdashboardprofit", "admin")",
+                type: "GET",
+                data: { Period: period },
+                success: function (data) {
+                    var income = data.income.toFixed(2);
+                    var outgoing = data.outgoing.toFixed(2);
+                    var profit = data.profit.toFixed(2);
+                    var chart = c3.generate({
+                        bindto: '#profit-chart',
+                        data: {
+                            columns: [
+                                ['IN AMZ', income],
+                                ['OUT SBL', outgoing],
+                                ['PROFIT', profit]
+                            ],
+                            type: 'bar'
+                        },
+                        bar: {
+                            space: 0.5,
+                            width: 80
+                        },
+                        grid: {
+                            x: {
+                                show: false
+                            },
+                            y: {
+                                show: true
+                            }
+                        },
+                        size: {
+                            height: 290
+                        },
+                        color: {
+                            pattern: ['#ffbc34', '#36bea6', '#009efb']
+                        }
+                    });
+                }
+            });
+        }
+
+        // change period
+        $(document.body).on("change", "#profit-period", function () {
+            var period = $("#profit-period").val();
+            GetDashboardProfit(period);
+        });
+        // get vehicle status
+        GetDashboardVehicleStatus();
+
+        function GetDashboardVehicleStatus() {
+            $.ajax({
+                url: "@Url.Action("getdashboardvehiclestatus", "admin")",
+                type: "GET",
+                data: {},
+                success: function (data) {
+                    var rented = data.rented;
+                    var available = data.available;
+                    var repair = data.repair;
+                    var returned = data.returned;
+                    $('#spnTotalVehicle').text('Vehicles: ' + data.totalVehicles);
+                    var chart = c3.generate({
+                        bindto: '#vehicle-status-chart',
+                        data: {
+                            columns: [
+                                ['AVAILABLE', available],
+                                ['RENTED', rented],
+                                ['REPAIR', repair],
+                                ['RETURNED', returned],
+                            ],
+                            type: 'donut',
+                            onclick: function (d, i) { console.log("onclick", d, i); },
+                            onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                            onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+                        },
+                        donut: {
+                            label: {
+                                show: false
+                            },
+                            title: "Status",
+                            width: 30,
+                        },
+                        color: {
+                            pattern: ['#36bea6', '#ffbc34', '#009efb', '#888888']
+                        }
+                    });
+                }
+            });
+        }
+
+
+        // get Dashboard Stats
+        GetDashboardStats();
+
+        function GetDashboardStats() {
+            $.ajax({
+                url: "@Url.Action("GetDashboardStats", "admin")",
+                type: "GET",
+                data: {},
+                success: function (data) {
+                    $("#routes-week").text(data.routes);
+                    $("#induction-pending").text(data.pendingInductions);
+                    $("#drivers-depot").text(data.allocatedDrivers);
+                }
+            });
+        }
+
+        // get overview
+        GetDashboardOverview();
+
+        function GetDashboardOverview() {
+            //var FromDate = $("#profit-period").val();
+            var fromDate = "2018-01-01";
+            $.ajax({
+                url: "@Url.Action("getdashboardoverview", "admin")",
+                type: "GET",
+                data: { FromDate: fromDate },
+                success: function (data) {
+                    $("#overview-area").empty();
+                    $.each(data.overviews, function (i, x) {
+                        if (x.Diff > 0) {
+                            $("#overview-area").append("<tr><td class=\"text-center\">" + x.Id + "</td><td class=\"txt-oflo\">" + x.Period + "</td><td><span class=\"text-success\">£" + x.SblTotal.toFixed(2) + "</span></td><td><span class=\"text-cyan\">£" + x.AmazonTotal.toFixed(2) + "</span></td><td><span class=\"badge badge-success badge-pill\">" + x.Status + "</span></td><td><span class=\"text-info\">£" + x.Diff.toFixed(2) + "</span></td></tr>");
+                        } else {
+                            $("#overview-area").append("<tr><td class=\"text-center\">" + x.Id + "</td><td class=\"txt-oflo\">" + x.Period + "</td><td><span class=\"text-success\">£" + x.SblTotal.toFixed(2) + "</span></td><td><span class=\"text-cyan\">£" + x.AmazonTotal.toFixed(2) + "</span></td><td><span class=\"badge badge-danger badge-pill\">" + x.Status + "</span></td><td><span class=\"text-info\">£" + x.Diff.toFixed(2) + "</span></td></tr>");
+                        }
+                    });
+                }
+            });
+        }
+
+        // get route allocations
+        GetDashboardRouteAllocations();
+
+        function GetDashboardRouteAllocations() {
+            //var FromDate = $("#profit-period").val();
+            var fromDate = "2018-01-01";
+            $.ajax({
+                url: "@Url.Action("getdashboardrouteallocations", "admin")",
+                type: "GET",
+                data: { FromDate: fromDate },
+                success: function (data) {
+                    $("#route-allocation-area").empty();
+                    $.each(data.allocations, function (i, x) {
+                        $("#route-allocation-area").append("<tr><td class=\"text-center\">" + x.Week + "</td><td class=\"txt-oflo\">" + moment(x.Date).format('DD MMM YYYY') + "</td><td class=\"text-center\"><span class=\"text-danger\">" + x.Routes + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.FullQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.HalfQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.RemoteDebriefQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.NurseryRoutesLevel1Quantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.NurseryRoutesLevel2Quantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.Rescue2HoursQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.Rescue4HoursQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.Rescue6HoursQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.ReDelivery2HoursQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.ReDelivery4HoursQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.ReDelivery6HoursQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.Missort2HoursQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.Missort4HoursQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.Missort6HoursQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.SameDayQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.TrainingDayQuantity + "</span></td><td class=\"text-center\"><span class=\"text-success\">" + x.RideAlongQuantity + "</span></td><td class=\"text-center\"><span class=\"text-info\">" + x.Ad1Quantity + "</span></td><td class=\"text-center\"><span class=\"text-info\">" + x.Ad2Quantity + "</span></td><td class=\"text-center\"><span class=\"text-info\">" + x.Ad3Quantity + "</span></td><td class=\"text-center\"><span class=\"text-warning\">" + x.Fuel.toFixed(2) + "</span></td><td class=\"text-center\"><span class=\"text-warning\">" + x.Mileage.toFixed(2) + "</span></td><td class=\"text-center\"><span class=\"text-warning\">" + x.Deduct.toFixed(2) + "</span></td><td class=\"text-center\"><a class=\"text-warning ViewRoute\"  data-allocationdate=\"" + moment(x.Date).format('DD MMM YYYY') + "\" href='javascript:void(0);' data-toggle='modal' data-target='#divViewRoute'>View</a></td></tr>");
+                    });
+                }
+            });
+        }
+        // Route Allocation List
+        function ViewRouteDetails(routeDate) {
+            $('#btnDownloadRoute').addClass("hide");
+            $.ajax({
+                url: "@Url.Action("RouteAllocationList", "admin")",
+                type: "GET",
+                data: { routeDate: routeDate },
+                success: function (data) {
+                    $("#tbodyRouteDetail").empty();
+                    if (data.routes.length > 0) {
+                        $('#aHrefDownload').data("allocationdate", routeDate);
+                        $('#aHrefDownload').addClass("show");
+                        $('#aHrefDownload').removeClass("hide");
+                        //$('#aHrefDownload').href = "~/admin/DownloadRouteAllocationList/?routedate=" + routeDate;
+                        $('#aHrefDownload').attr("href", "/admin/DownloadRouteAllocationList/?routedate=" + routeDate);
+                    }
+                    $.each(data.routes, function (i, data) {
+                        $("#tbodyRouteDetail").append("<tr><td>" + data.DriverName + "</td><td style=\"text-align:center;\">" + data.DepotName + "</td><td style=\"text-align:center;\">" + data.RouteCode + "</td><td style=\"text-align:center;\">" + data.RouteType + "</td><td style=\"text-align:center;\">" + data.Ad1Quantity + "</td><td style=\"text-align:center;\">" + data.Ad2Quantity + "</td><td style=\"text-align:center;\">" + data.Ad3Quantity + "</td><td style=\"text-align:center;\">" + data.Fuel + "</td><td style=\"text-align:center;\">" + data.Deduct + "</td><td style=\"text-align:center;\">" + data.Mileage + "</td><td>" + data.Notes + "</td></tr>");
+                    });
+                }
+            });
+        }
+
+        $(document.body).on("click", ".ViewRoute", function () {
+            var routeDate = $(this).data('allocationdate');
+            $('#spnRouteDate').text(routeDate);
+            ViewRouteDetails(routeDate);
+        });
+
+        @*$(document.body).on("click", "#aHrefDownload", function () {
+            var routeDate = $(this).data('allocationdate');
+            console.log(routeDate);
+            $.ajax({
+                url: "@Url.Action("DownloadRouteAllocationList", "admin")",
+                type: "GET",
+                data: { routeDate: routeDate },
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        });*@
+    </script>
+}

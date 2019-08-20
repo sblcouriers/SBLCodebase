@@ -1,0 +1,31 @@
+﻿<nav class="sidebar-nav">
+    <ul id="sidebarnav">
+        <li>
+            <a class="waves-effect waves-dark" href="~/admin/dashboard">
+                <i class="icon-speedometer"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-write"></i><span class="hide-menu">POC</span></a>
+            <ul aria-expanded="false" class="collapse">
+                <li>@Html.ActionLink("Handbook", "Handbook", "admin")</li>
+                <li>@Html.ActionLink("Handbook Report", "HandbookList", "admin")</li>
+            </ul>
+        </li>
+        <li>
+            <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="ti-truck"></i><span class="hide-menu">Vehicles</span></a>
+            <ul aria-expanded="false" class="collapse">
+                <li>@Html.ActionLink("Rental Companies", "rentallist", "admin")</li>
+                <li>@Html.ActionLink("Rented by SBL", "vehiclelist", "admin")</li>
+                <li>@Html.ActionLink("Services", "vehicleservicelist", "admin")</li>
+                <li>@Html.ActionLink("Accidents", "accidentlist", "admin")</li>
+                <li>@Html.ActionLink("Rented by Associates", "subrentallist", "admin")</li>
+                <li>@Html.ActionLink("Inspections", "inspectionlist", "admin")</li>
+            </ul>
+        </li>
+        <li><a href="javascript:document.getElementById('logoutForm').submit()">Logout</a></li>
+    </ul>
+</nav>
+
+

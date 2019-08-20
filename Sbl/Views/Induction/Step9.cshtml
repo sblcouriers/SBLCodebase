@@ -1,0 +1,124 @@
+﻿@model Sbl.Models.InductionStep9ViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutInduction.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Step 9</h4>
+                <h6 class="card-subtitle">Please complete the form signing each page</h6>
+                <div class='row'>
+                    <div class="col-md-12">
+                        <ul class='nav nav-wizard nav-wizard-backnav'>
+                            <li><a>Step 1</a></li>
+                            <li><a>Step 2</a></li>
+                            <li><a>Step 3</a></li>
+                            <li><a>Step 4</a></li>
+                            <li><a>Step 5</a></li>
+                            <li><a>Step 6</a></li>
+                            <li><a>Step 7</a></li>
+                            <li><a>Step 8</a></li>
+                            <li class="active"><a>Step 9</a></li>
+                            <li><a>Step 10</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("step9", "induction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.GuidId)
+                    @Html.HiddenFor(m => m.FullName)
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1>Exiting the yard</h1>
+                                <p>Drivers must:</p>
+                                <ul>
+                                    <li>Abide by and apply site safety rules when exiting the yard as illustrated in the Depot safety rules already signed for on arrival and outlined at Section 1 of Standard Operational Procedure.</li>
+                                    <li>Follow the traffic flow system.</li>
+                                    <li>Not Exceed 10 MPH.</li>
+                                    <li>Wear PPE at all times.</li>
+                                    <li>Not use mobile phone/handhelds whilst riding. Rabbit/Mobile device equipment to be stored in Designated Jacket pouch or Top Box.</li>
+                                    <li>Check the load whenever Driver has stopped to make a delivery. Driver must check that the load is still evenly distributed before setting off on the next delivery.</li>
+                                    <li>In the case of adverse weather conditions, it is at the Riders sole discretion to deliver the items. In these circumstances, the Rider is solely responsible for any incident or consequence that arises as a result of his/her decision.</li>
+                                </ul>
+                                <p>I have read this Standard Operational Procedure and understand my responsibility to comply with its contents. Failure to follow these instructions may result in a serious injury or disciplinary action being taken.</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <a href="/induction/step8?guidid=@Model.GuidId" class="btn btn-lg btn-default"> Back to previous page</a>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step9Signature, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Step9Signature, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Step9Signature)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step9DateSigned, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.Step9DateSigned, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Step9DateSigned)
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-success" style="margin-top: 30px; float: right;">
+                                    <i class="fa fa-check"></i>
+                                    <span> Next </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+        FillSignature();
+        function FillSignature() {
+            $("#Step9Signature").val($("#FullName").val());
+            $("#Step9DateSigned").datepicker("setDate", new Date());
+        }
+
+        swal({
+            title: "Warning",
+            text: "Please read carefully sign and date",
+            type: "warning",
+            button: "Close",
+        });
+
+    </script>
+}

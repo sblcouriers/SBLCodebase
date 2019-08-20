@@ -1,0 +1,950 @@
+﻿@using Sbl.Helpers
+
+@model Sbl.Models.ServiceConfirmationViewModel
+
+@{
+    ViewBag.Title = "Service Confirmation";
+}
+
+<link href="~/css/routeStyle.css" rel="stylesheet">
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Service Confirmation</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Service Confirmation</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Depot</strong></label>
+                                    <select id="Depot" class="form-control">
+                                        @foreach (var depot in Model.Depots)
+                                        {
+                                            if (Model.DepotId == depot.Id)
+                                            {
+                                                <option value="@depot.Id" selected="selected">@depot.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@depot.Id">@depot.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Period</strong></label>
+                                    <select id="Period" class="form-control">
+                                        @foreach (var period in Model.Periods.OrderByDescending(x => x.DateStart))
+                                        {
+                                            if (Model.DateStart == period.DateStart)
+                                            {
+                                                <option value="@String.Format("{0:yyyy-MM-dd}", period.DateStart)" selected="selected">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} (week {2})", period.DateStart, period.DateEnd, period.Week)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@String.Format("{0:yyyy-MM-dd}", period.DateStart)">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} (week {2})", period.DateStart, period.DateEnd, period.Week)</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-1" style="display:none;">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Days</strong></label>
+                                    <select id="Days" class="form-control">
+                                        <option value="3" @String.Format("{0}", Model.Days == 3 ? "selected=\"selected\"" : "")>3</option>
+                                        <option value="5" @String.Format("{0}", Model.Days == 5 ? "selected=\"selected\"" : "")>5</option>
+                                        <option value="7" @String.Format("{0}", Model.Days == 7 ? "selected=\"selected\"" : "")>7</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2" style="display:none;">
+                                <div class="form-group">
+                                    <br />
+                                    <a id="btnSearch" class="btn btn-success" style="color: #fff; margin-top: 10px;">Search</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="col-md-5 align-self-center">
+                                <h4 class="text-themecolor">
+                                    <span style="color:red;margin-left:10px;">Week Totals</span>
+                                </h4>
+                            </div>
+                            <table id="day-table" class="display nowrap table table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th style="background-color: #fff;"></th>
+                                        <th class="title-header">Routes</th>
+                                        <th class="title-header" style="display:none;">Full</th>
+                                        <th class="title-header" style="display:none;">Half</th>
+                                        <th class="title-header">Remote</th>
+                                        <th class="title-header">Nus1</th>
+                                        <th class="title-header">Nus2</th>
+                                        <th class="title-header">Res2</th>
+                                        <th class="title-header">Res4</th>
+                                        <th class="title-header">Res6</th>
+                                        <th class="title-header">Redev2</th>
+                                        <th class="title-header">Redev4</th>
+                                        <th class="title-header">Redev6</th>
+                                        <th class="title-header">Mis2</th>
+                                        <th class="title-header">Mis4</th>
+                                        <th class="title-header">Mis6</th>
+                                        <th class="title-header">Same</th>
+                                        <th class="title-header">Training</th>
+                                        <th class="title-header">Ride</th>
+                                        <th class="title-header">AD1</th>
+                                        <th class="title-header">AD2</th>
+                                        <th class="title-header">AD3</th>
+                                        <th class="title-header">LeadD</th>
+                                        <th class="title-header">LargeVan</th>
+                                        <th class="title-header">CC</th>
+                                        <th class="title-header">LateP</th>
+                                        <th class="title-header">Mile</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="day-amazon-quantity">
+                                        <td class="day-title"><p>AMZ</p></td>
+                                        <td><p>@Model.AmazonWeekFullAndHalfQuantity</p></td>
+                                        <td style="display:none;"><p>@Model.AmazonWeekFullQuantity</p></td>
+                                        <td style="display:none;"><p>@Model.AmazonWeekHalfQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekRemoteDebriefQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekNurseryRoutesLevel1Quantity</p></td>
+                                        <td><p>@Model.AmazonWeekNurseryRoutesLevel2Quantity</p></td>
+                                        <td><p>@Model.AmazonWeekRescue2HoursQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekRescue4HoursQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekRescue6HoursQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekReDelivery2HoursQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekReDelivery4HoursQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekReDelivery6HoursQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekMissort2HoursQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekMissort4HoursQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekMissort6HoursQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekSameDayQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekTrainingDayQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekRideAlongQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekSupportAd1Quantity</p></td>
+                                        <td><p>@Model.AmazonWeekSupportAd2Quantity</p></td>
+                                        <td><p>@Model.AmazonWeekSupportAd3Quantity</p></td>
+                                        <td><p>@Model.AmazonWeekLeadDriverQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekLargeVanQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekCongestionChargeQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekLatePaymentQuantity</p></td>
+                                        <td><p>@Model.AmazonWeekMileage</p></td>
+                                    </tr>
+                                    <tr class="day-amazon-price" style="@String.Format("{0}", User.IsInRole(WebConstant.SBLUserRole.Master) || User.IsInRole(WebConstant.SBLUserRole.Admin) ? "" : "display:none;")">
+                                        <td class="day-title"><p>£</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekFullAndHalfPrice)</p></td>
+                                        <td style="display:none;"><p>@String.Format("{0:N2}", Model.AmazonWeekFullPrice)</p></tdstyle="display:none;">
+                                        <td style="display:none;"><p>@String.Format("{0:N2}", Model.AmazonWeekHalfPrice)</p></tdstyle="display:none;">
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekRemoteDebriefPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekNurseryRoutesLevel1Price)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekNurseryRoutesLevel2Price)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekRescue2HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekRescue4HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekRescue6HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekReDelivery2HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekReDelivery4HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekReDelivery6HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekMissort2HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekMissort4HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekMissort6HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekSameDayPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekTrainingDayPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekRideAlongPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekSupportAd1Price)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekSupportAd2Price)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekSupportAd3Price)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekLeadDriverPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekLargeVanPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekCongestionChargePrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.AmazonWeekLatePaymentPrice)</p></td>
+                                        <td><p>@Model.AmazonWeekMileage</p></td>
+                                    </tr>
+                                    <tr class="day-sbl-quantity">
+                                        <td class="day-title"><p>SBL</p></td>
+                                        <td><p>@Model.SblWeekFullAndHalfQuantity</p></td>
+                                        <td style="display:none;"><p>@Model.SblWeekFullQuantity</p></td>
+                                        <td style="display:none;"><p>@Model.SblWeekHalfQuantity</p></td>
+                                        <td><p>@Model.SblWeekRemoteDebriefQuantity</p></td>
+                                        <td><p>@Model.SblWeekNurseryRoutesLevel1Quantity</p></td>
+                                        <td><p>@Model.SblWeekNurseryRoutesLevel2Quantity</p></td>
+                                        <td><p>@Model.SblWeekRescue2HoursQuantity</p></td>
+                                        <td><p>@Model.SblWeekRescue4HoursQuantity</p></td>
+                                        <td><p>@Model.SblWeekRescue6HoursQuantity</p></td>
+                                        <td><p>@Model.SblWeekReDelivery2HoursQuantity</p></td>
+                                        <td><p>@Model.SblWeekReDelivery4HoursQuantity</p></td>
+                                        <td><p>@Model.SblWeekReDelivery6HoursQuantity</p></td>
+                                        <td><p>@Model.SblWeekMissort2HoursQuantity</p></td>
+                                        <td><p>@Model.SblWeekMissort4HoursQuantity</p></td>
+                                        <td><p>@Model.SblWeekMissort6HoursQuantity</p></td>
+                                        <td><p>@Model.SblWeekSameDayQuantity</p></td>
+                                        <td><p>@Model.SblWeekTrainingDayQuantity</p></td>
+                                        <td><p>@Model.SblWeekRideAlongQuantity</p></td>
+                                        <td><p>@Model.SblWeekSupportAd1Quantity</p></td>
+                                        <td><p>@Model.SblWeekSupportAd2Quantity</p></td>
+                                        <td><p>@Model.SblWeekSupportAd3Quantity</p></td>
+                                        <td><p>@Model.SblWeekLeadDriverQuantity</p></td>
+                                        <td><p>@Model.SblWeekLargeVanQuantity</p></td>
+                                        <td><p>@Model.SblWeekCongestionChargeQuantity</p></td>
+                                        <td><p>@Model.SblWeekLatePaymentQuantity</p></td>
+                                        <td><p>@Model.SblWeekMileage</p></td>
+                                    </tr>
+                                    <tr class="day-sbl-price" style="@String.Format("{0}", User.IsInRole(WebConstant.SBLUserRole.Master) || User.IsInRole(WebConstant.SBLUserRole.Admin) ? "" : "display:none;")">
+                                        <td class="day-title"><p>£</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekFullAndHalfPrice)</p></td>
+                                        <td style="display:none;"><p>@String.Format("{0:N2}", Model.SblWeekFullPrice)</p></td>
+                                        <td style="display:none;"><p>@String.Format("{0:N2}", Model.SblWeekHalfPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekRemoteDebriefPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekNurseryRoutesLevel1Price)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekNurseryRoutesLevel2Price)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekRescue2HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekRescue4HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekRescue6HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekReDelivery2HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekReDelivery4HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekReDelivery6HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekMissort2HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekMissort4HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekMissort6HoursPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekSameDayPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekTrainingDayPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekRideAlongPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekSupportAd1Price)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekSupportAd2Price)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekSupportAd3Price)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekLeadDriverPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekLargeVanPrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekCongestionChargePrice)</p></td>
+                                        <td><p>@String.Format("{0:N2}", Model.SblWeekLatePaymentPrice)</p></td>
+                                        <td><p>@Model.SblWeekMileage</p></td>
+                                    </tr>
+                                    <tr class="day-diff-quantity">
+                                        <td class="day-title"><p>DIFF</p></td>
+                                        <td><p class="@(Model.DiffWeekFullAndHalfQuantity < 0 ? "day-red" : "")">@Model.DiffWeekFullAndHalfQuantity</p></td>
+                                        <td style="display:none;"><p class="@(Model.DiffWeekFullQuantity < 0 ? "day-red" : "")">@Model.DiffWeekFullQuantity</p></td>
+                                        <td style="display:none;"><p class="@(Model.DiffWeekHalfQuantity < 0 ? "day-red" : "")">@Model.DiffWeekHalfQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekRemoteDebriefQuantity < 0 ? "day-red" : "")">@Model.DiffWeekRemoteDebriefQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekNurseryRoutesLevel1Quantity < 0 ? "day-red" : "")">@Model.DiffWeekNurseryRoutesLevel1Quantity</p></td>
+                                        <td><p class="@(Model.DiffWeekNurseryRoutesLevel2Quantity < 0 ? "day-red" : "")">@Model.DiffWeekNurseryRoutesLevel2Quantity</p></td>
+                                        <td><p class="@(Model.DiffWeekRescue2HoursQuantity < 0 ? "day-red" : "")">@Model.DiffWeekRescue2HoursQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekRescue4HoursQuantity < 0 ? "day-red" : "")">@Model.DiffWeekRescue4HoursQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekRescue6HoursQuantity < 0 ? "day-red" : "")">@Model.DiffWeekRescue6HoursQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekReDelivery2HoursQuantity < 0 ? "day-red" : "")">@Model.DiffWeekReDelivery2HoursQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekReDelivery4HoursQuantity < 0 ? "day-red" : "")">@Model.DiffWeekReDelivery4HoursQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekReDelivery6HoursQuantity < 0 ? "day-red" : "")">@Model.DiffWeekReDelivery6HoursQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekMissort2HoursQuantity < 0 ? "day-red" : "")">@Model.DiffWeekMissort2HoursQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekMissort4HoursQuantity < 0 ? "day-red" : "")">@Model.DiffWeekMissort4HoursQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekMissort6HoursQuantity < 0 ? "day-red" : "")">@Model.DiffWeekMissort6HoursQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekSameDayQuantity < 0 ? "day-red" : "")">@Model.DiffWeekSameDayQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekTrainingDayQuantity < 0 ? "day-red" : "")">@Model.DiffWeekTrainingDayQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekRideAlongQuantity < 0 ? "day-red" : "")">@Model.DiffWeekRideAlongQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekSupportAd1Quantity < 0 ? "day-red" : "")">@Model.DiffWeekSupportAd1Quantity</p></td>
+                                        <td><p class="@(Model.DiffWeekSupportAd2Quantity < 0 ? "day-red" : "")">@Model.DiffWeekSupportAd2Quantity</p></td>
+                                        <td><p class="@(Model.DiffWeekSupportAd3Quantity < 0 ? "day-red" : "")">@Model.DiffWeekSupportAd3Quantity</p></td>
+                                        <td><p class="@(Model.DiffWeekLeadDriverQuantity < 0 ? "day-red" : "")">@Model.DiffWeekLeadDriverQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekLargeVanQuantity < 0 ? "day-red" : "")">@Model.DiffWeekLargeVanQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekCongestionChargeQuantity < 0 ? "day-red" : "")">@Model.DiffWeekCongestionChargeQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekLatePaymentQuantity < 0 ? "day-red" : "")">@Model.DiffWeekLatePaymentQuantity</p></td>
+                                        <td><p class="@(Model.DiffWeekMileage < 0 ? "day-red diffWeekMileage" : "diffWeekMileage")">@Model.DiffWeekMileage</p></td>
+                                    </tr>
+                                    <tr class="day-diff-price" style="@String.Format("{0}", User.IsInRole(WebConstant.SBLUserRole.Master) || User.IsInRole(WebConstant.SBLUserRole.Admin) ? "" : "display:none;")">
+                                        <td class="day-title"><p>£</p></td>
+                                        <td><p class="@(Model.DiffWeekFullAndHalfPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekFullAndHalfPrice)</p></td>
+                                        <td style="display:none;"><p class="@(Model.DiffWeekFullPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekFullPrice)</p></td>
+                                        <td style="display:none;"><p class="@(Model.DiffWeekHalfPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekHalfPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekRemoteDebriefPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekRemoteDebriefPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekNurseryRoutesLevel1Price < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekNurseryRoutesLevel1Price)</p></td>
+                                        <td><p class="@(Model.DiffWeekNurseryRoutesLevel2Price < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekNurseryRoutesLevel2Price)</p></td>
+                                        <td><p class="@(Model.DiffWeekRescue2HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekRescue2HoursPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekRescue4HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekRescue4HoursPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekRescue6HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekRescue6HoursPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekReDelivery2HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekReDelivery2HoursPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekReDelivery4HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekReDelivery4HoursPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekReDelivery6HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekReDelivery6HoursPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekMissort2HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekMissort2HoursPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekMissort4HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekMissort4HoursPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekMissort6HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekMissort6HoursPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekSameDayPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekSameDayPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekTrainingDayPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekTrainingDayPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekRideAlongPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekRideAlongPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekSupportAd1Price < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekSupportAd1Price)</p></td>
+                                        <td><p class="@(Model.DiffWeekSupportAd2Price < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekSupportAd2Price)</p></td>
+                                        <td><p class="@(Model.DiffWeekSupportAd3Price < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekSupportAd3Price)</p></td>
+                                        <td><p class="@(Model.DiffWeekLeadDriverPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekLeadDriverPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekLargeVanPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekLargeVanPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekCongestionChargePrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekCongestionChargePrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekLatePaymentPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", Model.DiffWeekLatePaymentPrice)</p></td>
+                                        <td><p class="@(Model.DiffWeekMileage < 0 ? "day-red diffWeekMileage" : "diffWeekMileage")">@Model.DiffWeekMileage</p></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="display nowrap table table-bordered" cellspacing="0" width="100%" style="@String.Format("{0}", User.IsInRole(WebConstant.SBLUserRole.Master) || User.IsInRole(WebConstant.SBLUserRole.Admin) ? "" : "display:none;")">
+                                <thead>
+                                    <tr>
+                                        <th class="title-header" style="background-color:#ffbc34;font-size:20px;text-align:center;color:#fff;padding:8px;font-weight:bold;">Amazon Total</th>
+                                        <th class="title-header" style="background-color:#36bea6;font-size:20px;text-align:center;color:#fff;padding:8px;font-weight:bold;">SBL Total</th>
+                                        <th class="title-header" style="background-color:#009efb;font-size:20px;text-align:center;color:#fff;padding:8px;font-weight:bold;">Diff Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="background-color:#ffbc34;font-size:20px;text-align:center;color:#fff;padding:8px;">
+                                            <p style="margin:0;">@String.Format("{0:N2}", Model.AmazonWeekTotalPrice)</p>
+                                        </td>
+                                        <td style="background-color:#36bea6;font-size:20px;text-align:center;color:#fff;padding:8px;">
+                                            <p style="margin:0;">@String.Format("{0:N2}", Model.SblWeekTotalPrice)</p>
+                                        </td>
+                                        <td style="background-color:#009efb;font-size:20px;text-align:center;color:#fff;padding:8px;">
+                                            <p style="margin:0;">@String.Format("{0:N2}", Model.DiffWeekTotalPrice)</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @foreach (var item in Model.Totals)
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div class="col-md-5 align-self-center">
+                                    <h4 class="text-themecolor">
+                                        <a style="color: #fff;" data-routedate="@String.Format("{0:yyyy-MM-dd}", item.RouteDate)" data-routeamazonid="@item.RouteAmazonId" class="btn btn-danger EditAmazon">Edit</a>
+                                        <span style="color:red;margin-left:10px;">@String.Format("{0:dddd dd MMM yyy}", item.RouteDate)</span>
+                                    </h4>
+                                </div>
+                                <table id="day-table" class="display nowrap table table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th style="background-color: #fff;"></th>
+                                            <th class="title-header">Routes</th>
+                                            <th class="title-header" style="display:none;">Full</th>
+                                            <th class="title-header" style="display:none;">Half</th>
+                                            <th class="title-header">Remote</th>
+                                            <th class="title-header">Nus1</th>
+                                            <th class="title-header">Nus2</th>
+                                            <th class="title-header">Res2</th>
+                                            <th class="title-header">Res4</th>
+                                            <th class="title-header">Res6</th>
+                                            <th class="title-header">Redev2</th>
+                                            <th class="title-header">Redev4</th>
+                                            <th class="title-header">Redev6</th>
+                                            <th class="title-header">Mis2</th>
+                                            <th class="title-header">Mis4</th>
+                                            <th class="title-header">Mis6</th>
+                                            <th class="title-header">Same</th>
+                                            <th class="title-header">Training</th>
+                                            <th class="title-header">Ride</th>
+                                            <th class="title-header">AD1</th>
+                                            <th class="title-header">AD2</th>
+                                            <th class="title-header">AD3</th>
+                                            <th class="title-header">LeadD</th>
+                                            <th class="title-header">LargeVan</th>
+                                            <th class="title-header">CC</th>
+                                            <th class="title-header">LateP</th>
+                                            <th class="title-header">Mile</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="day-amazon-quantity">
+                                            <td class="day-title"><p>AMZ</p></td>
+                                            <td><p id="@String.Format("amazonDayFullAndHalfQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayFullAndHalfQuantity</p></td>
+                                            <td style="display:none;"><p id="@String.Format("amazonDayFullQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayFullQuantity</p></td>
+                                            <td style="display:none;"><p id="@String.Format("amazonDayHalfQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayHalfQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayRemoteDebriefQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayRemoteDebriefQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayNurseryRoutesLevel1Quantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayNurseryRoutesLevel1Quantity</p></td>
+                                            <td><p id="@String.Format("amazonDayNurseryRoutesLevel2Quantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayNurseryRoutesLevel2Quantity</p></td>
+                                            <td><p id="@String.Format("amazonDayRescue2HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayRescue2HoursQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayRescue4HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayRescue4HoursQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayRescue6HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayRescue6HoursQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayReDelivery2HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayReDelivery2HoursQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayReDelivery4HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayReDelivery4HoursQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayReDelivery6HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayReDelivery6HoursQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayMissort2HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayMissort2HoursQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayMissort4HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayMissort4HoursQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayMissort6HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayMissort6HoursQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDaySameDayQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDaySameDayQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayTrainingDayQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayTrainingDayQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayRideAlongQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayRideAlongQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDaySupportAd1Quantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDaySupportAd1Quantity</p></td>
+                                            <td><p id="@String.Format("amazonDaySupportAd2Quantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDaySupportAd2Quantity</p></td>
+                                            <td><p id="@String.Format("amazonDaySupportAd3Quantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDaySupportAd3Quantity</p></td>
+                                            <td><p id="@String.Format("amazonDayLeadDriverQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayLeadDriverQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayLargeVanQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayLargeVanQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayCongestionChargeQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayCongestionChargeQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayLatePaymentQuantity{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayLatePaymentQuantity</p></td>
+                                            <td><p id="@String.Format("amazonDayMileage{0:yyyyMMdd}", item.RouteDate)">@item.AmazonDayMileage</p></td>
+                                        </tr>
+                                        <tr class="day-amazon-price" style="@String.Format("{0}", User.IsInRole(WebConstant.SBLUserRole.Master) || User.IsInRole(WebConstant.SBLUserRole.Admin) ? "" : "display:none;")">
+                                            <td class="day-title"><p>£</p></td>
+                                            <td><p id="@String.Format("amazonDayFullAndHalfPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayFullAndHalfPrice)</p></td>
+                                            <td style="display:none;"><p id="@String.Format("amazonDayFullPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayFullPrice)</p></td>
+                                            <td style="display:none;"><p id="@String.Format("amazonDayHalfPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayHalfPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayRemoteDebriefPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayRemoteDebriefPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayNurseryRoutesLevel1Price{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayNurseryRoutesLevel1Price)</p></td>
+                                            <td><p id="@String.Format("amazonDayNurseryRoutesLevel2Price{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayNurseryRoutesLevel2Price)</p></td>
+                                            <td><p id="@String.Format("amazonDayRescue2HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayRescue2HoursPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayRescue4HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayRescue4HoursPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayRescue6HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayRescue6HoursPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayReDelivery2HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayReDelivery2HoursPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayReDelivery4HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayReDelivery4HoursPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayReDelivery6HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayReDelivery6HoursPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayMissort2HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayMissort2HoursPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayMissort4HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayMissort4HoursPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayMissort6HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayMissort6HoursPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDaySameDayPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDaySameDayPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayTrainingDayPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayTrainingDayPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayRideAlongPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayRideAlongPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDaySupportAd1Price{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDaySupportAd1Price)</p></td>
+                                            <td><p id="@String.Format("amazonDaySupportAd2Price{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDaySupportAd2Price)</p></td>
+                                            <td><p id="@String.Format("amazonDaySupportAd3Price{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDaySupportAd3Price)</p></td>
+                                            <td><p id="@String.Format("amazonDayLeadDriverPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayLeadDriverPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayLargeVanPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayLargeVanPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayCongestionChargePrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayCongestionChargePrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayLatePaymentPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.AmazonDayLatePaymentPrice)</p></td>
+                                            <td><p id="@String.Format("amazonDayMileage1{0:yyyyMMdd}", item.RouteDate)" class="amazonDayMileage">@item.AmazonDayMileage</p></td>
+                                        </tr>
+                                        <tr class="day-sbl-quantity">
+                                            <td class="day-title"><p>SBL</p></td>
+                                            <td><p id="@String.Format("sblDayFullAndHalfQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayFullAndHalfQuantity</p></td>
+                                            <td style="display:none;"><p id="@String.Format("sblDayFullQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayFullQuantity</p></td>
+                                            <td style="display:none;"><p id="@String.Format("sblDayHalfQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayHalfQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayRemoteDebriefQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayRemoteDebriefQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayNurseryRoutesLevel1Quantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayNurseryRoutesLevel1Quantity</p></td>
+                                            <td><p id="@String.Format("sblDayNurseryRoutesLevel2Quantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayNurseryRoutesLevel2Quantity</p></td>
+                                            <td><p id="@String.Format("sblDayRescue2HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayRescue2HoursQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayRescue4HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayRescue4HoursQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayRescue6HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayRescue6HoursQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayReDelivery2HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayReDelivery2HoursQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayReDelivery4HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayReDelivery4HoursQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayReDelivery6HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayReDelivery6HoursQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayMissort2HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayMissort2HoursQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayMissort4HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayMissort4HoursQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayMissort6HoursQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayMissort6HoursQuantity</p></td>
+                                            <td><p id="@String.Format("sblDaySameDayQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDaySameDayQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayTrainingDayQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayTrainingDayQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayRideAlongQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayRideAlongQuantity</p></td>
+                                            <td><p id="@String.Format("sblDaySupportAd1Quantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDaySupportAd1Quantity</p></td>
+                                            <td><p id="@String.Format("sblDaySupportAd2Quantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDaySupportAd2Quantity</p></td>
+                                            <td><p id="@String.Format("sblDaySupportAd3Quantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDaySupportAd3Quantity</p></td>
+                                            <td><p id="@String.Format("sblDayLeadDriverQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayLeadDriverQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayLargeVanQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayLargeVanQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayCongestionChargeQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayCongestionChargeQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayLatePaymentQuantity{0:yyyyMMdd}", item.RouteDate)">@item.SblDayLatePaymentQuantity</p></td>
+                                            <td><p id="@String.Format("sblDayMileage{0:yyyyMMdd}", item.RouteDate)" class="sblDayMileage">@item.SblDayMileage</p></td>
+                                        </tr>
+                                        <tr class="day-sbl-price" style="@String.Format("{0}", User.IsInRole(WebConstant.SBLUserRole.Master) || User.IsInRole(WebConstant.SBLUserRole.Admin) ? "" : "display:none;")">
+                                            <td class="day-title"><p>£</p></td>
+                                            <td><p id="@String.Format("sblDayFullAndHalfPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayFullAndHalfPrice)</p></td>
+                                            <td style="display:none;"><p id="@String.Format("sblDayFullPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayFullPrice)</p></td>
+                                            <td style="display:none;"><p id="@String.Format("sblDayHalfPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayHalfPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayRemoteDebriefPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayRemoteDebriefPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayNurseryRoutesLevel1Price{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayNurseryRoutesLevel1Price)</p></td>
+                                            <td><p id="@String.Format("sblDayNurseryRoutesLevel2Price{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayNurseryRoutesLevel2Price)</p></td>
+                                            <td><p id="@String.Format("sblDayRescue2HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayRescue2HoursPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayRescue4HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayRescue4HoursPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayRescue6HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayRescue6HoursPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayReDelivery2HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayReDelivery2HoursPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayReDelivery4HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayReDelivery4HoursPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayReDelivery6HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayReDelivery6HoursPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayMissort2HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayMissort2HoursPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayMissort4HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayMissort4HoursPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayMissort6HoursPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayMissort6HoursPrice)</p></td>
+                                            <td><p id="@String.Format("sblDaySameDayPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDaySameDayPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayTrainingDayPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayTrainingDayPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayRideAlongPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayRideAlongPrice)</p></td>
+                                            <td><p id="@String.Format("sblDaySupportAd1Price{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDaySupportAd1Price)</p></td>
+                                            <td><p id="@String.Format("sblDaySupportAd2Price{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDaySupportAd2Price)</p></td>
+                                            <td><p id="@String.Format("sblDaySupportAd3Price{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDaySupportAd3Price)</p></td>
+                                            <td><p id="@String.Format("sblDayLeadDriverPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayLeadDriverPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayLargeVanPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayLargeVanPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayCongestionChargePrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayCongestionChargePrice)</p></td>
+                                            <td><p id="@String.Format("sblDayLatePaymentPrice{0:yyyyMMdd}", item.RouteDate)">@String.Format("{0:N2}", item.SblDayLatePaymentPrice)</p></td>
+                                            <td><p id="@String.Format("sblDayMileage1{0:yyyyMMdd}", item.RouteDate)" class="sblDayMileage">@item.SblDayMileage</p></td>
+                                        </tr>
+                                        <tr class="day-diff-quantity">
+                                            <td class="day-title"><p>DIFF</p></td>
+                                            <td><p id="@String.Format("diffDayFullAndHalfQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayFullQuantity < 0 ? "day-red" : "")">@item.DiffDayFullAndHalfQuantity</p></td>
+                                            <td style="display:none;"><p id="@String.Format("diffDayFullQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayFullQuantity < 0 ? "day-red" : "")">@item.DiffDayFullQuantity</p></td>
+                                            <td style="display:none;"><p id="@String.Format("diffDayHalfQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayHalfQuantity < 0 ? "day-red" : "")">@item.DiffDayHalfQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayRemoteDebriefQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayRemoteDebriefQuantity < 0 ? "day-red" : "")">@item.DiffDayRemoteDebriefQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayNurseryRoutesLevel1Quantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayNurseryRoutesLevel1Quantity < 0 ? "day-red" : "")">@item.DiffDayNurseryRoutesLevel1Quantity</p></td>
+                                            <td><p id="@String.Format("diffDayNurseryRoutesLevel2Quantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayNurseryRoutesLevel2Quantity < 0 ? "day-red" : "")">@item.DiffDayNurseryRoutesLevel2Quantity</p></td>
+                                            <td><p id="@String.Format("diffDayRescue2HoursQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayRescue2HoursQuantity < 0 ? "day-red" : "")">@item.DiffDayRescue2HoursQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayRescue4HoursQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayRescue4HoursQuantity < 0 ? "day-red" : "")">@item.DiffDayRescue4HoursQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayRescue6HoursQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayRescue6HoursQuantity < 0 ? "day-red" : "")">@item.DiffDayRescue6HoursQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayReDelivery2HoursQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayReDelivery2HoursQuantity < 0 ? "day-red" : "")">@item.DiffDayReDelivery2HoursQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayReDelivery4HoursQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayReDelivery4HoursQuantity < 0 ? "day-red" : "")">@item.DiffDayReDelivery4HoursQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayReDelivery6HoursQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayReDelivery6HoursQuantity < 0 ? "day-red" : "")">@item.DiffDayReDelivery6HoursQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayMissort2HoursQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayMissort2HoursQuantity < 0 ? "day-red" : "")">@item.DiffDayMissort2HoursQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayMissort4HoursQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayMissort4HoursQuantity < 0 ? "day-red" : "")">@item.DiffDayMissort4HoursQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayMissort6HoursQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayMissort6HoursQuantity < 0 ? "day-red" : "")">@item.DiffDayMissort6HoursQuantity</p></td>
+                                            <td><p id="@String.Format("diffDaySameDayQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDaySameDayQuantity < 0 ? "day-red" : "")">@item.DiffDaySameDayQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayTrainingDayQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayTrainingDayQuantity < 0 ? "day-red" : "")">@item.DiffDayTrainingDayQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayRideAlongQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayRideAlongQuantity < 0 ? "day-red" : "")">@item.DiffDayRideAlongQuantity</p></td>
+                                            <td><p id="@String.Format("diffDaySupportAd1Quantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDaySupportAd1Quantity < 0 ? "day-red" : "")">@item.DiffDaySupportAd1Quantity</p></td>
+                                            <td><p id="@String.Format("diffDaySupportAd2Quantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDaySupportAd2Quantity < 0 ? "day-red" : "")">@item.DiffDaySupportAd2Quantity</p></td>
+                                            <td><p id="@String.Format("diffDaySupportAd3Quantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDaySupportAd3Quantity < 0 ? "day-red" : "")">@item.DiffDaySupportAd3Quantity</p></td>
+                                            <td><p id="@String.Format("diffDayLeadDriverQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayLeadDriverQuantity < 0 ? "day-red" : "")">@item.DiffDayLeadDriverQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayLargeVanQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayLargeVanQuantity < 0 ? "day-red" : "")">@item.DiffDayLargeVanQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayCongestionChargeQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayCongestionChargeQuantity < 0 ? "day-red" : "")">@item.DiffDayCongestionChargeQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayLatePaymentQuantity{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayLatePaymentQuantity < 0 ? "day-red" : "")">@item.DiffDayLatePaymentQuantity</p></td>
+                                            <td><p id="@String.Format("diffDayMileage{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayMileage < 0 ? "day-red diffDayMileage" : "diffDayMileage")">@item.DiffDayMileage</p></td>
+                                        </tr>
+                                        <tr class="day-diff-price" style="@String.Format("{0}", User.IsInRole(WebConstant.SBLUserRole.Master) || User.IsInRole(WebConstant.SBLUserRole.Admin) ? "" : "display:none;")">
+                                            <td class="day-title"><p>£</p></td>
+                                            <td><p id="@String.Format("diffDayFullAndHalfPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayFullPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayFullAndHalfPrice)</p></td>
+                                            <td style="display:none;"><p id="@String.Format("diffDayFullPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayFullPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayFullPrice)</p></td>
+                                            <td style="display:none;"><p id="@String.Format("diffDayHalfPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayHalfPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayHalfPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayRemoteDebriefPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayRemoteDebriefPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayRemoteDebriefPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayNurseryRoutesLevel1Price{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayNurseryRoutesLevel1Price < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayNurseryRoutesLevel1Price)</p></td>
+                                            <td><p id="@String.Format("diffDayNurseryRoutesLevel2Price{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayNurseryRoutesLevel2Price < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayNurseryRoutesLevel2Price)</p></td>
+                                            <td><p id="@String.Format("diffDayRescue2HoursPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayRescue2HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayRescue2HoursPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayRescue4HoursPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayRescue4HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayRescue4HoursPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayRescue6HoursPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayRescue6HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayRescue6HoursPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayReDelivery2HoursPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayReDelivery2HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayReDelivery2HoursPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayReDelivery4HoursPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayReDelivery4HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayReDelivery4HoursPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayReDelivery6HoursPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayReDelivery6HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayReDelivery6HoursPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayMissort2HoursPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayMissort2HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayMissort2HoursPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayMissort4HoursPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayMissort4HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayMissort4HoursPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayMissort6HoursPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayMissort6HoursPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayMissort6HoursPrice)</p></td>
+                                            <td><p id="@String.Format("diffDaySameDayPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDaySameDayPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDaySameDayPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayTrainingDayPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayTrainingDayPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayTrainingDayPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayRideAlongPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayRideAlongPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayRideAlongPrice)</p></td>
+                                            <td><p id="@String.Format("diffDaySupportAd1Price{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDaySupportAd1Price < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDaySupportAd1Price)</p></td>
+                                            <td><p id="@String.Format("diffDaySupportAd2Price{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDaySupportAd2Price < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDaySupportAd2Price)</p></td>
+                                            <td><p id="@String.Format("diffDaySupportAd3Price{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDaySupportAd3Price < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDaySupportAd3Price)</p></td>
+                                            <td><p id="@String.Format("diffDayLeadDriverPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayLeadDriverPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayLeadDriverPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayLargeVanPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayLargeVanPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayLargeVanPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayCongestionChargePrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayCongestionChargePrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayCongestionChargePrice)</p></td>
+                                            <td><p id="@String.Format("diffDayLatePaymentPrice{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayLatePaymentPrice < 0 ? "day-red" : "")">@String.Format("{0:N2}", item.DiffDayLatePaymentPrice)</p></td>
+                                            <td><p id="@String.Format("diffDayMileage1{0:yyyyMMdd}", item.RouteDate)" class="@(item.DiffDayMileage < 0 ? "day-red diffDayMileage" : "diffDayMileage")">@item.DiffDayMileage</p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+
+</div>
+
+<div class="loading-modal"></div>
+
+@section Scripts {
+    <script>
+
+        /* loading */
+        $body = $("body");
+        $(document).on({
+            ajaxStart: function () { $body.addClass("loading"); },
+            ajaxStop: function () { $body.removeClass("loading"); }
+        });
+
+
+        // Full
+        // Half
+        // RemoteDebrief
+        // NurseryRoutesLevel1
+        // NurseryRoutesLevel2
+        // Rescue2Hours
+        // Rescue4Hours
+        // Rescue6Hours
+        // ReDelivery2Hours
+        // ReDelivery4Hours
+        // ReDelivery6Hours
+        // Missort2Hours
+        // Missort4Hours
+        // Missort6Hours
+        // SameDay
+        // TrainingDay
+        // RideAlong
+
+        // SupportAd1
+        // SupportAd2
+        // SupportAd3
+        // LeadDriver
+        // LargeVan
+
+        // CongestionCharge
+        // LatePayment
+        // Mileage
+
+
+        /* select */
+        //$("#Depot").select2();
+        //$("#Period").select2();
+        //$("#Days").select2();
+
+        function Search() {
+            var depotId = $("#Depot").val();
+            var date = $("#Period").val();
+            var days = $("#Days").val();
+            var queryString = "";
+            if (date != 0) {
+                queryString = "?date=" + date;
+            }
+            if (days != 0) {
+                if (queryString == "") {
+                    queryString = "?days=" + days;
+                } else {
+                    queryString = queryString + "&days=" + days;
+                }
+            }
+            if (depotId != 0) {
+                if (queryString == "") {
+                    queryString = "?depotId=" + depotId;
+                } else {
+                    queryString = queryString + "&depotId=" + depotId;
+                }
+            }
+            window.location.href = "/admin/serviceconfirmation" + queryString;
+        }
+
+
+        $(document.body).on("change", "#Depot", function () {
+            Search();
+        });
+
+        $(document.body).on("change", "#Period", function () {
+            Search();
+        });
+
+        $(document.body).on("change", "#Days", function () {
+            Search();
+        });
+
+
+        var jc;
+
+        $(document.body).on("click", ".EditAmazon", function () {
+
+            var RouteDate = $(this).data("routedate");
+            var DepotId = $("#Depot").val();
+            var RouteAmazonId = $(this).data("routeamazonid");
+
+            jc = $.confirm({
+                title: "",
+                content: '' +
+                    //
+                    '<div class="row" style=\"margin:0;\">' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonFull"><strong>Full</strong></label>' +
+                                '<input type="text" id="EditAmazonFull" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonHalf"><strong>Half</strong></label>' +
+                                '<input type="text" id="EditAmazonHalf" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonRemoteDebrief"><strong>Remote</strong></label>' +
+                                '<input type="text" id="EditAmazonRemoteDebrief" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonNurseryRoutesLevel1"><strong>Nus1</strong></label>' +
+                                '<input type="text" id="EditAmazonNurseryRoutesLevel1" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonNurseryRoutesLevel2"><strong>Nus2</strong></label>' +
+                                '<input type="text" id="EditAmazonNurseryRoutesLevel2" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonRescue2Hours"><strong>Res2</strong></label>' +
+                                '<input type="text" id="EditAmazonRescue2Hours" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    //
+                    '<div class="row" style=\"margin:0;\">' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonRescue4Hours"><strong>Res4</strong></label>' +
+                                '<input type="text" id="EditAmazonRescue4Hours" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonRescue6Hours"><strong>Res6</strong></label>' +
+                                '<input type="text" id="EditAmazonRescue6Hours" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonReDelivery2Hours"><strong>Redev2</strong></label>' +
+                                '<input type="text" id="EditAmazonReDelivery2Hours" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonReDelivery4Hours"><strong>Redev4</strong></label>' +
+                                '<input type="text" id="EditAmazonReDelivery4Hours" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonReDelivery6Hours"><strong>Redev6</strong></label>' +
+                                '<input type="text" id="EditAmazonReDelivery6Hours" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonMissort2Hours"><strong>Mis2</strong></label>' +
+                                '<input type="text" id="EditAmazonMissort2Hours" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    //
+                    '<div class="row" style=\"margin:0;\">' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonMissort4Hours"><strong>Mis4</strong></label>' +
+                                '<input type="text" id="EditAmazonMissort4Hours" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonMissort6Hours"><strong>Mis6</strong></label>' +
+                                '<input type="text" id="EditAmazonMissort6Hours" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonSameDay"><strong>Same</strong></label>' +
+                                '<input type="text" id="EditAmazonSameDay" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonTrainingDay"><strong>Training</strong></label>' +
+                                '<input type="text" id="EditAmazonTrainingDay" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonRideAlong"><strong>Ride</strong></label>' +
+                                '<input type="text" id="EditAmazonRideAlong" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonLargeVan"><strong>CC</strong></label>' +
+                                '<input type="text" id="EditAmazonLargeVan" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    //
+                    '<div class="row" style=\"margin:0;\">' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonCongestionCharge"><strong>CC</strong></label>' +
+                                '<input type="text" id="EditAmazonCongestionCharge" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonLatePayment"><strong>LateP</strong></label>' +
+                                '<input type="text" id="EditAmazonLatePayment" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-2">' +
+                            '<div class="form-group">' +
+                                '<label for="EditAmazonMileage"><strong>Mileage</strong></label>' +
+                                '<input type="text" id="EditAmazonMileage" class="form-control">' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    //
+                    '',
+                boxWidth: '50%',
+                useBootstrap: false,
+                buttons: {
+                    save: {
+                        text: 'Update',
+                        btnClass: 'btn-green',
+                        action: function () {
+
+                            var Full = $("#EditAmazonFull").val(); if (Full == "") { Full = 0; }
+                            var Half = $("#EditAmazonHalf").val(); if (Half == "") { Half = 0; }
+                            var RemoteDebrief = $("#EditAmazonRemoteDebrief").val(); if (RemoteDebrief == "") { RemoteDebrief = 0; }
+                            var NurseryRoutesLevel1 = $("#EditAmazonNurseryRoutesLevel1").val(); if (NurseryRoutesLevel1 == "") { NurseryRoutesLevel1 = 0; }
+                            var NurseryRoutesLevel2 = $("#EditAmazonNurseryRoutesLevel2").val(); if (NurseryRoutesLevel2 == "") { NurseryRoutesLevel2 = 0; }
+                            var Rescue2Hours = $("#EditAmazonRescue2Hours").val(); if (Rescue2Hours == "") { Rescue2Hours = 0; }
+                            var Rescue4Hours = $("#EditAmazonRescue4Hours").val(); if (Rescue4Hours == "") { Rescue4Hours = 0; }
+                            var Rescue6Hours = $("#EditAmazonRescue6Hours").val(); if (Rescue6Hours == "") { Rescue6Hours = 0; }
+                            var ReDelivery2Hours = $("#EditAmazonReDelivery2Hours").val(); if (ReDelivery2Hours == "") { ReDelivery2Hours = 0; }
+                            var ReDelivery4Hours = $("#EditAmazonReDelivery4Hours").val(); if (ReDelivery4Hours == "") { ReDelivery4Hours = 0; }
+                            var ReDelivery6Hours = $("#EditAmazonReDelivery6Hours").val(); if (ReDelivery6Hours == "") { ReDelivery6Hours = 0; }
+                            var Missort2Hours = $("#EditAmazonMissort2Hours").val(); if (Missort2Hours == "") { Missort2Hours = 0; }
+                            var Missort4Hours = $("#EditAmazonMissort4Hours").val(); if (Missort4Hours == "") { Missort4Hours = 0; }
+                            var Missort6Hours = $("#EditAmazonMissort6Hours").val(); if (Missort6Hours == "") { Missort6Hours = 0; }
+                            var SameDay = $("#EditAmazonSameDay").val(); if (SameDay == "") { SameDay = 0; }
+                            var TrainingDay = $("#EditAmazonTrainingDay").val(); if (TrainingDay == "") { TrainingDay = 0; }
+                            var RideAlong = $("#EditAmazonRideAlong").val(); if (RideAlong == "") { RideAlong = 0; }
+                            var LargeVan = $("#EditAmazonLargeVan").val(); if (LargeVan == "") { LargeVan = 0; }
+                            var CongestionCharge = $("#EditAmazonCongestionCharge").val(); if (CongestionCharge == "") { CongestionCharge = 0; }
+                            var LatePayment = $("#EditAmazonLatePayment").val(); if (LatePayment == "") { LatePayment = 0; }
+                            var Mileage = $("#EditAmazonMileage").val(); if (Mileage == "") { Mileage = 0; }
+
+                            //alert(RouteDate + "---" + DepotId + "---" + RouteAmazonId + "---" + Full + "---" + Half + "---" + Ad1 + "---" + Ad2 + "---" + Ad3);
+
+                            $.ajax({
+                                url: "@Url.Action("UpdateAmazonRouteDetails", "admin")",
+                                type: "GET",
+                                data: {
+                                    RouteDate: RouteDate,
+                                    DepotId: DepotId,
+                                    RouteAmazonId: RouteAmazonId,
+                                    Full: Full,
+                                    Half: Half,
+                                    RemoteDebrief: RemoteDebrief,
+                                    NurseryRoutesLevel1: NurseryRoutesLevel1,
+                                    NurseryRoutesLevel2: NurseryRoutesLevel2,
+                                    Rescue2Hours: Rescue2Hours,
+                                    Rescue4Hours: Rescue4Hours,
+                                    Rescue6Hours: Rescue6Hours,
+                                    ReDelivery2Hours: ReDelivery2Hours,
+                                    ReDelivery4Hours: ReDelivery4Hours,
+                                    ReDelivery6Hours: ReDelivery6Hours,
+                                    Missort2Hours: Missort2Hours,
+                                    Missort4Hours: Missort4Hours,
+                                    Missort6Hours: Missort6Hours,
+                                    SameDay: SameDay,
+                                    TrainingDay: TrainingDay,
+                                    RideAlong: RideAlong,
+                                    LargeVan: LargeVan,
+                                    CongestionCharge: CongestionCharge,
+                                    LatePayment: LatePayment,
+                                    Mileage: Mileage
+                                },
+                                success: function (data) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        text: 'Cancel',
+                        btnClass: 'btn-red',
+                        action: function () {
+                            //close
+                        }
+                    },
+                },
+                onContentReady: function () {
+                    $.ajax({
+                        url: "@Url.Action("GetAmazonRouteDetails", "admin")",
+                        type: "GET",
+                        data: { RouteAmazonId: RouteAmazonId },
+                        success: function (data) {
+                            //alert("status: " + data.status);
+                            if (data.status == 2) {
+                                // existing
+                                $("#EditAmazonFull").val(data.Full);
+                                $("#EditAmazonHalf").val(data.Half);
+                                $("#EditAmazonRemoteDebrief").val(data.RemoteDebrief);
+                                $("#EditAmazonNurseryRoutesLevel1").val(data.NurseryRoutesLevel1);
+                                $("#EditAmazonNurseryRoutesLevel2").val(data.NurseryRoutesLevel2);
+                                $("#EditAmazonRescue2Hours").val(data.Rescue2Hours);
+                                $("#EditAmazonRescue4Hours").val(data.Rescue4Hours);
+                                $("#EditAmazonRescue6Hours").val(data.Rescue6Hours);
+                                $("#EditAmazonReDelivery2Hours").val(data.ReDelivery2Hours);
+                                $("#EditAmazonReDelivery4Hours").val(data.ReDelivery4Hours);
+                                $("#EditAmazonReDelivery6Hours").val(data.ReDelivery6Hours);
+                                $("#EditAmazonMissort2Hours").val(data.Missort2Hours);
+                                $("#EditAmazonMissort4Hours").val(data.Missort4Hours);
+                                $("#EditAmazonMissort6Hours").val(data.Missort6Hours);
+                                $("#EditAmazonSameDay").val(data.SameDay);
+                                $("#EditAmazonTrainingDay").val(data.TrainingDay);
+                                $("#EditAmazonRideAlong").val(data.RideAlong);
+                                $("#EditAmazonLargeVan").val(data.LargeVan);
+                                $("#EditAmazonCongestionCharge").val(data.CongestionCharge);
+                                $("#EditAmazonLatePayment").val(data.LatePayment);
+                                $("#EditAmazonMileage").val(data.Mileage);
+                            }
+                            else {
+                                if (data.status == 1) {
+                                    // new
+                                }
+                                else {
+                                    // reload
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+
+
+
+
+        $("#new-associate").select2();
+        var pageload = false;
+        SetAmzQtyPerm();
+
+        function SetAmzQtyPerm() {
+            var hasWritePermision = '@ViewBag.HasWritePermision';
+            console.log(hasWritePermision);
+            if (hasWritePermision == 'False') {
+                $('.AmzQty').prop("readonly", true);
+            } else {
+                $('.AmzQty').prop("readonly", false);
+            }
+        }
+
+
+    </script>
+}

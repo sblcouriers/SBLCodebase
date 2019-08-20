@@ -1,0 +1,184 @@
+﻿@model Sbl.Models.SubRental
+
+@{
+    ViewBag.Title = "Insert Sub-Rental";
+}
+
+@{
+    List<SelectListItem> status = new List<SelectListItem>();
+    status.Add(new SelectListItem { Text = "Rented", Value = "Rented" });
+    status.Add(new SelectListItem { Text = "Available", Value = "Available" });
+    status.Add(new SelectListItem { Text = "Repair", Value = "Repair" });
+    status.Add(new SelectListItem { Text = "Returned", Value = "Returned" });
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Insert New Sub-Rental</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/subrentallist">Sub-Rentals</a></li>
+                        <li class="breadcrumb-item active">Insert New Sub-Rental</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("subrentalcreate", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" id="VanRentalPriceSettings" value="@ViewBag.VanRentalPriceSettings" />
+                            <input type="hidden" id="InsurancePriceSettings" value="@ViewBag.InsurancePriceSettings" />
+                            <input type="hidden" id="GoodsInTransitPriceSettings" value="@ViewBag.GoodsInTransitPriceSettings" />
+                            <input type="hidden" id="PublicLiabilityPriceSettings" value="@ViewBag.PublicLiabilityPriceSettings" />
+
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.AssociateId, new { @class = "control-label" })
+                                            @Html.DropDownListFor(m => m.AssociateId, (IEnumerable<SelectListItem>)ViewBag.Associates, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                            @Html.ValidationMessageFor(m => m.AssociateId)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.VehicleId, new { @class = "control-label" })
+                                            @Html.DropDownListFor(m => m.VehicleId, (IEnumerable<SelectListItem>)ViewBag.Vehicles, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                            @Html.ValidationMessageFor(m => m.VehicleId)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.MileageStart, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.MileageStart, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.MileageStart)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.DateRented, new { @class = "control-label" })
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.DateRented, new { @class = "form-control sbl-datepicker" })
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                </div>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.DateRented)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.VanRentalPrice, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.VanRentalPrice, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.VanRentalPrice)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.InsurancePrice, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.InsurancePrice, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.InsurancePrice)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.GoodsInTransitPrice, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.GoodsInTransitPrice, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.GoodsInTransitPrice)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.PublicLiabilityPrice, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.PublicLiabilityPrice, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.PublicLiabilityPrice)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.RentalPrice, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.RentalPrice, new { @class = "form-control", @readonly = "readonly" })
+                                            @Html.ValidationMessageFor(m => m.RentalPrice)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                <a href="~/admin/subrentallist" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+ 
+        /* select */
+        //$("#AssociateId").select2();
+        //$("#VehicleId").select2();
+ 
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+
+        Start();
+        function Start()
+        {
+            $("#VanRentalPrice").val($("#VanRentalPriceSettings").val());
+            $("#InsurancePrice").val($("#InsurancePriceSettings").val());
+            $("#GoodsInTransitPrice").val($("#GoodsInTransitPriceSettings").val());
+            $("#PublicLiabilityPrice").val($("#PublicLiabilityPriceSettings").val());
+            Calculate();
+        }
+
+        $(document.body).on("change", "#VanRentalPrice", function () {
+            Calculate();
+        });
+
+        $(document.body).on("change", "#InsurancePrice", function () {
+            Calculate();
+        });
+
+        $(document.body).on("change", "#GoodsInTransitPrice", function () {
+            Calculate();
+        });
+
+        $(document.body).on("change", "#PublicLiabilityPrice", function () {
+            Calculate();
+        });
+
+        function Calculate()
+        {
+            var p1 = $("#VanRentalPrice").val();
+            var p2 = $("#InsurancePrice").val();
+            var p3 = $("#GoodsInTransitPrice").val();
+            var p4 = $("#PublicLiabilityPrice").val();
+            var total = parseFloat(p1) + parseFloat(p2) + parseFloat(p3) + parseFloat(p4);
+            $("#RentalPrice").val(total);
+        }
+
+
+    </script>
+}

@@ -1,0 +1,280 @@
+﻿@model Sbl.Models.SubRentalListViewModel
+
+@{
+    ViewBag.Title = "Vehicles Rented by Associates";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Vehicles Rented by Associates</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Vehicles Rented by Associates</li>
+                    </ol>
+                    <a href="~/admin/subrentalcreate" class="btn btn-success d-none d-lg-block m-l-15">
+                        <i class="fa fa-plus-circle"></i> Insert New
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Depot</strong></label>
+                                    <select id="Depot" class="form-control">
+                                        @if (Model.SelectedDepotId == 0)
+                                        {
+                                            <option value="0" selected="selected">All Depots</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="0">All Depots</option>
+                                        }
+                                        @foreach (var depot in Model.Depots)
+                                        {
+                                            if (Model.SelectedDepotId == depot.Id)
+                                            {
+                                                <option value="@depot.Id" selected="selected">@depot.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@depot.Id">@depot.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Associate</strong></label>
+                                    <select id="Associate" class="form-control">
+                                        @if (Model.SelectedAssociateId == 0)
+                                        {
+                                            <option value="0" selected="selected">All Associates</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="0">All Associates</option>
+                                        }
+                                        @foreach (var associate in Model.Associates)
+                                        {
+                                            if (Model.SelectedAssociateId == associate.Id)
+                                            {
+                                                <option value="@associate.Id" selected="selected">@associate.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@associate.Id">@associate.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Vehicle</strong></label>
+                                    <select id="Vehicle" class="form-control">
+                                        @if (Model.SelectedVehicleId == 0)
+                                        {
+                                            <option value="0" selected="selected">All Vehicles</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="0">All Vehicles</option>
+                                        }
+                                        @foreach (var vehicle in Model.Vehicles)
+                                        {
+                                            if (Model.SelectedVehicleId == vehicle.Id)
+                                            {
+                                                <option value="@vehicle.Id" selected="selected">@vehicle.VehicleMake - @vehicle.VehicleModel - @vehicle.VehicleRegistration</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@vehicle.Id">@vehicle.VehicleMake - @vehicle.VehicleModel - @vehicle.VehicleRegistration</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Status</strong></label>
+                                    <select id="Status" class="form-control">
+                                        @if (Model.SelectedStatus == "0")
+                                        {
+                                            <option value="0" selected="selected">All Status</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="0">All Status</option>
+                                        }
+                                        @if (Model.SelectedStatus == "1")
+                                        {
+                                            <option value="1" selected="selected">Active</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="1">Active</option>
+                                        }
+                                        @if (Model.SelectedStatus == "2")
+                                        {
+                                            <option value="2" selected="selected">Returned</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="2">Returned</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="main-table" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Associate</th>
+                                        <th>Vehicle</th>
+                                        <th>Date Rented</th>
+                                        <th>Date Returned</th>
+                                        <th>Price</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.SubRentals)
+                                    {
+                                        <tr style="@String.Format("{0}", item.DateReturned.HasValue == true ? "background-color:#f47a7a;" : "")">
+                                            <td>@item.AssociateName</td>
+                                            <td>@item.VehicleMake - @item.VehicleModel - @item.VehicleRegistration</td>
+                                            <td>@String.Format("{0:dd MMM yyyy}", item.DateRented)</td>
+                                            <td>
+                                                @if (item.DateReturned.HasValue)
+                                                {
+                                                    <span>@String.Format("{0:dd MMM yyyy}", item.DateReturned)</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>-</span>
+                                                }
+                                            </td>
+                                            <td>@String.Format("£{0:N2}", item.RentalPrice)</td>
+                                            <td class="text-nowrap">
+                                                @if (item.Status == "Returned")
+                                                {
+                                                    <a href="~/admin/subrentalcancelreturn/@item.Id" data-toggle="tooltip" data-original-title="Cancel Return"> <i class="fa fa-arrow-circle-right text-inverse m-r-10"></i> </a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="~/admin/subrentaledit/@item.Id" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                                    <a href="~/admin/subrentalreturn/@item.Id" data-toggle="tooltip" data-original-title="Return Vehicle"> <i class="fa fa-arrow-circle-left text-inverse m-r-10"></i> </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/node_modules/datatables/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#main-table').DataTable();
+        });
+        $('#main-table').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+
+
+
+        $(document.body).on("change", "#Depot", function () {
+            Search();
+        });
+        $(document.body).on("change", "#Associate", function () {
+            Search();
+        });
+        $(document.body).on("change", "#Vehicle", function () {
+            Search();
+        });
+        $(document.body).on("change", "#Status", function () {
+            Search();
+        });
+
+        function Search() {
+            var depotid = $("#Depot").val();
+            var associateid = $("#Associate").val();
+            var vehicleid = $("#Vehicle").val();
+            var status = $("#Status").val();
+            var queryString = "";
+            if (depotid != 0) {
+                queryString = "?depotid=" + depotid;
+            }
+            if (associateid != 0) {
+                if (queryString == "") {
+                    queryString = "?associateid=" + associateid;
+                } else {
+                    queryString = queryString + "&associateid=" + associateid;
+                }
+            }
+            if (vehicleid != 0) {
+                if (queryString == "") {
+                    queryString = "?vehicleid=" + vehicleid;
+                } else {
+                    queryString = queryString + "&vehicleid=" + vehicleid;
+                }
+            }
+            if (status != 0) {
+                if (queryString == "") {
+                    queryString = "?status=" + status;
+                } else {
+                    queryString = queryString + "&status=" + status;
+                }
+            }
+            window.location.href = "/admin/subrentallistnew" + queryString;
+        }
+
+
+    </script>
+}

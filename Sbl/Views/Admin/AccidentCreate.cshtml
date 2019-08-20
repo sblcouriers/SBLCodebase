@@ -1,0 +1,144 @@
+﻿@using Sbl.Helpers
+@model Sbl.Models.Accident
+
+@{
+    ViewBag.Title = "Insert Accident";
+}
+
+
+
+<div class="page-wrapper">
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Insert New Accident</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/accidentlist">Accidents</a></li>
+                        <li class="breadcrumb-item active">Insert New Accident</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page Content -->
+        <!-- ============================================================== -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("accidentcreate", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-body">
+                                @Html.ValidationSummary(true)
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Vehicle</label>
+                                            @Html.DropDownListFor(m => m.VehicleId, (IEnumerable<SelectListItem>)ViewBag.Vehicles, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                            @Html.ValidationMessageFor(m => m.VehicleId)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Associate</label>
+                                            @Html.DropDownListFor(m => m.AssociateId, (IEnumerable<SelectListItem>)ViewBag.Associates, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                            @Html.ValidationMessageFor(m => m.AssociateId)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Date</label>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.Date, new { @class = "form-control sbl-datepicker" })
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                </div>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.Date)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Status</label>
+                                            @Html.DropDownListFor(m => m.Status, DropdownListBinder.PopulatAccidentStatus(), "-- Select --", new { @class = "form-control", @style = "background-color: #13a89e; color: #fff;" })
+                                            @Html.ValidationMessageFor(m => m.Status)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <button id="add-file" class="btn btn-outline-secondary btn-rounded" type="button"><span class="btn-label"> <i class="fa fa-plus"></i></span> Add File</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="files-area">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                <a href="~/admin/accidentlist" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page Content -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Container fluid  -->
+    <!-- ============================================================== -->
+</div>
+
+@section Scripts {
+    <!-- ============================================================== -->
+    <!-- This page plugins -->
+    <!-- ============================================================== -->
+    <script>
+
+            $(document).ready(function () {
+                $('.dropify').dropify();
+            });
+
+            jQuery('.sbl-datepicker').datepicker({
+                autoclose: true,
+                todayHighlight: true,
+                startView: 0,
+                format: "dd M yyyy"
+            });
+
+            $("#VehicleId").select2();
+            $("#AssociateId").select2();
+
+            $(document.body).on("click", "#add-file", function () {
+                $("#files-area").append("<div class=\"col-md-3\"><div class=\"form-group\"><label class=\"control-label\">File</label><input type=\"file\" name=\"FileUpload\" class=\"dropify\" data-max-file-size=\"99M\" /><button class=\"btn btn-xs btn-danger remove-file\" type=\"button\" style=\"margin-top:5px;\"><span class=\"btn-label\"> <i class=\"fa fa-times\"></i></span> Remove</button></div></div>");
+                $('.dropify').dropify();
+            });
+
+            $(document.body).on("click", ".remove-file", function () {
+                $(this).parent().parent().remove();
+            });
+
+    </script>
+    <!-- ============================================================== -->
+    <!-- This page plugins -->
+    <!-- ============================================================== -->
+}

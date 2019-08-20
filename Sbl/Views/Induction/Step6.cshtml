@@ -1,0 +1,174 @@
+﻿@model Sbl.Models.InductionStep6ViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutInduction.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Step 6</h4>
+                <h6 class="card-subtitle">Please complete the form signing each page</h6>
+                <div class='row'>
+                    <div class="col-md-12">
+                        <ul class='nav nav-wizard nav-wizard-backnav'>
+                            <li><a>Step 1</a></li>
+                            <li><a>Step 2</a></li>
+                            <li><a>Step 3</a></li>
+                            <li><a>Step 4</a></li>
+                            <li><a>Step 5</a></li>
+                            <li class="active"><a>Step 6</a></li>
+                            <li><a>Step 7</a></li>
+                            <li><a>Step 8</a></li>
+                            <li><a>Step 9</a></li>
+                            <li><a>Step 10</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("step6", "induction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.GuidId)
+                    @Html.HiddenFor(m => m.FullName)
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1>Medical Fitness Declaration</h1>
+                                <p>All contractors wishing to provide services must be medically fit enough to undertake the role as a multi-drop courier. The core role involves a significant amount of driving and the safe manual handling, manipulation, sorting and delivery of large numbers of consignments. Please confirm your fitness to provide services listed below by ticking each section, signing, and dating the bottom of the form. Tick the boxes below if you meet the conditions.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(m => m.PhysicallyFit, new { @class = "custom-control-input" })
+                                        @Html.LabelFor(m => m.PhysicallyFit, new { @class = "custom-control-label" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(m => m.NotTakingMedication, new { @class = "custom-control-input" })
+                                        @Html.LabelFor(m => m.NotTakingMedication, new { @class = "custom-control-label" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(m => m.NoMedicalConditions, new { @class = "custom-control-input" })
+                                        @Html.LabelFor(m => m.NoMedicalConditions, new { @class = "custom-control-label" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(m => m.ComplyWithGuidelines, new { @class = "custom-control-input" })
+                                        @Html.LabelFor(m => m.ComplyWithGuidelines, new { @class = "custom-control-label" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(m => m.NoMentalOrPhysicalConditions, new { @class = "custom-control-input" })
+                                        @Html.LabelFor(m => m.NoMentalOrPhysicalConditions, new { @class = "custom-control-label" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(m => m.InformSblChanges, new { @class = "custom-control-input" })
+                                        @Html.LabelFor(m => m.InformSblChanges, new { @class = "custom-control-label" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <a href="/induction/step5?guidid=@Model.GuidId" class="btn btn-lg btn-default"> Back to previous page</a>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step6Signature, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Step6Signature, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Step6Signature)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step6DateSigned, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.Step6DateSigned, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Step6DateSigned)
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-success" style="margin-top: 30px; float: right;">
+                                    <i class="fa fa-check"></i>
+                                    <span> Next </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+        AutoFill();
+        function AutoFill() {
+            $("#Step6Signature").val($("#FullName").val());
+            $("#Step6DateSigned").datepicker("setDate", new Date());
+        }
+
+        swal({
+            title: "Warning",
+            text: "Please read carefully sign and date",
+            type: "warning",
+            button: "Close",
+        });
+
+    </script>
+}

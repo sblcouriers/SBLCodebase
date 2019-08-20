@@ -1,0 +1,200 @@
+﻿@using Microsoft.Ajax.Utilities
+@using Sbl.Helpers
+@using Sbl.Models
+
+@model Sbl.Models.HandbookListViewModel
+
+@{
+    ViewBag.Title = "Handbook Report";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Handbook Report</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Handbook Report</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Vehicles</strong></label>
+                                    <select id="Vehicle" class="form-control select2 custom-select">
+                                        <option value="0">-- Select --</option>
+                                        @foreach (var vehicle in Model.Vehicles)
+                                        {
+                                            if (Model.VehicleId == vehicle.VehicleId)
+                                            {
+                                                <option value="@vehicle.VehicleId" selected="selected">@vehicle.Make - @vehicle.Model - @vehicle.Registration</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@vehicle.VehicleId">@vehicle.Make - @vehicle.Model - @vehicle.Registration</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="control-label"><strong>Period</strong></label>
+                                    <select id="Period" class="form-control select2 custom-select">
+                                        @foreach (var period in Model.Periods.OrderByDescending(x => x.DateStart))
+                                        {
+                                            if (Model.DateStart == period.DateStart)
+                                            {
+                                                <option value="@String.Format("{0:yyyy-MM-dd}", period.DateStart)" selected="selected">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} (week {2})", period.DateStart, period.DateEnd, period.Week)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@String.Format("{0:yyyy-MM-dd}", period.DateStart)">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} (week {2})", period.DateStart, period.DateEnd, period.Week)</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            @foreach (var item in Model.Vehicles)
+                            {
+                                <table id="tableAccordin" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" style="width:100%;margin-bottom:5px;">
+                                    <tbody class="tbodyAccordin">
+                                        <tr class="trAccordion">
+                                            <td style="padding:5px;">
+                                                <a id="aEdit" title="Edit" class="btn btn-xs btn-success pull-left m-r-10 aEdit" data-id="@item.VehicleId" href="javascript:void(0);"><i class="fa fa-eye" style="color: white;"></i></a>
+                                                <p class="pull-left" style="margin:0;"><strong>@item.Make - @item.Model - @item.Registration</strong></p>
+                                            </td>
+                                        </tr>
+                                        <tr id="@String.Format("RouteDetails{0}", item.VehicleId)" class="trRouteDetails">
+                                            <td>
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr style="font-weight:bold;">
+                                                                <th>Date</th>
+                                                                <th>Status</th>
+                                                                <th>Note</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @if (item.Handbooks.Any())
+                                                            {
+                                                                foreach (var handbook in item.Handbooks)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@String.Format("{0:dd MMM yyyy - ddd}", handbook.BookDate)</td>
+                                                                        <td>@handbook.Status</td>
+                                                                        <td>@handbook.Notes</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    </tfoot>
+                                </table>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="loading-modal"></div>
+
+@section Scripts {
+    <script>
+
+
+        /* loading */
+        $body = $("body");
+        $(document).on({
+            ajaxStart: function () { $body.addClass("loading"); },
+            ajaxStop: function () { $body.removeClass("loading"); }
+        });
+
+
+        /* select */
+        $("#Vehicle").select2();
+        //$("#Depot").select2();
+        $("#Period").select2();
+
+
+         
+
+        $(document.body).on("click", ".aEdit", function () {
+
+            var routeDetails = "RouteDetails" + $(this).data("id");
+            $("#" + routeDetails).toggle();
+
+        });
+
+ 
+
+
+        $(document.body).on("change", "#Period", function () {
+            Search();
+        });
+        $(document.body).on("change", "#Vehicle", function () {
+            Search();
+        });
+
+        function Search() {
+            var date = $("#Period").val();
+            var vehicleId = $("#Vehicle").val();
+            var queryString = "";
+            if (date != 0) {
+                queryString = "?date=" + date;
+            }
+            if (vehicleId != 0) {
+                if (queryString == "") {
+                    queryString = "?vehicleId=" + vehicleId;
+                } else {
+                    queryString = queryString + "&vehicleId=" + vehicleId;
+                }
+            }
+            window.location.href = "/admin/handbooklist" + queryString;
+        }
+
+
+         
+  
+
+
+
+    </script>
+}

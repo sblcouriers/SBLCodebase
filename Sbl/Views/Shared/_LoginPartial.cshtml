@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNet.Identity
+@using Sbl.Helpers
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        if (User.IsInRole(WebConstant.SBLUserRole.Master))
+        {
+            @Html.Partial("_MenuMaster")
+        }
+        if (User.IsInRole(WebConstant.SBLUserRole.Admin))
+        {
+            @Html.Partial("_MenuAdmin")
+        }
+        if (User.IsInRole(WebConstant.SBLUserRole.Fleet))
+        {
+            @Html.Partial("_MenuFleet")
+        }
+        if (User.IsInRole(WebConstant.SBLUserRole.Payroll))
+        {
+            @Html.Partial("_MenuPayroll")
+        }
+        if (User.IsInRole(WebConstant.SBLUserRole.POC))
+        {
+            @Html.Partial("_MenuPoc")
+        }
+        if (User.IsInRole(WebConstant.SBLUserRole.Recruitment))
+        {
+            @Html.Partial("_MenuRecruitment")
+        }
+        if (User.IsInRole(WebConstant.SBLUserRole.Driver))
+        {
+            @Html.Partial("_MenuDriver")
+        }
+    }
+}
+else
+{
+    <nav class="sidebar-nav">
+        <ul id="sidebarnav">
+            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li>@Html.ActionLink("Login", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        </ul>
+    </nav>
+}

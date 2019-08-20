@@ -1,0 +1,128 @@
+﻿@model Sbl.Models.ChargePcn
+
+@{
+    ViewBag.Title = "Edit Charge PCN";
+}
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Edit Charge PCN</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/chargepcnlist">Charges PCN</a></li>
+                        <li class="breadcrumb-item active">Edit Charge PCN</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("chargepcnedit", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            @Html.ValidationSummary()
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.AssociateId, new { @class = "control-label" })
+                                            @Html.DropDownListFor(m => m.AssociateId, (IEnumerable<SelectListItem>)ViewBag.Associates, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                            @Html.ValidationMessageFor(m => m.AssociateId)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Description, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Description)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Date, new { @class = "control-label" })
+                                            <div class="input-group">
+                                                @Html.EditorFor(m => m.Date, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                </div>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.Date)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.PcnFee, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.PcnFee, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.PcnFee)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.AdminFee, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.AdminFee, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.AdminFee)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.NumberOfInstalments, new { @class = "control-label" })
+                                            @Html.TextBoxFor(m => m.NumberOfInstalments, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.NumberOfInstalments)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.WeekFrequency, new { @class = "control-label" })
+                                            @Html.DropDownListFor(m => m.WeekFrequency, (IEnumerable<SelectListItem>)ViewBag.Weeks, "-- N/A --", new { @class = "form-control select2 custom-select" })
+                                            @Html.ValidationMessageFor(m => m.WeekFrequency)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.DateFirstInstalment, new { @class = "control-label" })
+                                            <div class="input-group">
+                                                @Html.EditorFor(m => m.DateFirstInstalment, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                </div>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.DateFirstInstalment)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Save</button>
+                                <a href="~/admin/chargepcnlist" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+    </script>
+}

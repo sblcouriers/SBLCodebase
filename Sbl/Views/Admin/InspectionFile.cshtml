@@ -1,0 +1,158 @@
+﻿@using Sbl.Helpers
+@model Sbl.Models.Inspection
+
+@{
+    ViewBag.Title = "Inspection Files";
+}
+
+
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">@Model.Associate.Name (@Model.Vehicle.Make - @Model.Vehicle.Model - @Model.Vehicle.Registration) Inspection Files</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="~/admin/InspectionList">Inspection</a></li>
+                        <li class="breadcrumb-item active">@Model.Associate.Name Inspection Files</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @using (Html.BeginForm("InspectionFile", "admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.Id)
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">File</label>
+                                            <input type="file" name="fileUpload" class="dropify" data-max-file-size="99M" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Description</label>
+                                            @Html.DropDownList("description", DropdownListBinder.PopulatInspectionFileDescription(), "-- Select --", new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Expiry Date</label>
+                                            <div class="input-group">
+                                                <input type="text" id="ExpiryDate" name="expiryDate" class="form-control sbl-datepicker">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="icon-calender"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Add Inspection File</button>
+                                <a href="~/admin/InspectionList" class="btn btn-inverse">Cancel</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @if (Model.InspectionFiles.Any(x => x.Active == true && x.Deleted == false))
+                        {
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Inspection Files</label><br />
+                                        @foreach (var file in Model.InspectionFiles.Where(x => x.Active == true && x.Deleted == false))
+                                        {
+                                            <div class="@String.Format("file-{0}", file.Id)" style="border:1px solid #cccccc; padding:10px; margin-right: 5px; display: inline-block;">
+                                                @if (!String.IsNullOrEmpty(file.DataFileDescription))
+                                                {
+                                                    <p><strong>Description:</strong> @file.DataFileDescription</p>
+                                                }
+                                                @if (file.DataFileExpiryDate.HasValue)
+                                                {
+                                                    <p><strong>Expiry Date:</strong> @String.Format("{0:dd MMM yyyy}", file.DataFileExpiryDate)</p>
+                                                }
+                                                <p><strong>File Name:</strong> @file.DataFileName</p>
+                                                <a href="~/admin/Inspectionfiledownload/@file.Id" class="btn btn-xs btn-success"> <i class="fa fa-cloud"></i> Download</a>
+                                                <a data-id="@file.Id" class="btn btn-xs btn-danger remove-existing-file"> <i class="fa fa-times"></i> Remove</a>
+                                                <a href="~/admin/ViewInspectionFile/@file.Id" target="_blank" class="btn btn-xs btn-info viewFile"> <i class="fa fa-eye"></i> View</a>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            $('.dropify').dropify();
+        });
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+        $(document.body).on("click", ".remove-existing-file", function () {
+            var inspectionFileId = $(this).data("id");
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this file!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: "@Url.Action("Inspectionfileremove", "admin")",
+                    type: "GET",
+                    data: { inspectionFileId: inspectionFileId },
+                    success: function (data) {
+                        $(".file-" + inspectionFileId).remove();
+                        swal("Deleted!", "The file has been deleted.", "success");
+                    }
+                });
+            });
+        });
+
+        $(document.body).on("click", "#Description", function () {
+            var description = $(this).val();
+            if (description == "DVLA Check" || description == "POA - 1" || description == "POA - 2") {
+                var d = new Date();
+                var date = moment(d).add(5, 'months').format('DD MMM YYYY');
+                $("#ExpiryDate").datepicker("setDate", date);
+                //$("#ExpiryDate").prop('disabled', true);
+            }
+            else {
+                $("#ExpiryDate").val("");
+                //$("#ExpiryDate").prop('disabled', false);
+            }            
+        });
+
+    </script>
+}

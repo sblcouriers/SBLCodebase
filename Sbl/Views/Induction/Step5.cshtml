@@ -1,0 +1,143 @@
+﻿@model Sbl.Models.InductionStep5ViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutInduction.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Step 5</h4>
+                <h6 class="card-subtitle">Please complete the form signing each page</h6>
+                <div class='row'>
+                    <div class="col-md-12">
+                        <ul class='nav nav-wizard nav-wizard-backnav'>
+                            <li><a>Step 1</a></li>
+                            <li><a>Step 2</a></li>
+                            <li><a>Step 3</a></li>
+                            <li><a>Step 4</a></li>
+                            <li class="active"><a>Step 5</a></li>
+                            <li><a>Step 6</a></li>
+                            <li><a>Step 7</a></li>
+                            <li><a>Step 8</a></li>
+                            <li><a>Step 9</a></li>
+                            <li><a>Step 10</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("step5", "induction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.GuidId)
+                    @Html.HiddenFor(m => m.FullName)
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1>Nondisclosure and Data Protection Agreements for contractors</h1>
+                                <p>During the course of your time at Amazon.co.Uk Limited "(Amazon" and ·us"),	you will be invited to visit our premises, where you may receive information relating to Amazon that is not known to the general public and is confidential and important to us. We call this our "Confidential Information".</p>
+                                <p>Our Confidential Information includes, among other things:</p>
+                                <ul>
+                                    <li>The way that we work</li>
+                                    <li>The layout of our premises</li>
+                                    <li>The technology that we use Including computers and machinery</li>
+                                    <li>That goods that we stock and the way that they are stored</li>
+                                    <li>The people we work and interact with</li>
+                                    <li>The people and companies who deliver to us and collect from us</li>
+                                    <li>Any details about our customers, including their names, addresses and what they buy</li>
+                                    <li>Anything to do with finance</li>
+                                    <li>Anything to do with advertising or marketing plans</li>
+                                    <li>Anything that you hear</li>
+                                </ul>
+                                <p>Our Confidential Information is very important to our business. It is vital to us that it does not become known to other companies. We will take all legal steps necessary to protect our Confidential Information.</p>
+                                <p>You must agree to the following commitments:</p>
+                                <ul>
+                                    <li>1. You will not disclose our Confidential Information to anyone or any company.</li>
+                                    <li>2. You will use our Confidential Information to make up your mind about working with us.</li>
+                                    <li>3. You will notify us immediately if you discover that our Confidential Information have been disclosed, however it happens.</li>
+                                    <li>4. All our Confidential Information will remain our property.</li>
+                                    <li>5. You will not trade stocks or shares based on our Confidential Information.</li>
+                                    <li>6. You will return any materials containing our Confidential Information to us if we ask you to.</li>
+                                    <li>7. You also agree that you will not disclose information to us that is confidential to you or anyone else.</li>
+                                </ul>
+                                <p>This is a legal agreement.</p>
+                                <p>If a provision of this agreement held invalid under any applicable law, such invalidity will not affect any other provision of this agreement that can be given effect without the invalid provision. Further, all terms and conditions of this agreement will be deemed enforceable to the fullest extent permissible under applicable law, and, when necessary, the court is requested to reform any and all terms or conditions to give them such effect.</p>
+                                <p>Amazon.co.uk is relying upon your promise to comply strictly with this agreement. Any violation of this agreement may cause substantial and irreparable harm to Amazon.co.uk. Accordingly, without limiting any other available remedies, this agreement is specifically enforceable by Amazon.co.Uk.</p>
+                                <p>Any failure by Amazon.co.uk to enforce your strict performance of any provision of this agreement will not constitute a waiver of Amazon.co.uk's right to subsequently enforce such provision or any other provision of this agreement.</p>
+                                <p>I understand and agree to abide by the promises I make in this agreement to protect Amazon's Confidential Information. I agree that my promises also apply for the benefit of other Amazon companies.</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <a href="/induction/step4?guidid=@Model.GuidId" class="btn btn-lg btn-default"> Back to previous page</a>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step5Signature, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Step5Signature, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Step5Signature)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step5DateSigned, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.Step5DateSigned, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Step5DateSigned)
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-success" style="margin-top: 30px; float: right;">
+                                    <i class="fa fa-check"></i>
+                                    <span> Next </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+        AutoFill();
+        function AutoFill() {
+            $("#Step5Signature").val($("#FullName").val());
+            $("#Step5DateSigned").datepicker("setDate", new Date());
+        }
+
+        swal({
+            title: "Warning",
+            text: "Please read carefully sign and date",
+            type: "warning",
+            button: "Close",
+        });
+
+    </script>
+}

@@ -1,0 +1,327 @@
+﻿@model Sbl.Models.InductionStep3ViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutInduction.cshtml";
+}
+
+@{
+    List<SelectListItem> yesno = new List<SelectListItem>();
+    yesno.Add(new SelectListItem { Text = "Yes", Value = "true" });
+    yesno.Add(new SelectListItem { Text = "No", Value = "false" });
+}
+
+@{
+    List<SelectListItem> title = new List<SelectListItem>();
+    title.Add(new SelectListItem { Text = "Mr", Value = "Mr" });
+    title.Add(new SelectListItem { Text = "Miss", Value = "Miss" });
+    title.Add(new SelectListItem { Text = "Mrs", Value = "Mrs" });
+    title.Add(new SelectListItem { Text = "Ms", Value = "Ms" });
+}
+
+@{
+    List<SelectListItem> gender = new List<SelectListItem>();
+    gender.Add(new SelectListItem { Text = "Male", Value = "Male" });
+    gender.Add(new SelectListItem { Text = "Female", Value = "Female" });
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Step 3</h4>
+                <h6 class="card-subtitle">Please complete the form signing each page</h6>
+                <div class='row'>
+                    <div class="col-md-12">
+                        <ul class='nav nav-wizard nav-wizard-backnav'>
+                            <li><a>Step 1</a></li>
+                            <li><a>Step 2</a></li>
+                            <li class="active"><a>Step 3</a></li>
+                            <li><a>Step 4</a></li>
+                            <li><a>Step 5</a></li>
+                            <li><a>Step 6</a></li>
+                            <li><a>Step 7</a></li>
+                            <li><a>Step 8</a></li>
+                            <li><a>Step 9</a></li>
+                            <li><a>Step 10</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm("step3", "induction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Id)
+                    @Html.HiddenFor(m => m.GuidId)
+                    @Html.HiddenFor(m => m.FullName)
+                    <div class="form-body">
+
+                        <h4 class="text-success">Accurate Background Basic Disclosure Check</h4>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.UnspentCriminalConviction, new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.UnspentCriminalConviction, yesno, "-- Select --", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.UnspentCriminalConviction)
+                                </div>
+                            </div>
+                            <div class="col-md-9 criminalInfo">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CriminalConvictionDetails, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CriminalConvictionDetails, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CriminalConvictionDetails)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRTitle, new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.CRTitle, title, "-- Select --", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRTitle)
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRSurname, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRSurname, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRSurname)
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRForename, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRForename, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRForename)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRMotherSurnameBirth, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRMotherSurnameBirth, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRMotherSurnameBirth)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRMotherForenameBirth, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRMotherForenameBirth, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRMotherForenameBirth)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRMaidenFamilyName, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRMaidenFamilyName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRMaidenFamilyName)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CROtherName1, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CROtherName1, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CROtherName1)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CROtherName2, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CROtherName2, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CROtherName2)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CROtherName3, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CROtherName3, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CROtherName3)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRDateOfBirth, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.CRDateOfBirth, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.CRDateOfBirth)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRGender, new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.CRGender, gender, "-- Select --", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRGender)
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRTownOfBirth, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRTownOfBirth, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRTownOfBirth)
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRCountryOfBirth, new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.CRCountryOfBirth, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                    @Html.ValidationMessageFor(m => m.CRCountryOfBirth)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRPassportNumber, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRPassportNumber, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRPassportNumber)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRIsUKPassport, new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.CRIsUKPassport, yesno, "-- Select --", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRIsUKPassport)
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRPassportCountryOfIssue, new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.CRPassportCountryOfIssue, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                    @Html.ValidationMessageFor(m => m.CRPassportCountryOfIssue)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRPassportIssueDate, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.CRPassportIssueDate, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.CRPassportIssueDate)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRPassportExpiryDate, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.CRPassportExpiryDate, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.CRPassportExpiryDate)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRNationalInsuranceNumber, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRNationalInsuranceNumber, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRNationalInsuranceNumber)
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRDriverLicense, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.CRDriverLicense, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CRDriverLicense)
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CRDriverLicenseCountryOfIssue, new { @class = "control-label" })
+                                    @Html.DropDownListFor(m => m.CRDriverLicenseCountryOfIssue, (IEnumerable<SelectListItem>)ViewBag.Countries, "-- Select --", new { @class = "form-control select2 custom-select" })
+                                    @Html.ValidationMessageFor(m => m.CRDriverLicenseCountryOfIssue)
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-1">
+                                <a href="/induction/step2?guidid=@Model.GuidId" class="btn btn-lg btn-default"> Back to previous page</a>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step3Signature, new { @class = "control-label" })
+                                    @Html.TextBoxFor(m => m.Step3Signature, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Step3Signature)
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Step3DateSigned, new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(m => m.Step3DateSigned, new { htmlAttributes = new { @class = "form-control sbl-datepicker" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="icon-calender"></i></span>
+                                        </div>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Step3DateSigned)
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-success" style="margin-top: 30px; float: right;">
+                                    <i class="fa fa-check"></i>
+                                    <span> Next </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        jQuery('.sbl-datepicker').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            startView: 0,
+            format: "dd M yyyy"
+        });
+
+
+        CheckCriminal();
+
+        $(document.body).on("change", "#UnspentCriminalConviction", function () {
+            CheckCriminal();
+        });
+
+        function CheckCriminal() {
+            if ($("#UnspentCriminalConviction").val() == "true") {
+                $(".criminalInfo").show();
+            }
+            else {
+                $(".criminalInfo").hide();
+            }
+        }
+
+        AutoFill();
+        function AutoFill() {
+            $("#Step3Signature").val($("#FullName").val());
+            $("#Step3DateSigned").datepicker("setDate", new Date());
+        }
+
+    </script>
+}

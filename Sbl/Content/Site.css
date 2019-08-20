@@ -1,0 +1,157 @@
+﻿body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+
+/* bootstrap modifications */
+
+.navbar-nav {
+    margin-top: 0px;
+}
+
+.navbar {
+    border-radius: 0;
+}
+
+.navbar-inverse {
+    background-color: #455666;
+    border-color: #455666;
+}
+
+.navbar-brand {
+    float: left;
+    padding: 2px;
+}
+
+.navbar-brand img {
+    width: 90px;
+    margin-left: 20px;
+}
+
+.navbar-inverse .navbar-brand {
+    color: #fff;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: #fff;
+    font-size: 15px;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover {
+    color: #fcce0d;
+    font-size: 15px;
+}
+
+input.checkbox {
+    margin-top: 7px !important;
+}
+
+
+.progress {
+    height: 35px !important;
+    margin-bottom: 0px !important;
+}
+
+.progress-bar {
+    padding: 7px !important;
+    font-size: 14px;
+}
+
+
+/* misc */
+
+.float-right {
+    float: right;
+}
+
+
+/* select2 mod */
+
+.select2-container--default .select2-selection--single {
+    border: 1px solid #cccccc !important;
+}
+
+.select2-container .select2-selection--single {
+    height: 34px !important;
+    padding: 2px 4px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 4px !important;
+}
+
+
+/* loading */
+
+.loading-modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('/img/loading.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+body.loading {
+    overflow: hidden;   
+}
+
+body.loading .loading-modal {
+    display: block;
+}
+
+
+/* layout */
+
+.box {
+    border: 1px solid #999999;
+    margin: 10px 0;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.box-header {
+    margin-bottom: 10px;
+    background-color: #f1f1f1;
+    padding: 5px;
+    border-radius: 5px;
+    height: 40px;
+}
+
+.box-title {
+    color: #555555;
+    display: inline-block;
+    margin: 0 0 0 10px;
+    font-size: 21px;
+}
+
+.box-content {
+}
+

@@ -1,0 +1,313 @@
+﻿@using Sbl.Helpers
+@model Sbl.Models.AssociateRemittanceViewModel
+@{
+    Layout = null;
+}
+@{
+    ViewBag.Title = "Associate Remittance Advice";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+    <title>@ViewBag.Title | SBL Couriers Limited</title>
+    <title>SBL</title>
+    <!-- page css -->
+    <link href="~/css/pages/login-register-lock.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="~/css/style.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        .table-responsive {
+            overflow-x: unset !important;
+        }
+    </style>
+
+</head>
+<body class="horizontal-nav skin-default card-no-border" style="margin:0 auto;background-color:#fff;">
+    
+
+    <div class="page-wrapper" style="background-color:#fff;">
+        <div class="container-fluid">
+            <div class="row page-titles" style="display:none;">
+                <div class="col-md-5 align-self-center">
+                    <h4 class="text-themecolor">Associate Remittance Advice</h4>
+                </div>
+                <div class="col-md-7 align-self-center text-right">
+                    <div class="d-flex justify-content-end align-items-center">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="~/admin/dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="~/admin/associatelist">Associates</a></li>
+                            <li class="breadcrumb-item active">Associate Remittance Advice</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-body printableArea">
+                        <h3><b>REMITTANCE ADVICE</b></h3>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-left">
+                                    <address>
+                                        <h3><b class="text-danger">@Model.SblRemittanceBusinessName</b></h3>
+                                        <p class="text-muted m-l-5">
+                                            <span>@Model.SblRemittanceBusinessAddress</span><br />
+                                            <span>@Model.SblRemittanceBusinessCity @Model.SblRemittanceBusinessPostcode</span><br />
+                                            <span>VAT Number: @Model.SblRemittanceBusinessVatNumber</span><br />
+                                        </p>
+                                    </address>
+                                </div>
+                                <div class="pull-right text-right">
+                                    <address>
+                                        <h3>Week <span class="pull-right" style="margin-left:10px;"> @Model.WeekNumber</span></h3>
+                                        <p class="m-t-30">
+                                            <b>Remittance Date:</b>
+                                            <span style="margin-left:10px;">@String.Format("{0:dd/MM/yyyy}", Model.RemittanceDate)</span>
+                                            <br>
+                                            <b>Due Date:</b>
+                                            <span style="margin-left:10px;">@String.Format("{0:dd/MM/yyyy}", Model.DueDate)</span>
+                                            <br>
+                                        </p>
+                                        <h4 class="font-bold">@Model.AssociateName</h4>
+                                        <p class="text-muted m-l-30">
+                                            <span>@Model.AssociateAddress</span><br />
+                                            <span>@Model.AssociateCity @Model.AssociatePostcode</span><br />
+                                            <span>Phone: @Model.AssociatePhone</span><br />
+                                            <span>Email: @Model.AssociateEmail</span><br />
+                                        </p>
+                                    </address>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3><b>ROUTES</b></h3>
+                                <div>
+                                    <table class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Date</th>
+                                                <th class="text-center">Route Type</th>
+                                                <th class="text-center">Route Code</th>
+                                                <th class="text-center">Extra Services</th>
+                                                <th class="text-center">Site</th>
+                                                <th class="text-center">Miles</th>
+                                                <th class="text-center">BYOD</th>
+                                                <th class="text-center">Route Rate</th>
+                                                <th class="text-center">Extra Rate</th>
+                                                <th class="text-center">Fuel Rate</th>
+                                                <th class="text-center">Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Routes)
+                                            {
+                                                if (item.AllocationStatus == "ON" || item.AllocationStatus == "TRAINING")
+                                                {
+                                                    <tr>
+                                                        <td class="text-center">@String.Format("{0:dd/MM/yyyy}", item.RouteDate)</td>
+                                                        <td class="text-center">@item.RouteType1</td>
+                                                        <td class="text-center">@item.RouteCode1</td>
+                                                        <td class="text-center">@item.RouteExtra</td>
+                                                        <td class="text-center">@item.Depot</td>
+                                                        <td class="text-center">@String.Format("{0:N0}", item.Mileage)</td>
+                                                        <td class="text-center">@String.Format("£{0:N2}", item.Byod)</td>
+                                                        <td class="text-center">@String.Format("£{0:N2}", item.RouteRate)</td>
+                                                        <td class="text-center">@String.Format("£{0:N2}", item.RouteExtraRate)</td>
+                                                        <td class="text-center">@String.Format("£{0:N2}", item.FuelSupport)</td>
+                                                        <td class="text-center">@String.Format("£{0:N2}", item.SubTotal)</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    <tr style="background-color:#f1f1f1;">
+                                                        <td class="text-center">@String.Format("{0:dd/MM/yyyy}", item.RouteDate)</td>
+                                                        <td colspan="12" class="text-center"><span style="font-weight:bold;">@item.AllocationStatus</span></td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr style="font-weight:bold;">
+                                                <td colspan="5"></td>
+                                                <td class="text-center">@String.Format("{0:N0}", Model.SumMileage)</td>
+                                                <td class="text-center">@String.Format("£{0:N2}", Model.SumByod)</td>
+                                                <td class="text-center">@String.Format("£{0:N2}", Model.SumRouteRate)</td>
+                                                <td class="text-center">@String.Format("£{0:N2}", Model.SumRouteExtraRate)</td>
+                                                <td class="text-center">@String.Format("£{0:N2}", Model.SumFuelSupport)</td>
+                                                <td class="text-center">@String.Format("£{0:N2}", Model.SumSubTotal)</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <h3><b>CREDITS</b></h3>
+                                    <table class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Date</th>
+                                                <th class="text-center">Description</th>
+                                                <th class="text-center">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Credits)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@String.Format("{0:dd/MM/yyyy}", item.CreditDate)</td>
+                                                    <td>@item.Description</td>
+                                                    <td class="text-center">@String.Format("£{0:N2}", item.CreditAmount)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr style="font-weight:bold;">
+                                                <td colspan="2"></td>
+                                                <td class="text-center">@String.Format("£{0:N2}", Model.SumCreditAmount)</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <h3><b>DEDUCTIONS</b></h3>
+                                    <table class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Date</th>
+                                                <th class="text-center">Description</th>
+                                                <th class="text-center">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.SubRentals)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} ({2} days)", Model.FromDate, Model.FromDate.Value.AddDays(6), item.VanRentalDays)</td>
+                                                    <td>@item.VanRentalDescription</td>
+                                                    <td class="text-center">@String.Format("£{0:N2}", item.VanRentalPrice)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} ({2} days)", Model.FromDate, Model.FromDate.Value.AddDays(6), item.VanRentalDays)</td>
+                                                    <td>@item.InsuranceDescription</td>
+                                                    <td class="text-center">@String.Format("£{0:N2}", item.InsurancePrice)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} ({2} days)", Model.FromDate, Model.FromDate.Value.AddDays(6), item.VanRentalDays)</td>
+                                                    <td>@item.GoodsInTransitDescription</td>
+                                                    <td class="text-center">@String.Format("£{0:N2}", item.GoodsInTransitPrice)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">@String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy} ({2} days)", Model.FromDate, Model.FromDate.Value.AddDays(6), item.VanRentalDays)</td>
+                                                    <td>@item.PublicLiabilityDescription</td>
+                                                    <td class="text-center">@String.Format("£{0:N2}", item.PublicLiabilityPrice)</td>
+                                                </tr>
+                                            }
+                                            @foreach (var item in Model.Deductions)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@String.Format("{0:dd/MM/yyyy}", item.DeductionDate)</td>
+                                                    <td>@item.Description</td>
+                                                    <td class="text-center">@String.Format("£{0:N2}", item.DeductionAmount)</td>
+                                                </tr>
+                                            }
+                                            @foreach (var item in Model.ExtraDeductions)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@String.Format("{0:dd/MM/yyyy}", item.DeductionDate)</td>
+                                                    <td>@item.Description</td>
+                                                    <td class="text-center">@String.Format("£{0:N2}", item.DeductionAmount)</td>
+                                                </tr>
+                                            }
+                                            @foreach (var item in Model.ChargeClaims)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@String.Format("{0:dd/MM/yyyy}", item.ChargeClaimDate)</td>
+                                                    <td>@item.Description</td>
+                                                    <td class="text-center">@String.Format("£{0:N2}", item.ChargeClaimAmount)</td>
+                                                </tr>
+                                            }
+                                            @foreach (var item in Model.ChargePcns)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@String.Format("{0:dd/MM/yyyy}", item.ChargePcnDate)</td>
+                                                    <td>@item.Description</td>
+                                                    <td class="text-center">@String.Format("£{0:N2}", item.ChargePcnAmount)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                            <tr style="font-weight:bold;">
+                                                <td colspan="2"></td>
+                                                <td class="text-center">@String.Format("£{0:N2}", Model.TotalDeductions)</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <h3><b>SUMMARY</b></h3>
+                                    <table class="table table-hover table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center"><span style="font-weight:bold;">Total Credits</span></td>
+                                                <td class="text-center"><span style="font-weight:bold;">@String.Format("£{0:N2}", Model.TotalCredits)</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center"><span style="font-weight:bold;">Total Deductions</span></td>
+                                                <td class="text-center"><span style="font-weight:bold;">@String.Format("£{0:N2}", Model.TotalDeductions)</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center"><span style="font-weight:bold;">Total NET (excluding VAT)</span></td>
+                                                <td class="text-center"><span style="font-weight:bold;">@String.Format("£{0:N2}", Model.Total)</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" class="text-center"><span style="font-weight:bold;">@Model.SblRemittanceThankYouMessage</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/assets/node_modules/jquery/jquery-3.2.1.min.js"></script>
+    <script src="~/assets/node_modules/popper/popper.min.js"></script>
+    <script src="~/assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
